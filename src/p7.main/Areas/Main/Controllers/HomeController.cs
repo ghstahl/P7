@@ -1,0 +1,58 @@
+﻿using System.Linq;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using p7.main.Models;
+
+namespace p7.main.Areas.Main.Controllers
+{
+    [Area("Main")]
+    public class HomeController : Controller
+    {
+        private ILogger Logger { get; set; }
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private ISession Session => _httpContextAccessor.HttpContext.Session;
+
+
+
+        public HomeController(IHttpContextAccessor httpContextAccessor,
+            ILogger<HomeController> logger)
+        {
+            _httpContextAccessor = httpContextAccessor;
+            Logger = logger;
+        }
+
+        public IActionResult Index()
+        {
+            Logger.LogInformation("Hello from the Home Index Controller");
+            Session.SetString("Test", "Ben Rules!");
+            return View();
+        }
+
+        public IActionResult About()
+        {
+            Logger.LogInformation("Hello from the Home About Controller");
+            var message = Session.GetString("Test");
+            ViewData["Message"] = message;
+
+            var result = HttpContext.User.Claims.Select(
+              c => new ClaimType { Type = c.Type, Value = c.Value });
+
+            return View(result);
+        }
+
+        public IActionResult Contact()
+        {
+            Logger.LogInformation("Hello from the Home Contact Controller");
+            ViewData["Message"] = "Your contact page.";
+
+            return View();
+        }
+
+        public IActionResult Error()
+        {
+            Logger.LogInformation("Hello from the Home Error Controller");
+            return View();
+        }
+    }
+}

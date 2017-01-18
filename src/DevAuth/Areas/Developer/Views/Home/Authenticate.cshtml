@@ -1,0 +1,46 @@
+﻿@using Microsoft.AspNetCore.Authentication.DevAuth.Models
+@model Microsoft.AspNetCore.Authentication.DevAuth.Models.AuthenticateViewModel
+@{
+    ViewData["Title"] = "Hello Developer Authenticate Home";
+}
+
+<h2>@ViewData["Title"].</h2>
+
+<form asp-controller="Home" asp-action="Authenticate" method="post" class="form-horizontal">
+    <ul>
+        <li>@Model.RequestToken.Token</li>
+        <li>@Model.RequestToken.CallBackUri</li>
+        <li>@Model.RequestToken.Properties</li>
+    </ul>
+    <hr/>
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="LoginModel.Email" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="LoginModel.Email" class="form-control"/>
+            <span asp-validation-for="LoginModel.Email" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <button type="submit" class="btn btn-default">Login</button>
+        </div>
+    </div>
+
+</form>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
+
+
+
+
+
+
+
+
+
+
