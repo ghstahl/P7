@@ -64,7 +64,8 @@
     "P7.Filters": "1.0.0-*",
     "P7.SimpleRedirector": "1.0.0-*",
     "P7.Globalization": "1.0.0-*",
-    "Loc.HelloServices": "1.0.0-*"  },
+    "Loc.HelloServices": "1.0.0-*",
+    "P7.SimpleRedirect.Core": "1.0.0-*"  },
 
   "tools": {
     "Microsoft.AspNetCore.Razor.Tools": "1.0.0-preview2-final",
