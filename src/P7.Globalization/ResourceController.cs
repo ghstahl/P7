@@ -96,7 +96,7 @@ namespace P7.Globalization
                 {
                     if (string.IsNullOrEmpty(treatment))
                     {
-                        treatment = "P7.Core.Localization.Treatment,P7.Core";
+                        treatment = "P7.Core.Localization.Treatment.KeyValueObject,P7.Core";
                     }
                     var typeTreatment = TypeHelper<Type>.GetTypeByFullName(treatment);
                     var localizer = _localizerFactory.Create(typeId);
