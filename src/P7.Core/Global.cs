@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using System;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 
@@ -9,5 +10,6 @@ namespace P7.Core
         public static IHostingEnvironment HostingEnvironment { get; set; }
         public static IMemoryCache MemoryCache { get; set; }
         public static IConfigurationRoot ConfigurationRoot { get; set; }
+        public static IServiceProvider ServiceProvider { get; set; }
     }
 }

@@ -31,6 +31,7 @@ using P7.Core.Startup;
 using P7.Core.IoC;
 using P7.Core.Localization;
 using P7.Core.TagHelpers;
+using P7.GraphQLCore;
 
 namespace WebApplication5
 {
@@ -119,6 +120,7 @@ namespace WebApplication5
             services.AddAllConfigureServicesRegistrants(Configuration);
             services.AddDependencies();
             var serviceProvider = services.BuildServiceProvider(Configuration);
+            P7.Core.Global.ServiceProvider = serviceProvider;
             return serviceProvider;
 
         }
@@ -126,6 +128,10 @@ namespace WebApplication5
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            var dd = P7.Core.Global.ServiceProvider.GetServices<IQueryFieldRecordRegistration>();
+            var vv = P7.Core.Global.ServiceProvider.GetService<IQueryFieldRecordRegistrationStore>();
+            
+
             var supportedCultures = new List<CultureInfo>
             {
                 new CultureInfo("en-US"),

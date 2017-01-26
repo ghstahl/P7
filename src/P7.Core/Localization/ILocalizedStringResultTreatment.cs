@@ -8,6 +8,7 @@ namespace P7.Core.Localization
 {
     public interface ILocalizedStringResultTreatment
     {
+        string Key { get; }
         object Process(IEnumerable<LocalizedString> resourceSet);
     }
 }

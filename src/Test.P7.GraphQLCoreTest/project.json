@@ -3,16 +3,26 @@
     "Autofac": "4.3.0",
     "Autofac.Configuration": "4.0.1",
     "Autofac.Extensions.DependencyInjection": "4.0.0",
+    "dotnet-test-mstest": "1.1.2-preview",
+    "FakeItEasy": "3.0.0-beta002-build000066",
+    "GraphQL": "0.14.6.657",
+    "GraphQL-Parser": "2.0.0",
     "Microsoft.AspNetCore": "1.1.0",
     "Microsoft.AspNetCore.Mvc": "1.1.0",
     "Microsoft.AspNetCore.Mvc.Core": "1.1.0",
     "Microsoft.AspNetCore.Mvc.Localization": "1.1.0",
     "Microsoft.AspNetCore.Routing": "1.1.0",
+    "Microsoft.AspNetCore.TestHost": "1.1.0",
     "Microsoft.EntityFrameworkCore": "1.1.0",
     "Microsoft.Extensions.Caching.Abstractions": "1.1.0",
     "Microsoft.Extensions.Configuration.Abstractions": "1.1.0",
+    "MSTest.TestFramework": "1.0.8-rc2",
     "Newtonsoft.Json": "9.0.1",
-    "Serilog": "2.3.0"
+    "P7.Core": "1.0.0-*",
+    "P7.Globalization": "1.0.0-*",
+    "P7.GraphQLCore": "1.0.0-*",
+    "Serilog": "2.3.0",
+    "Shouldly": "2.8.2"
   },
   "frameworks": {
     "netcoreapp1.1": {
@@ -20,7 +30,12 @@
     }
   },
   "version": "1.0.0-*",
+  "testRunner": "mstest",
   "buildOptions": {
-    "outputName": "Loc.HelloServices"
+    "outputName": "Test.P7.GraphQLCoreTest"
+  },
+  "runtimes": {
+    "win10-x64": {}, /* one or more RIDs */
+    "osx.10.10-x64": {}
   }
 }

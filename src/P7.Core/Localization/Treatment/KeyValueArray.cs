@@ -15,5 +15,7 @@ namespace P7.Core.Localization.Treatment
 
             return result;
         }
+
+        public string Key => "kva";
     }
 }

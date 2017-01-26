@@ -18,5 +18,6 @@ namespace P7.Core.Localization.Treatment
             }
             return expando;
         }
+        public string Key => "kvo";
     }
 }

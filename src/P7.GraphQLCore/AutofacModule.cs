@@ -1,0 +1,49 @@
+﻿using System;
+using Autofac;
+using GraphQL;
+using GraphQL.Execution;
+using GraphQL.Http;
+using GraphQL.Types;
+using GraphQL.Validation;
+using GraphQL.Validation.Complexity;
+using P7.Core.Reflection;
+
+namespace P7.GraphQLCore
+{
+    public class AutofacModule : Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+
+            // This is a global sweep to find all types that implement IFieldRecordRegistration.  We then register every one of them.
+            // Future would be to database this, but for now if it is referenced it is in.
+            var myTypes = TypeHelper<IQueryFieldRecordRegistration>.FindTypesInAssemblies(TypeHelper<IQueryFieldRecordRegistration>.IsType);
+            foreach (var type in myTypes)
+            {
+                builder.RegisterType(type).As<IQueryFieldRecordRegistration>();
+            }
+
+            builder.RegisterType<QueryFieldRecordRegistrationStore>()
+                .As<IQueryFieldRecordRegistrationStore>()
+                .SingleInstance();
+           
+            builder.RegisterType<GraphQLDocumentBuilder>().As<IDocumentBuilder>();
+            builder.RegisterType<DocumentValidator>().As<IDocumentValidator>(); 
+            builder.RegisterType<ComplexityAnalyzer>().As<IComplexityAnalyzer>();
+            builder.RegisterType<DocumentExecuter>().As<IDocumentExecuter>().SingleInstance();
+            builder.RegisterInstance(new DocumentWriter(indent: true)).As<IDocumentWriter>();
+            builder.RegisterType<QueryCore>().AsSelf();
+            builder.RegisterType<SchemaCore>().As<ISchema>();
+
+            builder.Register<Func<Type, GraphType>>(c =>
+            {
+                var context = c.Resolve<IComponentContext>();
+                return t => {
+                    var res = context.Resolve(t);
+                    return (GraphType)res;
+                };
+            });
+
+        }
+    }
+}

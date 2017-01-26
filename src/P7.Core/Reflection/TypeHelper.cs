@@ -154,7 +154,10 @@ i.e. COA.MEF.Calculator.Globalization.Views.Home, COA.MEF.Calculator.Globalizati
             }
             return typesSoFar;
         }
-
+        public static IEnumerable<Type> FindTypesInAssembliesWithInterfaceImplementation<TInteface>( )
+        {
+            return FindTypesInAssemblies(TypeHelper<TInteface>.IsType);
+        }
         public static IEnumerable<Type> FindTypesInAssemblies(Predicate<Type> predicate)
         {
             var assemblyParts = ApplicationParts.OfType<AssemblyPart>();
