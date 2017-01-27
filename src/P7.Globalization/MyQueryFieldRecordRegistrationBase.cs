@@ -33,39 +33,40 @@ namespace P7.Globalization
             }
         }
 
-        public  void PopulateStringGraphTypes( )
+        public void PopulateStringGraphTypes()
         {
             ListStringGraphTypeFieldRecords.Add(new FieldRecord<StringGraphType>()
             {
                 Name = "resource",
-                QueryArguments = new QueryArguments(new QueryArgument<ResourceQueryInput> { Name = "input" }),
+                QueryArguments = new QueryArguments(new QueryArgument<ResourceQueryInput> {Name = "input"}),
 
                 Resolve = async context =>
                 {
-                        var input = context.GetArgument<ResourceQueryHandle>("input");
-                        CultureInfo currentCulture = new CultureInfo("en-US");
-                        if (!string.IsNullOrEmpty(input.Culture))
+                    var input = context.GetArgument<ResourceQueryHandle>("input");
+                    CultureInfo currentCulture = new CultureInfo("en-US");
+                    if (!string.IsNullOrEmpty(input.Culture))
+                    {
+                        try
                         {
-                            try
-                            {
-                                currentCulture = new CultureInfo(input.Culture);
-                            }
-                            catch (Exception)
-                            {
-                                currentCulture = new CultureInfo("en-US");
-                            }
+                            currentCulture = new CultureInfo(input.Culture);
                         }
-                        var obj = await _resourceFetcher.GetResourceSetAsync(
-                            new ResourceQueryHandle()
-                            {
-                                Culture = currentCulture.Name,
-                                Id = input.Id,
-                                Treatment = input.Treatment
-                            });
-                        return obj;
+                        catch (Exception)
+                        {
+                            currentCulture = new CultureInfo("en-US");
+                        }
+                    }
+                    var obj = await _resourceFetcher.GetResourceSetAsync(
+                        new ResourceQueryHandle()
+                        {
+                            Culture = currentCulture.Name,
+                            Id = input.Id,
+                            Treatment = input.Treatment
+                        });
+                    return obj;
                 }
             });
         }
+
         public override IEnumerable<FieldRecord<StringGraphType>> GetStringGraphTypes()
         {
             return ListStringGraphTypeFieldRecords;
