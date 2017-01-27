@@ -6,7 +6,7 @@ using Microsoft.Extensions.Localization;
 using P7.Core.Localization.Treatment;
 using P7.Core.Reflection;
 
-namespace P7.Globalization
+namespace P7.Core.Localization
 {
     public class ResourceFetcher: IResourceFetcher
     {
