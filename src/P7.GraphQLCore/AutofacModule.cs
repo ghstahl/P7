@@ -15,18 +15,34 @@ namespace P7.GraphQLCore
         protected override void Load(ContainerBuilder builder)
         {
 
-            // This is a global sweep to find all types that implement IFieldRecordRegistration.  We then register every one of them.
+            // This is a global sweep to find all types that 
+            // implement IMutationFieldRecordRegistration and IQueryFieldRecordRegistration.  
+            // We then register every one of them.
             // Future would be to database this, but for now if it is referenced it is in.
-            var myTypes = TypeHelper<IQueryFieldRecordRegistration>.FindTypesInAssemblies(TypeHelper<IQueryFieldRecordRegistration>.IsType);
+            var myTypes = TypeHelper<IQueryFieldRecordRegistration>
+                .FindTypesInAssemblies(TypeHelper<IQueryFieldRecordRegistration>.IsType);
             foreach (var type in myTypes)
             {
                 builder.RegisterType(type).As<IQueryFieldRecordRegistration>();
             }
-
             builder.RegisterType<QueryFieldRecordRegistrationStore>()
                 .As<IQueryFieldRecordRegistrationStore>()
                 .SingleInstance();
-           
+
+            myTypes = TypeHelper<IMutationFieldRecordRegistration>
+                .FindTypesInAssemblies(TypeHelper<IMutationFieldRecordRegistration>.IsType);
+            foreach (var type in myTypes)
+            {
+                builder.RegisterType(type).As<IMutationFieldRecordRegistration>();
+            }
+            builder.RegisterType<MutationFieldRecordRegistrationStore>()
+                .As<IMutationFieldRecordRegistrationStore>()
+                .SingleInstance();
+
+
+
+
+
             builder.RegisterType<GraphQLDocumentBuilder>().As<IDocumentBuilder>();
             builder.RegisterType<DocumentValidator>().As<IDocumentValidator>(); 
             builder.RegisterType<ComplexityAnalyzer>().As<IComplexityAnalyzer>();

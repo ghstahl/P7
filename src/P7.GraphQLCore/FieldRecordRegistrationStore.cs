@@ -7,6 +7,16 @@ using GraphQL.Types;
 namespace P7.GraphQLCore
 {
 
+    public class MutationFieldRecordRegistrationStore : FieldRecordRegistrationStore, IMutationFieldRecordRegistration
+    {
+        public MutationFieldRecordRegistrationStore(IEnumerable<IMutationFieldRecordRegistration> fieldRecordRegistrations)
+        {
+            FieldRecordRegistrations = from item in fieldRecordRegistrations
+                                       let c = item as IFieldRecordRegistration
+                                       select c;
+        }
+    }
+
     public class QueryFieldRecordRegistrationStore : FieldRecordRegistrationStore, IQueryFieldRecordRegistrationStore
     {
         public QueryFieldRecordRegistrationStore(IEnumerable<IQueryFieldRecordRegistration> fieldRecordRegistrations)
@@ -38,7 +48,7 @@ namespace P7.GraphQLCore
                 }
             }
             return _getStringGraphTypes;
-            
+
         }
 
         private List<FieldRecord<BooleanGraphType>> _getBooleanGraphTypes;

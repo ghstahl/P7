@@ -6,7 +6,9 @@ namespace P7.GraphQLCore
     public interface IQueryFieldRecordRegistration: IFieldRecordRegistration
     {
     }
-
+    public interface IMutationFieldRecordRegistration : IFieldRecordRegistration
+    {
+    }
     public interface IFieldRecordRegistration
     {
         IEnumerable<FieldRecord<StringGraphType>> GetStringGraphTypes();
