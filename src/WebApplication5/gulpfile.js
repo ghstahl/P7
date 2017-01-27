@@ -58,6 +58,16 @@ gulp.task('copy:p7.main:areas', function () {
         .pipe(gulp.dest('Areas/'));
 });
 
+gulp.task('copy:P7.GraphQLViewer', function () {
+    return gulp.src(['../P7.GraphQLViewer/static/**'])
+        .pipe(gulp.dest('static/'));
+});
+
+gulp.task('copy:P7.GraphQLViewer:areas', function () {
+    return gulp.src(['../P7.GraphQLViewer/Areas/**', '!../P7.GraphQLViewer/Areas/*/{Controllers,Controllers/**}'])
+        .pipe(gulp.dest('Areas/'));
+});
+
 gulp.task('copy:p7.Authorization:areas', function () {
     return gulp.src(['../p7.Authorization/Areas/**', '!../p7.Authorization/Areas/*/{Controllers,Controllers/**}'])
         .pipe(gulp.dest('Areas/'));
@@ -70,12 +80,16 @@ gulp.task('copy:DevAuth:areas', function () {
 gulp.task('watch', [
         'copy:p7.main',
         'copy:p7.main:areas',
+        'copy:P7.GraphQLViewer',
+        'copy:P7.GraphQLViewer:areas',
         'copy:p7.Authorization:areas',
         'copy:DevAuth:areas'
     ],
     function () {
         gulp.watch(['../p7.main/Views/**'], ['copy:p7.main']);
         gulp.watch(['../p7.main/Areas/**'], ['copy:p7.main:areas']);
+        gulp.watch(['../P7.GraphQLViewer/Views/**'], ['copy:P7.GraphQLViewer']);
+        gulp.watch(['../P7.GraphQLViewer/Areas/**'], ['copy:P7.GraphQLViewer:areas']);
         gulp.watch(['../p7.Authorization/Areas/**'], ['copy:p7.Authorization:areas']);
         gulp.watch(['../DevAuth/Areas/**'], ['copy:DevAuth:areas']);
     });
