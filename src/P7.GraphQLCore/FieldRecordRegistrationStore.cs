@@ -7,7 +7,7 @@ using GraphQL.Types;
 namespace P7.GraphQLCore
 {
 
-    public class MutationFieldRecordRegistrationStore : FieldRecordRegistrationStore, IMutationFieldRecordRegistration
+    public class MutationFieldRecordRegistrationStore : FieldRecordRegistrationStore, IMutationFieldRecordRegistrationStore
     {
         public MutationFieldRecordRegistrationStore(IEnumerable<IMutationFieldRecordRegistration> fieldRecordRegistrations)
         {

@@ -49,7 +49,7 @@ namespace Test.P7.GraphQLCoreTest
         public void default_culture_kvo_success_request()
         {
             var d = AutofacStoreFactory.AutofacContainer;
- 
+
             var dd = AutofacStoreFactory.Resolve<IQueryFieldRecordRegistration>();
             var cc = AutofacStoreFactory.Resolve<IQueryFieldRecordRegistrationStore>();
             var id = @"Test.P7.GraphQLCoreTest.Resources.Main,Test.P7.GraphQLCoreTest";
@@ -83,7 +83,7 @@ namespace Test.P7.GraphQLCoreTest
                   resource(input: $input)
                 }";
 
-       
+
             var expected = @"{'resource':[{'key': 'Hello','value': 'Hello'}]}";
             AssertQuerySuccess(query, expected, gqlInputs);
 
