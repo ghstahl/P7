@@ -42,9 +42,6 @@ namespace P7.Globalization
 
                 Resolve = async context =>
                 {
-                    var result = await Task.Run(() =>
-                    {
-
                         var input = context.GetArgument<ResourceQueryHandle>("input");
                         CultureInfo currentCulture = new CultureInfo("en-US");
                         if (!string.IsNullOrEmpty(input.Culture))
@@ -58,7 +55,7 @@ namespace P7.Globalization
                                 currentCulture = new CultureInfo("en-US");
                             }
                         }
-                        var obj = _resourceFetcher.GetResourceSet(
+                        var obj = await _resourceFetcher.GetResourceSetAsync(
                             new ResourceQueryHandle()
                             {
                                 Culture = currentCulture.Name,
@@ -66,11 +63,8 @@ namespace P7.Globalization
                                 Treatment = input.Treatment
                             });
                         return obj;
-                    });
-                    return result;
                 }
             });
-
         }
         public override IEnumerable<FieldRecord<StringGraphType>> GetStringGraphTypes()
         {

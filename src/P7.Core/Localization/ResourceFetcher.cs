@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Localization;
 using P7.Core.Localization.Treatment;
@@ -71,6 +72,12 @@ namespace P7.Core.Localization
             });
 
             var result = value != null ? value.Value : newValue.Value;
+            return result;
+        }
+
+        public Task<object> GetResourceSetAsync(ResourceQueryHandle input)
+        {
+            var result = Task.Run(() => GetResourceSet(input));
             return result;
         }
     }
