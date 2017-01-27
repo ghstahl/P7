@@ -68,7 +68,8 @@
     "IdentityServer4": "1.0.2",
     "IdentityServer4.AccessTokenValidation": "1.0.4",
     "GraphQL-Parser": "2.0.0",
-    "Autofac": "4.3.0" },
+    "Autofac": "4.3.0",
+    "P7.GraphQLCore": "1.0.0-*" },
 
   "tools": {
     "Microsoft.AspNetCore.Razor.Tools": "1.0.0-preview2-final",
