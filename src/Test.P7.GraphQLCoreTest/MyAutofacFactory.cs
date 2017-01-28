@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using Autofac;
@@ -8,6 +9,9 @@ using GraphQL;
 using GraphQL.Http;
 using GraphQL.Types;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Localization;
 using P7.GraphQLCore;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.DotNet.InternalAbstractions;
@@ -32,6 +36,7 @@ namespace Test.P7.GraphQLCoreTest
                     {
                         Assembly.Load(new AssemblyName("P7.Core")),
                         Assembly.Load(new AssemblyName("P7.Globalization")),
+                        Assembly.Load(new AssemblyName("P7.BlogStore.Hugo")),
                         Assembly.Load(new AssemblyName("P7.GraphQLCore"))
                     };
 
@@ -41,7 +46,23 @@ namespace Test.P7.GraphQLCoreTest
 
 
                     builder.RegisterInstance(Global.HostingEnvironment).As<IHostingEnvironment>();
-                 
+                    var httpContextAccessor = A.Fake<IHttpContextAccessor>();
+                    var httpContext = A.Fake<HttpContext>();
+                    var featureCollection = A.Fake<IFeatureCollection>();
+                    var requestCultureFeature = A.Fake<IRequestCultureFeature>();
+                    var requestCulture = new RequestCulture(new CultureInfo("en-US"));
+                    A.CallTo(() => httpContextAccessor.HttpContext).Returns(httpContext);
+                    A.CallTo(() => httpContext.Features).Returns(featureCollection);
+                    A.CallTo(() => featureCollection.Get<IRequestCultureFeature>()).Returns(requestCultureFeature);
+                    A.CallTo(() => requestCultureFeature.RequestCulture).Returns(requestCulture);
+
+
+
+
+
+                    builder.RegisterInstance(httpContextAccessor).As<IHttpContextAccessor>();
+                    builder.RegisterType<GraphQLUserContext>();
+
                     builder.RegisterAssemblyModules(assemblies.ToArray());
 
                     var locOptions = new LocalizationOptions();
@@ -57,7 +78,7 @@ namespace Test.P7.GraphQLCoreTest
                     builder.RegisterType<MemoryCache>()
                        .As<IMemoryCache>();
 
-                  
+
                     var container = builder.Build();
 
                     _autofacContainer = container;
@@ -71,6 +92,6 @@ namespace Test.P7.GraphQLCoreTest
         {
             return AutofacContainer.Resolve<T>();
         }
-       
+
     }
 }

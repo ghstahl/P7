@@ -11,6 +11,7 @@ using GraphQL.Types;
 using GraphQL.Validation;
 using GraphQLParser.Exceptions;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using P7.Core;
@@ -24,6 +25,7 @@ namespace Test.P7.GraphQLCoreTest
         public IDocumentExecuter Executer { get; private set; }
 
         public IDocumentWriter Writer { get; private set; }
+        public GraphQLUserContext GraphQLUserContext { get; private set; }
         public ISchema Schema
         {
             get
@@ -38,12 +40,16 @@ namespace Test.P7.GraphQLCoreTest
         {
             var hostName = typeof(MyAutofacFactory).GetTypeInfo().Assembly.GetName().Name;
             var hostingEnvironment = A.Fake<IHostingEnvironment>();
+            var httpContextAccessor = A.Fake<IHttpContextAccessor>();
+
+
             hostingEnvironment.ApplicationName = hostName;
             Global.HostingEnvironment = hostingEnvironment;
             AutofacStoreFactory = new MyAutofacFactory();
 
             Executer = AutofacStoreFactory.Resolve<IDocumentExecuter>();
             Writer = AutofacStoreFactory.Resolve<IDocumentWriter>();
+            GraphQLUserContext = AutofacStoreFactory.Resolve<GraphQLUserContext>();
         }
         [TestMethod]
         public void default_culture_kvo_success_request()
@@ -62,7 +68,7 @@ namespace Test.P7.GraphQLCoreTest
                 }";
 
             var expected = @"{'resource':{'hello':'Hello'}}";
-            AssertQuerySuccess(query, expected, gqlInputs);
+            AssertQuerySuccess(query, expected, gqlInputs,root:null,userContext: GraphQLUserContext);
 
 
             Assert.AreEqual(42, 42);
@@ -85,7 +91,7 @@ namespace Test.P7.GraphQLCoreTest
 
 
             var expected = @"{'resource':[{'key': 'Hello','value': 'Hello'}]}";
-            AssertQuerySuccess(query, expected, gqlInputs);
+            AssertQuerySuccess(query, expected, gqlInputs, root: null, userContext: GraphQLUserContext);
 
 
             Assert.AreEqual(42, 42);

@@ -21,7 +21,6 @@
     },
     "BundlerMinifier.Core": "2.2.306",
     "Microsoft.AspNetCore.Diagnostics": "1.1.0",
-    "Microsoft.AspNetCore.Mvc": "1.1.0",
     "Microsoft.AspNetCore.Routing": "1.1.0",
     "Microsoft.AspNetCore.Server.IISIntegration": "1.1.0",
     "Microsoft.AspNetCore.Server.Kestrel": "1.1.0",
@@ -38,8 +37,9 @@
     "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "1.1.0",
     "Microsoft.AspNetCore.Identity": "1.1.0",
     "P7.Core": "1.0.0-*",
-    "GraphQL": "0.14.6.657",
     "GraphQL-Parser": "2.0.0",
-    "P7.GraphQLCore": "1.0.0-*"
+    "P7.GraphQLCore": "1.0.0-*",
+    "GraphQL": "0.14.6.657",
+    "Microsoft.AspNetCore.Mvc": "1.1.1"
   }
 }
