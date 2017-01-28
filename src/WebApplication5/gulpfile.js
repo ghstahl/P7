@@ -60,7 +60,7 @@ gulp.task('copy:p7.main:areas', function () {
 
 gulp.task('copy:P7.GraphQLViewer', function () {
     return gulp.src(['../P7.GraphQLViewer/static/**'])
-        .pipe(gulp.dest('static/'));
+        .pipe(gulp.dest('wwwroot/static/'));
 });
 
 gulp.task('copy:P7.GraphQLViewer:areas', function () {

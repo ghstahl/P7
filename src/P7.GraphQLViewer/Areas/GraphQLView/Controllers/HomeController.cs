@@ -1,11 +1,10 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace P7.GraphQLViewer.Areas.Main.Controllers
+namespace P7.GraphQLViewer.Areas.GraphQLView.Controllers
 {
-    [Area("GraphQL")]
+    [Area("GraphQLView")]
     public class HomeController : Controller
     {
         private ILogger Logger { get; set; }
