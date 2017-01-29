@@ -19,12 +19,15 @@ using Microsoft.DotNet.PlatformAbstractions;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
+using P7.BlogStore.Hugo;
 using P7.Core;
 
 namespace Test.P7.GraphQLCoreTest
 {
     public class MyAutofacFactory
     {
+        public IBiggyConfiguration BiggyConfiguration { get; set; }
+
         private IContainer _autofacContainer;
         public IContainer AutofacContainer
         {
@@ -44,6 +47,7 @@ namespace Test.P7.GraphQLCoreTest
 
                     var builder = new ContainerBuilder();
 
+                    builder.RegisterInstance(BiggyConfiguration).As<IBiggyConfiguration>();
 
                     builder.RegisterInstance(Global.HostingEnvironment).As<IHostingEnvironment>();
                     var httpContextAccessor = A.Fake<IHttpContextAccessor>();

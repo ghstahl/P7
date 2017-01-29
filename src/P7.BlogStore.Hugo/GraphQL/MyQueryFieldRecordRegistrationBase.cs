@@ -1,33 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Threading.Tasks;
 using GraphQL;
 using GraphQL.Types;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
+using P7.BlogStore.Core;
 using P7.Core.Localization;
 using P7.GraphQLCore;
 
-namespace P7.Globalization
+namespace P7.BlogStore.Hugo.GraphQL
 {
     public class MyQueryFieldRecordRegistrationBase : QueryFieldRecordRegistrationBase
     {
-        private IResourceFetcher _resourceFetcher;
-
+        private IBlogStore _blogStore;
         public MyQueryFieldRecordRegistrationBase(
-            IResourceFetcher resourceFetcher)
+            IBlogStore blogStore)
         {
-            _resourceFetcher = resourceFetcher;
+            _blogStore = blogStore;
         }
+
+
 
         protected override void PopulateStringGraphTypes()
         {
             ListStringGraphTypeFieldRecords.Add(new FieldRecord<StringGraphType>()
             {
-                Name = "resource",
-                QueryArguments = new QueryArguments(new QueryArgument<ResourceQueryInput> {Name = "input"}),
+                Name = "blog",
+                QueryArguments = new QueryArguments(new QueryArgument<BlogQueryInput> {Name = "input"}),
 
                 Resolve = async context =>
                 {
@@ -49,6 +49,7 @@ namespace P7.Globalization
                             currentCulture = new CultureInfo("en-US");
                         }
                     }
+                    /*
                     var obj = await _resourceFetcher.GetResourceSetAsync(
                         new ResourceQueryHandle()
                         {
@@ -57,6 +58,8 @@ namespace P7.Globalization
                             Treatment = input.Treatment
                         });
                     return obj;
+                    */
+                    return await Task.Run(()=> { return ""; });
                 }
             });
         }

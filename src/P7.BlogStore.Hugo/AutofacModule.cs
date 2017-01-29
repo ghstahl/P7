@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using P7.BlogStore.Core;
+using P7.BlogStore.Hugo.GraphQL;
 
 namespace P7.BlogStore.Hugo
 {
@@ -8,6 +9,7 @@ namespace P7.BlogStore.Hugo
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<HugoBlogStore>().As<IBlogStore>();
+            builder.RegisterType<BlogQueryInput>();
         }
     }
 }

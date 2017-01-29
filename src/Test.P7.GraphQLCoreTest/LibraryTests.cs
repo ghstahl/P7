@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -14,14 +15,23 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
+using P7.BlogStore.Hugo;
 using P7.Core;
 using P7.GraphQLCore;
 using Shouldly;
 namespace Test.P7.GraphQLCoreTest
 {
+    class MyBiggyConfiguration : IBiggyConfiguration
+    {
+        public string DatabaseName { get; set; }
+        public string FolderStorage { get; set; }
+    }
     [TestClass]
     public class LibraryTests
     {
+        public TenantDatabaseBiggyConfig GlobalTenantDatabaseBiggyConfig { get; set; }
+        private string _targetFolder;
+        protected string TargetFolder => _targetFolder;
         public IDocumentExecuter Executer { get; private set; }
 
         public IDocumentWriter Writer { get; private set; }
@@ -38,6 +48,17 @@ namespace Test.P7.GraphQLCoreTest
         [TestInitialize]
         public void Initialize()
         {
+            _targetFolder = Path.Combine(UnitTestHelpers.BaseDir, @"source");
+
+            GlobalTenantDatabaseBiggyConfig = new TenantDatabaseBiggyConfig();
+            GlobalTenantDatabaseBiggyConfig.UsingFolder(TargetFolder);
+            GlobalTenantDatabaseBiggyConfig.UsingTenantId(TenantDatabaseBiggyConfig.GlobalTenantId);
+            IBiggyConfiguration biggyConfiguration = new MyBiggyConfiguration()
+            {
+                FolderStorage = GlobalTenantDatabaseBiggyConfig.Folder,
+                DatabaseName = GlobalTenantDatabaseBiggyConfig.Database
+            };
+
             var hostName = typeof(MyAutofacFactory).GetTypeInfo().Assembly.GetName().Name;
             var hostingEnvironment = A.Fake<IHostingEnvironment>();
             var httpContextAccessor = A.Fake<IHttpContextAccessor>();
@@ -45,7 +66,7 @@ namespace Test.P7.GraphQLCoreTest
 
             hostingEnvironment.ApplicationName = hostName;
             Global.HostingEnvironment = hostingEnvironment;
-            AutofacStoreFactory = new MyAutofacFactory();
+            AutofacStoreFactory = new MyAutofacFactory() {BiggyConfiguration = biggyConfiguration };
 
             Executer = AutofacStoreFactory.Resolve<IDocumentExecuter>();
             Writer = AutofacStoreFactory.Resolve<IDocumentWriter>();

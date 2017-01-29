@@ -11,9 +11,10 @@ namespace P7.BlogStore.Hugo
     {
         protected IBiggyConfiguration _biggyConfiguration;
 
-        protected HugoStoreBase(IBiggyConfiguration biggyConfiguration)
+        protected HugoStoreBase(IBiggyConfiguration biggyConfiguration, string collection)
         {
             _biggyConfiguration = biggyConfiguration;
+            _collection = collection;
         }
         protected static object TheLock
         {
@@ -21,10 +22,11 @@ namespace P7.BlogStore.Hugo
         }
 
         protected JsonStore<T> _theStore = null;
+        private string _collection;
 
         protected JsonStore<T> Store => _theStore ?? (_theStore =
                                             new JsonStore<T>(_biggyConfiguration.FolderStorage,
-                                                _biggyConfiguration.DatabaseName, _biggyConfiguration.CollectionName));
+                                                _biggyConfiguration.DatabaseName, _collection));
         protected async Task GoAsync(Action action)
         {
             await Task.Run(action);

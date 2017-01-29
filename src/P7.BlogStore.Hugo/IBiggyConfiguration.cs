@@ -3,7 +3,6 @@
     public interface IBiggyConfiguration
     {
         string DatabaseName { get;  }
-        string CollectionName { get; }
         string FolderStorage { get; }
     }
 }
