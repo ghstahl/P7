@@ -1,19 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace P7.BlogStore.Core
 {
     public class Blog: IDocumentBase
     {
+        [JsonIgnore]
+        public bool EnableDeepCompare { get; set; }
         public Guid Id { get; set; }
         public BlogMetaData MetaData { get; set; }
         public List<string> Categories { get; set; }
         public List<string> Tags { get; set; }
         public string Data { get; set; }
         public DateTime TimeStamp { get; set; }
+        public string Title { get; set; }
+        public string Summary { get; set; }
         public Blog()
         {
+            EnableDeepCompare = false;
         }
 
         public Blog(Blog doc)
@@ -24,9 +30,29 @@ namespace P7.BlogStore.Core
             this.MetaData = doc.MetaData;
             this.Tags = doc.Tags;
             this.TimeStamp = doc.TimeStamp;
+            this.Summary = doc.Summary;
+            this.Title = doc.Title;
         }
-
+       
         public override bool Equals(object obj)
+        {
+            return EnableDeepCompare ? DeepEquals(obj) : ShallowEquals(obj);
+        }
+        public bool ShallowEquals(object obj)
+        {
+            var other = obj as Blog;
+            if (other == null)
+            {
+                return false;
+            }
+
+            if (!Id.IsEqual(other.Id))
+            {
+                return false;
+            }
+            return true;
+        }
+        public bool DeepEquals(object obj)
         {
             var other = obj as Blog;
             if (other == null)
@@ -42,7 +68,7 @@ namespace P7.BlogStore.Core
                 if (Categories.Except(other.Categories).Any())
                     return false;
             }
-            else if(!bothNull)
+            else if (!bothNull)
             {
                 return false;
             }
@@ -75,9 +101,17 @@ namespace P7.BlogStore.Core
             {
                 return false;
             }
+            if (!Summary.IsEqual(other.Summary))
+            {
+                return false;
+            }
+            if (!Title.IsEqual(other.Title))
+            {
+                return false;
+            }
             return true;
-        }
 
+        }
         public override int GetHashCode()
         {
             return Id.GetHashCode();

@@ -153,7 +153,9 @@ namespace Test.P7.GraphQLCoreTest
                 Tags = new List<string>() {"t1", "t2"},
                 MetaData = new BlogMetaData() {Category = "c0", Version = "1.0.0.0"},
                 Data = "This is my blog",
-                TimeStamp = simpleTS
+                TimeStamp = simpleTS,
+                Summary = "My Summary",
+                Title = "My Title"
             };
             var jsonBlog = JsonDocumentWriter.SerializeObjectSingleQuote(blog);
 
@@ -186,6 +188,7 @@ namespace Test.P7.GraphQLCoreTest
             Dictionary<string, object> dataExpected = new Dictionary<string, object> {{"blog", blog}};
            
             string additionalInfo = null;
+            blog.EnableDeepCompare = true;
             data.ShouldBe(dataExpected, additionalInfo);
         }
 
