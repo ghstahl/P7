@@ -15,8 +15,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
+using P7.BlogStore.Core;
 using P7.BlogStore.Hugo;
 using P7.Core;
+using P7.Core.Writers;
 using P7.GraphQLCore;
 using Shouldly;
 namespace Test.P7.GraphQLCoreTest
@@ -27,8 +29,19 @@ namespace Test.P7.GraphQLCoreTest
         public string FolderStorage { get; set; }
     }
     [TestClass]
-    public class LibraryTests
+    [DeploymentItem("source", "source")]
+    public class GraphQLTests
     {
+        private JsonDocumentWriter _DocumentWriter;
+
+        protected JsonDocumentWriter JsonDocumentWriter
+        {
+            get
+            {
+                return _DocumentWriter ?? new JsonDocumentWriter();
+            }
+        }
+
         public TenantDatabaseBiggyConfig GlobalTenantDatabaseBiggyConfig { get; set; }
         private string _targetFolder;
         protected string TargetFolder => _targetFolder;
@@ -48,8 +61,8 @@ namespace Test.P7.GraphQLCoreTest
         [TestInitialize]
         public void Initialize()
         {
-            _targetFolder = Path.Combine(UnitTestHelpers.BaseDir, @"source");
-
+            _targetFolder = Path.Combine(UnitTestHelpers.BaseDir, @"source", DateTime.Now.ToString("yyyy-dd-M__HH-mm-ss"));
+            Directory.CreateDirectory(_targetFolder);
             GlobalTenantDatabaseBiggyConfig = new TenantDatabaseBiggyConfig();
             GlobalTenantDatabaseBiggyConfig.UsingFolder(TargetFolder);
             GlobalTenantDatabaseBiggyConfig.UsingTenantId(TenantDatabaseBiggyConfig.GlobalTenantId);
@@ -115,7 +128,58 @@ namespace Test.P7.GraphQLCoreTest
             AssertQuerySuccess(query, expected, gqlInputs, root: null, userContext: GraphQLUserContext);
 
 
+
             Assert.AreEqual(42, 42);
+        }
+
+        [TestMethod]
+        public void blog_add_query_request()
+        {
+            var d = AutofacStoreFactory.AutofacContainer;
+
+            var dd = AutofacStoreFactory.Resolve<IMutationFieldRecordRegistration>();
+            var cc = AutofacStoreFactory.Resolve<IMutationFieldRecordRegistrationStore>();
+
+            Blog blog = new Blog()
+            {
+                Id = Guid.NewGuid(),
+                Categories = new List<string>() {"c1", "c2"},
+                Tags = new List<string>() {"t1", "t2"},
+                MetaData = new BlogMetaData() {Category = "c0", Version = "1.0.0.0"},
+                Data = "This is my blog"
+            };
+            var jsonBlog = JsonDocumentWriter.SerializeObjectSingleQuote(blog);
+
+            var rawInput = $"{{'input': {jsonBlog} }}";
+
+            var gqlInputs = rawInput.ToInputs();
+            var mutation = @"
+                mutation Q($input: BlogMutationInput!) {
+                  blog(input: $input)
+                }";
+
+            var expected = @"{'blog':true}";
+            AssertQuerySuccess(mutation, expected, gqlInputs, root: null, userContext: GraphQLUserContext);
+
+
+            rawInput =
+                $"{{'input': {{'id':'{blog.Id.ToString()}' }} }}";
+            gqlInputs = rawInput.ToInputs();
+            var query = @"
+                query Q($input: BlogQueryInput!) {
+                  blog(input: $input)
+                }";
+
+
+            var runResult = ExecuteQuery(query,  gqlInputs, root: null, userContext: GraphQLUserContext);
+            bool bRun = runResult.Errors?.Any() == true;
+            Assert.IsFalse(bRun);
+
+            Dictionary<string, object> data = (Dictionary<string, object>) runResult.Data;
+            Dictionary<string, object> dataExpected = new Dictionary<string, object> {{"blog", blog}};
+           
+            string additionalInfo = null;
+            data.ShouldBe(dataExpected, additionalInfo);
         }
 
         public ExecutionResult CreateQueryResult(string result)
@@ -179,13 +243,13 @@ namespace Test.P7.GraphQLCoreTest
             return runResult;
         }
         public ExecutionResult AssertQuery(
-            string query,
-            ExecutionResult expectedExecutionResult,
-            Inputs inputs,
-            object root,
-            object userContext = null,
-            CancellationToken cancellationToken = default(CancellationToken),
-            IEnumerable<IValidationRule> rules = null)
+           string query,
+           ExecutionResult expectedExecutionResult,
+           Inputs inputs,
+           object root,
+           object userContext = null,
+           CancellationToken cancellationToken = default(CancellationToken),
+           IEnumerable<IValidationRule> rules = null)
         {
             var runResult = Executer.ExecuteAsync(
                 Schema,
@@ -218,5 +282,45 @@ namespace Test.P7.GraphQLCoreTest
 
             return runResult;
         }
+
+        
+
+        public ExecutionResult ExecuteQuery(
+         string query,
+         Inputs inputs,
+         object root,
+         object userContext = null,
+         CancellationToken cancellationToken = default(CancellationToken),
+         IEnumerable<IValidationRule> rules = null)
+        {
+            var runResult = Executer.ExecuteAsync(
+                Schema,
+                root,
+                query,
+                null,
+                inputs,
+                userContext,
+                cancellationToken,
+                rules
+            ).Result;
+
+            var writtenResult = Writer.Write(runResult);
+
+            // #if DEBUG
+            //             Console.WriteLine(writtenResult);
+            // #endif
+
+            string additionalInfo = null;
+
+            if (runResult.Errors?.Any() == true)
+            {
+                additionalInfo = string.Join(Environment.NewLine, runResult.Errors
+                    .Where(x => x.InnerException is GraphQLSyntaxErrorException)
+                    .Select(x => x.InnerException.Message));
+            }
+
+            return runResult;
+        }
+
     }
 }

@@ -40,7 +40,8 @@ namespace Test.P7.GraphQLCoreTest
                         Assembly.Load(new AssemblyName("P7.Core")),
                         Assembly.Load(new AssemblyName("P7.Globalization")),
                         Assembly.Load(new AssemblyName("P7.BlogStore.Hugo")),
-                        Assembly.Load(new AssemblyName("P7.GraphQLCore"))
+                        Assembly.Load(new AssemblyName("P7.GraphQLCore")),
+                        Assembly.Load(new AssemblyName("P7.BlogStore.Core"))
                     };
 
 

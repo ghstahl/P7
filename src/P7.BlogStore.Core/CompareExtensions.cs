@@ -4,13 +4,14 @@
     {
         public static bool IsEqual(this object a, object b)
         {
-            if (a != null && b != null)
+            var bothNull = a == null && b == null;
+            var bothNotNull = a != null && b != null;
+            if (bothNotNull)
             {
                 if (!a.Equals(b))
                     return false;
             }
-
-            if (!(a == null && b == null))
+            else if (!bothNull)
             {
                 return false;
             }

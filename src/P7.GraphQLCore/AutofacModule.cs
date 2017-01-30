@@ -15,8 +15,8 @@ namespace P7.GraphQLCore
         protected override void Load(ContainerBuilder builder)
         {
 
-            // This is a global sweep to find all types that 
-            // implement IMutationFieldRecordRegistration and IQueryFieldRecordRegistration.  
+            // This is a global sweep to find all types that
+            // implement IMutationFieldRecordRegistration and IQueryFieldRecordRegistration.
             // We then register every one of them.
             // Future would be to database this, but for now if it is referenced it is in.
             var myTypes = TypeHelper<IQueryFieldRecordRegistration>
@@ -44,11 +44,12 @@ namespace P7.GraphQLCore
 
 
             builder.RegisterType<GraphQLDocumentBuilder>().As<IDocumentBuilder>();
-            builder.RegisterType<DocumentValidator>().As<IDocumentValidator>(); 
+            builder.RegisterType<DocumentValidator>().As<IDocumentValidator>();
             builder.RegisterType<ComplexityAnalyzer>().As<IComplexityAnalyzer>();
             builder.RegisterType<DocumentExecuter>().As<IDocumentExecuter>().SingleInstance();
             builder.RegisterInstance(new DocumentWriter(indent: true)).As<IDocumentWriter>();
             builder.RegisterType<QueryCore>().AsSelf();
+            builder.RegisterType<MutationCore>().AsSelf();
             builder.RegisterType<SchemaCore>().As<ISchema>();
 
             builder.Register<Func<Type, GraphType>>(c =>

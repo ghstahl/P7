@@ -5,51 +5,69 @@ namespace P7.GraphQLCore
 {
     public abstract class MutationFieldRecordRegistrationBase : IMutationFieldRecordRegistration
     {
-        public virtual IEnumerable<FieldRecord<StringGraphType>> GetStringGraphTypes()
+        private List<FieldRecord<StringGraphType>> _listStringGraphTypeFieldRecords;
+
+        protected List<FieldRecord<StringGraphType>> ListStringGraphTypeFieldRecords
         {
-            return null;
+            get
+            {
+                if (_listStringGraphTypeFieldRecords == null)
+                {
+                    _listStringGraphTypeFieldRecords = new List<FieldRecord<StringGraphType>>();
+                    PopulateStringGraphTypes();
+                }
+                return _listStringGraphTypeFieldRecords;
+            }
         }
-        public virtual IEnumerable<FieldRecord<BooleanGraphType>> GetBooleanGraphTypes()
+
+        protected virtual void PopulateStringGraphTypes()
+        {
+        }
+        public IEnumerable<FieldRecord<StringGraphType>> GetStringGraphTypes()
+        {
+            return ListStringGraphTypeFieldRecords;
+        }
+        public IEnumerable<FieldRecord<BooleanGraphType>> GetBooleanGraphTypes()
         {
             return null;
         }
 
-        public virtual IEnumerable<FieldRecord<DateGraphType>> GetDateGraphTypes()
+        public IEnumerable<FieldRecord<DateGraphType>> GetDateGraphTypes()
         {
             return null;
         }
 
-        public virtual IEnumerable<FieldRecord<DecimalGraphType>> GetDecimalGraphTypes()
+        public IEnumerable<FieldRecord<DecimalGraphType>> GetDecimalGraphTypes()
         {
             return null;
         }
 
-        public virtual IEnumerable<FieldRecord<EnumerationGraphType>> GetEnumerationGraphTypes()
+        public IEnumerable<FieldRecord<EnumerationGraphType>> GetEnumerationGraphTypes()
         {
             return null;
         }
 
-        public virtual IEnumerable<FieldRecord<FloatGraphType>> GetFloatGraphTypes()
+        public IEnumerable<FieldRecord<FloatGraphType>> GetFloatGraphTypes()
         {
             return null;
         }
 
-        public virtual IEnumerable<FieldRecord<IntGraphType>> GetIntGraphTypeTypes()
+        public IEnumerable<FieldRecord<IntGraphType>> GetIntGraphTypeTypes()
         {
             return null;
         }
 
-        public virtual IEnumerable<FieldRecord<InterfaceGraphType>> GetInterfaceGraphTypes()
+        public IEnumerable<FieldRecord<InterfaceGraphType>> GetInterfaceGraphTypes()
         {
             return null;
         }
 
-        public virtual IEnumerable<FieldRecord<ListGraphType>> GetListGraphTypes()
+        public IEnumerable<FieldRecord<ListGraphType>> GetListGraphTypes()
         {
             return null;
         }
 
-        public virtual IEnumerable<FieldRecord<UnionGraphType>> GetUnionGraphTypes()
+        public IEnumerable<FieldRecord<UnionGraphType>> GetUnionGraphTypes()
         {
             return null;
         }

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using GraphQL.Types;
+﻿using GraphQL.Types;
 
-namespace P7.BlogStore.Hugo.GraphQL
+namespace P7.BlogStore.Core.GraphQL
 {
     public class BlogQueryInput : InputObjectGraphType
     {

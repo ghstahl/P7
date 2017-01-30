@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace P7.BlogStore.Core
@@ -10,8 +11,8 @@ namespace P7.BlogStore.Core
     public class Blog: IDocumentBase
     {
         public BlogMetaData MetaData { get; set; }
-        public string[] Categories { get; set; }
-        public string[] Tags { get; set; }
+        public List<string> Categories { get; set; }
+        public List<string> Tags { get; set; }
         public string Data { get; set; }
 
         public Blog()
@@ -35,24 +36,31 @@ namespace P7.BlogStore.Core
                 return false;
             }
 
-            if (Categories != null && other.Categories != null)
+            var bothNull = Categories == null && other.Categories == null;
+            var bothNotNull = Categories != null && other.Categories != null;
+
+            if (bothNotNull)
             {
                 if (Categories.Except(other.Categories).Any())
                     return false;
             }
-            if (!(Categories == null && other.Categories == null))
+            else if(!bothNull)
             {
                 return false;
             }
-            if (Tags != null && other.Tags != null)
+
+            bothNull = Tags == null && other.Tags == null;
+            bothNotNull = Tags != null && other.Tags != null;
+            if (bothNotNull)
             {
                 if (Tags.Except(other.Tags).Any())
                     return false;
             }
-            if (!(Tags == null && other.Tags == null))
+            else if (!bothNull)
             {
                 return false;
             }
+
             if (!Id.IsEqual(other.Id))
             {
                 return false;
