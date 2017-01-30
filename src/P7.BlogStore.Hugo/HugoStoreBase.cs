@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hugo.Data.Json;
 using P7.BlogStore.Core;
+using P7.Core.Utils;
 
 namespace P7.BlogStore.Hugo
 {

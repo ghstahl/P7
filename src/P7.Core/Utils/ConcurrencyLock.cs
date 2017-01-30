@@ -1,6 +1,6 @@
-namespace P7.BlogStore.Hugo
+namespace P7.Core.Utils
 {
-    static class ConcurrencyLock
+    public static class ConcurrencyLock
     {
         private static object _theLock;
         public static object TheLock
