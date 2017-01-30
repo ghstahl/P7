@@ -11,7 +11,7 @@ namespace P7.BlogStore.Core
         public List<string> Categories { get; set; }
         public List<string> Tags { get; set; }
         public string Data { get; set; }
-
+        public DateTime TimeStamp { get; set; }
         public Blog()
         {
         }
@@ -23,6 +23,7 @@ namespace P7.BlogStore.Core
             this.Data = doc.Data;
             this.MetaData = doc.MetaData;
             this.Tags = doc.Tags;
+            this.TimeStamp = doc.TimeStamp;
         }
 
         public override bool Equals(object obj)
@@ -67,6 +68,10 @@ namespace P7.BlogStore.Core
                 return false;
             }
             if (!MetaData.IsEqual(other.MetaData))
+            {
+                return false;
+            }
+            if (!TimeStamp.IsEqual(other.TimeStamp))
             {
                 return false;
             }

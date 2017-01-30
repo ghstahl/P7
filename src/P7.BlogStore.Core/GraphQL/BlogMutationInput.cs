@@ -10,6 +10,7 @@ namespace P7.BlogStore.Core.GraphQL
             Field<NonNullGraphType<StringGraphType>>("id");
             Field<NonNullGraphType<StringGraphType>>("data");
             Field<NonNullGraphType<BlogMetaDataType>>("metaData");
+            Field<NonNullGraphType<DateGraphType>>("timeStamp");
             Field<ListGraphType<StringGraphType>>("tags");
             Field<ListGraphType<StringGraphType>>("categories");
         }

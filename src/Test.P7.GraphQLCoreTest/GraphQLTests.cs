@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -139,14 +140,20 @@ namespace Test.P7.GraphQLCoreTest
 
             var dd = AutofacStoreFactory.Resolve<IMutationFieldRecordRegistration>();
             var cc = AutofacStoreFactory.Resolve<IMutationFieldRecordRegistrationStore>();
+            var timeStamp = DateTime.UtcNow;
+            var tsS = timeStamp.ToString(JsonDocumentWriter.JsonSerializerSettings.DateFormatString);
 
+            var simpleTS = DateTime.Parse(tsS, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal);
+
+          
             Blog blog = new Blog()
             {
                 Id = Guid.NewGuid(),
                 Categories = new List<string>() {"c1", "c2"},
                 Tags = new List<string>() {"t1", "t2"},
                 MetaData = new BlogMetaData() {Category = "c0", Version = "1.0.0.0"},
-                Data = "This is my blog"
+                Data = "This is my blog",
+                TimeStamp = simpleTS
             };
             var jsonBlog = JsonDocumentWriter.SerializeObjectSingleQuote(blog);
 
