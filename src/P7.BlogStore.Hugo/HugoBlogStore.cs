@@ -4,8 +4,11 @@ namespace P7.BlogStore.Hugo
 {
     public class HugoBlogStore: HugoStoreBase<Blog>, IBlogStore
     {
-        public HugoBlogStore(IBiggyConfiguration biggyConfiguration) : base(biggyConfiguration,"blog")
+        public HugoBlogStore(IBiggyConfiguration biggyConfiguration) :
+            base(biggyConfiguration,"blog")
         {
         }
+
+
     }
 }

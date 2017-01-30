@@ -4,12 +4,9 @@ using System.Linq;
 
 namespace P7.BlogStore.Core
 {
-    public interface IDocumentBase
-    {
-        Guid Id { get;  }
-    }
     public class Blog: IDocumentBase
     {
+        public Guid Id { get; set; }
         public BlogMetaData MetaData { get; set; }
         public List<string> Categories { get; set; }
         public List<string> Tags { get; set; }
@@ -80,7 +77,5 @@ namespace P7.BlogStore.Core
         {
             return Id.GetHashCode();
         }
-
-        public Guid Id { get; set; }
     }
 }
