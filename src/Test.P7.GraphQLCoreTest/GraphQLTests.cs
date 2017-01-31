@@ -145,7 +145,7 @@ namespace Test.P7.GraphQLCoreTest
 
             var simpleTS = DateTime.Parse(tsS, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal);
 
-          
+
             Blog blog = new Blog()
             {
                 Id = Guid.NewGuid(),
@@ -186,7 +186,7 @@ namespace Test.P7.GraphQLCoreTest
 
             Dictionary<string, object> data = (Dictionary<string, object>) runResult.Data;
             Dictionary<string, object> dataExpected = new Dictionary<string, object> {{"blog", blog}};
-           
+
             string additionalInfo = null;
             blog.EnableDeepCompare = true;
             data.ShouldBe(dataExpected, additionalInfo);
@@ -293,7 +293,7 @@ namespace Test.P7.GraphQLCoreTest
             return runResult;
         }
 
-        
+
 
         public ExecutionResult ExecuteQuery(
          string query,

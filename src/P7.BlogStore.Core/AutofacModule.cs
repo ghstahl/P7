@@ -8,10 +8,12 @@ namespace P7.BlogStore.Core
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<BlogQueryInput>();
+            builder.RegisterType<BlogsQueryInput>();
             builder.RegisterType<BlogMutationInput>();
             builder.RegisterType<BlogMetaDataType>();
             builder.RegisterType<Blog>();
             builder.RegisterType<BlogComment>();
+            
         }
     }
 }

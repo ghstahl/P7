@@ -1,5 +1,5 @@
-﻿using System.IO;
-using BinaryFormatter;
+﻿using System;
+using System.IO;
 using ProtoBuf;
 
 namespace P7.Store
@@ -18,7 +18,14 @@ namespace P7.Store
             }
             return byteArray;
         }
-
+        public static string SerializeToBase64String(this PagingState pagingState)
+        {
+            if (pagingState == null)
+                return null;
+            byte[] bytes = pagingState.Serialize();
+            var psString = Convert.ToBase64String(bytes);
+            return psString;
+        }
         public static PagingState Deserialize(this byte[] bytes)
         {
             if (bytes == null)
@@ -28,6 +35,14 @@ namespace P7.Store
             {
                 pagingState = Serializer.Deserialize<PagingState>(memoryResponse);
             }
+            return pagingState;
+        }
+        public static PagingState DeserializeFromBase64String(this string psString)
+        {
+            if (string.IsNullOrEmpty(psString))
+                return new PagingState() { CurrentIndex = 0 };
+            var bytes = Convert.FromBase64String(psString);
+            PagingState pagingState = bytes.Deserialize();
             return pagingState;
         }
     }
