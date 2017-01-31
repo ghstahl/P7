@@ -11,11 +11,12 @@ namespace P7.BlogStore.Hugo
     public class HugoStoreBase<T> where T: class, IDocumentBase, new()
     {
         protected IBiggyConfiguration _biggyConfiguration;
-
-        protected HugoStoreBase(IBiggyConfiguration biggyConfiguration, string collection)
+        private ISorter<T> _sorter;
+        protected HugoStoreBase(IBiggyConfiguration biggyConfiguration, string collection, ISorter<T> sorter)
         {
             _biggyConfiguration = biggyConfiguration;
             _collection = collection;
+            _sorter = sorter;
         }
         protected static object TheLock
         {
@@ -25,9 +26,21 @@ namespace P7.BlogStore.Hugo
         protected JsonStore<T> _theStore = null;
         private string _collection;
 
-        protected JsonStore<T> Store => _theStore ?? (_theStore =
-                                            new JsonStore<T>(_biggyConfiguration.FolderStorage,
-                                                _biggyConfiguration.DatabaseName, _collection));
+        protected JsonStore<T> Store
+        {
+            get
+            {
+                if (_theStore == null)
+                {
+                    _theStore =
+                        new JsonStore<T>(_biggyConfiguration.FolderStorage,
+                            _biggyConfiguration.DatabaseName, _collection);
+                    _theStore.Sorter = _sorter;
+                }
+                return _theStore;
+            }
+        }
+
         protected async Task GoAsync(Action action)
         {
             await Task.Run(action);

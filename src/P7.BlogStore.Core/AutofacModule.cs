@@ -10,6 +10,8 @@ namespace P7.BlogStore.Core
             builder.RegisterType<BlogQueryInput>();
             builder.RegisterType<BlogMutationInput>();
             builder.RegisterType<BlogMetaDataType>();
+            builder.RegisterType<Blog>();
+            builder.RegisterType<BlogComment>();
         }
     }
 }
