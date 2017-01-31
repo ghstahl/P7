@@ -58,6 +58,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		global.json = global.json
 	EndProjectSection
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "P7.Store", "src\P7.Store\P7.Store.xproj", "{C093F641-24A1-4918-9AF0-49C0370EE65C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -140,6 +142,10 @@ Global
 		{8E5738CC-4A2F-490E-96CC-5D621EB9E7FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E5738CC-4A2F-490E-96CC-5D621EB9E7FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E5738CC-4A2F-490E-96CC-5D621EB9E7FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C093F641-24A1-4918-9AF0-49C0370EE65C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C093F641-24A1-4918-9AF0-49C0370EE65C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C093F641-24A1-4918-9AF0-49C0370EE65C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C093F641-24A1-4918-9AF0-49C0370EE65C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -164,5 +170,6 @@ Global
 		{B717FE5F-6AB8-4EDD-AE71-8E421B259105} = {005C0CCC-FF11-48F1-BCC6-D07950675B14}
 		{7D73432C-DDB8-4571-AEC7-268C4EE3598F} = {C07E3070-8CEB-4D3C-867B-CD091826C516}
 		{8E5738CC-4A2F-490E-96CC-5D621EB9E7FA} = {C07E3070-8CEB-4D3C-867B-CD091826C516}
+		{C093F641-24A1-4918-9AF0-49C0370EE65C} = {C07E3070-8CEB-4D3C-867B-CD091826C516}
 	EndGlobalSection
 EndGlobal

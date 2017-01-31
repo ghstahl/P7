@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace P7.BlogStore.Core
+namespace P7.Store
 {
     public interface IPage<T> : ICollection<T>, IEnumerable<T>, IEnumerable
     {

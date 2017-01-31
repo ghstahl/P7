@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using P7.Store;
 
 namespace P7.BlogStore.Core
 {

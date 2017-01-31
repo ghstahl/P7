@@ -40,6 +40,29 @@ namespace P7.BlogStore.Core.GraphQL
                     //                    return await Task.Run(() => { return ""; });
                 }
             });
+            ListStringGraphTypeFieldRecords.Add(new FieldRecord<StringGraphType>()
+            {
+                Name = "blogs",
+                QueryArguments = new QueryArguments(new QueryArgument<BlogsQueryInput> { Name = "input" }),
+
+                Resolve = async context =>
+                {
+                    try
+                    {
+                        var userContext = context.UserContext.As<GraphQLUserContext>();
+                        var blogsPageHandle = context.GetArgument<BlogsPageHandle>("input");
+
+                        var result = await _blogStore.FetchAsync(Guid.Empty);
+                        return result;
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+                    return null;
+                    //                    return await Task.Run(() => { return ""; });
+                }
+            });
         }
     }
 }

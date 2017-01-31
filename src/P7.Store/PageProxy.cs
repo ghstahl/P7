@@ -1,8 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using P7.BlogStore.Core;
 
-namespace P7.BlogStore.Hugo
+namespace P7.Store
 {
     public class PageProxy<T> : IPage<T>
     {

@@ -13,6 +13,7 @@
     "Microsoft.AspNetCore.Mvc.Localization": "1.1.1",
     "Microsoft.AspNetCore.Routing": "1.1.0",
     "Microsoft.AspNetCore.TestHost": "1.1.0",
+    "Microsoft.AspNetCore.WebUtilities": "1.1.0",
     "Microsoft.EntityFrameworkCore": "1.1.0",
     "Microsoft.Extensions.Caching.Abstractions": "1.1.0",
     "Microsoft.Extensions.Configuration.Abstractions": "1.1.0",
