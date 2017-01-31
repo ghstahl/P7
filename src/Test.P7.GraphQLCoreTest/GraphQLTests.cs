@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Castle.Components.DictionaryAdapter;
 using FakeItEasy;
 using GraphQL;
 using GraphQL.Http;
@@ -21,6 +22,7 @@ using P7.BlogStore.Hugo;
 using P7.Core;
 using P7.Core.Writers;
 using P7.GraphQLCore;
+using P7.Store;
 using Shouldly;
 namespace Test.P7.GraphQLCoreTest
 {
@@ -131,6 +133,141 @@ namespace Test.P7.GraphQLCoreTest
 
 
             Assert.AreEqual(42, 42);
+        }
+
+        [TestMethod]
+        public void blog_paging_request()
+        {
+
+            var dtBase = DateTime.UtcNow;
+            var tsS = dtBase.ToString(JsonDocumentWriter.JsonSerializerSettings.DateFormatString);
+
+            dtBase = DateTime.Parse(tsS, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal);
+
+
+
+            List<Blog> blogEntries = new List<Blog>();
+
+            int timeMultipier = 1;
+            for (int i = 0; i < 10; ++i)
+            {
+                timeMultipier = timeMultipier * -1;
+                DateTime timeStamp = dtBase.AddMinutes(i* timeMultipier);
+                int n = i % 2;
+                Blog blog = new Blog()
+                {
+                    Id = Guid.NewGuid(),
+                    Categories = new List<string>() { "c1"+n, "c2" + n },
+                    Tags = new List<string>() { "t1" + n, "t2" + n },
+                    MetaData = new BlogMetaData() { Category = "c0", Version = "1.0.0.0" },
+                    Data = "This is my blog",
+                    TimeStamp = timeStamp,
+                    Summary = "My Summary",
+                    Title = "My Title"
+                };
+                blogEntries.Add(blog);
+            }
+            foreach (var blogEntry in blogEntries)
+            {
+                var jsonBlog = JsonDocumentWriter.SerializeObjectSingleQuote(blogEntry);
+
+                var rawInput = $"{{'input': {jsonBlog} }}";
+                var gqlInputs = rawInput.ToInputs();
+                var mutation = @"
+                mutation Q($input: BlogMutationInput!) {
+                  blog(input: $input)
+                }";
+
+                var expected = @"{'blog':true}";
+                AssertQuerySuccess(mutation, expected, gqlInputs, root: null, userContext: GraphQLUserContext);
+                rawInput = $"{{'input': {{'id':'{blogEntry.Id.ToString()}' }} }}";
+                gqlInputs = rawInput.ToInputs();
+                var query = @"query Q($input: BlogQueryInput!) {
+                  blog(input: $input)
+                }";
+                var runResult = ExecuteQuery(query, gqlInputs, root: null, userContext: GraphQLUserContext);
+                bool bRun = runResult.Errors?.Any() == true;
+                Assert.IsFalse(bRun);
+
+                Dictionary<string, object> data = (Dictionary<string, object>)runResult.Data;
+                Dictionary<string, object> dataExpected = new Dictionary<string, object> { { "blog", blogEntry } };
+
+                string additionalInfo = null;
+                blogEntry.EnableDeepCompare = true;
+                data.ShouldBe(dataExpected, additionalInfo);
+            }
+            blogEntries = blogEntries.OrderBy(o => o.TimeStamp).ToList();
+
+
+            var pageSize = 3;
+            var rawInput2 = $"{{'input': {{'pageSize':'{pageSize}' }} }}";
+            var gqlInputs2 = rawInput2.ToInputs();
+            var query2 = @"query Q($input: BlogsQueryInput!) {
+                  blogs(input: $input)
+                }";
+            var runResult2 = ExecuteQuery(query2, gqlInputs2, root: null, userContext: GraphQLUserContext);
+            bool bRun2 = runResult2.Errors?.Any() == true;
+            Assert.IsFalse(bRun2);
+
+        
+            var slice = blogEntries.Skip(0).Take(pageSize).ToList();
+            foreach (var item in slice)
+            {
+                item.EnableDeepCompare = true;
+            }
+            Dictionary<string, object> result = (Dictionary<string, object>) runResult2.Data;
+            IPage<Blog> page = (IPage<Blog>) result["blogs"];
+
+            var read = page.ToList();
+            slice.ShouldBe(read);
+
+            var pagingState = page.PagingState;
+            rawInput2 = $"{{'input': {{'pageSize':'{pageSize}','pagingState':'{pagingState.SafeConvertToBase64String()}' }} }}";
+            gqlInputs2 = rawInput2.ToInputs();
+            query2 = @"query Q($input: BlogsQueryInput!) {
+                  blogs(input: $input)
+                }";
+            runResult2 = ExecuteQuery(query2, gqlInputs2, root: null, userContext: GraphQLUserContext);
+            bRun2 = runResult2.Errors?.Any() == true;
+            Assert.IsFalse(bRun2);
+
+            slice = blogEntries.Skip(3).Take(pageSize).ToList();
+            foreach (var item in slice)
+            {
+                item.EnableDeepCompare = true;
+            }
+            result = (Dictionary<string, object>)runResult2.Data;
+            page = (IPage<Blog>)result["blogs"];
+
+            read = page.ToList();
+            slice.ShouldBe(read);
+            page.CurrentPagingState.ShouldBe(pagingState);
+
+
+
+            // ASK FOR THEM ALL
+            pageSize = 100;
+            rawInput2 = $"{{'input': {{'pageSize':'{pageSize}' }} }}";
+            gqlInputs2 = rawInput2.ToInputs();
+            query2 = @"query Q($input: BlogsQueryInput!) {
+                  blogs(input: $input)
+                }";
+            runResult2 = ExecuteQuery(query2, gqlInputs2, root: null, userContext: GraphQLUserContext);
+            bRun2 = runResult2.Errors?.Any() == true;
+            Assert.IsFalse(bRun2);
+
+            slice = blogEntries.Skip(0).Take(pageSize).ToList();
+            foreach (var item in slice)
+            {
+                item.EnableDeepCompare = true;
+            }
+            result = (Dictionary<string, object>)runResult2.Data;
+            page = (IPage<Blog>)result["blogs"];
+
+            read = page.ToList();
+            slice.ShouldBe(read);
+            page.Count.ShouldBe(slice.Count);
+
         }
 
         [TestMethod]

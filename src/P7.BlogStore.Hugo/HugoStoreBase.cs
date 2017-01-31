@@ -136,8 +136,13 @@ namespace P7.BlogStore.Hugo
             );
             return result;
         }
-
-        public async Task<IPage<T>> PageAsync(int pageSize, byte[] pagingState, string[] categories = null, string[] tags = null)
+        public async Task<IPage<T>> PageAsync(
+            int pageSize, 
+            byte[] pagingState, 
+            DateTime? timeStampLowerBoundary = null,   
+            DateTime? timeStampUpperBoundary = null, 
+            string[] categories = null, 
+            string[] tags = null)
         {
             byte[] currentPagingState = pagingState;
             PagingState ps = pagingState.Deserialize();

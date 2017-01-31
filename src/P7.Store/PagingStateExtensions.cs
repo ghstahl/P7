@@ -6,6 +6,18 @@ namespace P7.Store
 {
     static public class PagingStateExtensions
     {
+        public static byte[] SafeConvertFromBase64String(this string psString)
+        {
+            if (string.IsNullOrEmpty(psString))
+                return null;
+            return Convert.FromBase64String(psString);
+        }
+        public static string SafeConvertToBase64String(this byte[] bytes)
+        {
+            if (bytes == null)
+                return null;
+            return Convert.ToBase64String(bytes);
+        }
         public static byte[] Serialize(this PagingState pagingState)
         {
             if (pagingState == null)

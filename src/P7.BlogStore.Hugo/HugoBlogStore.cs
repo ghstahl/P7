@@ -1,5 +1,8 @@
-﻿using Hugo.Data.Json;
+﻿using System;
+using System.Threading.Tasks;
+using Hugo.Data.Json;
 using P7.BlogStore.Core;
+using P7.Store;
 
 namespace P7.BlogStore.Hugo
 {
@@ -10,7 +13,5 @@ namespace P7.BlogStore.Hugo
             base(biggyConfiguration,"blog", sorter)
         {
         }
-
-
     }
 }

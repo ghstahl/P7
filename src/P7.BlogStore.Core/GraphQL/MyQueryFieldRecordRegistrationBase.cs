@@ -2,6 +2,7 @@
 using GraphQL;
 using GraphQL.Types;
 using P7.GraphQLCore;
+using P7.Store;
 
 namespace P7.BlogStore.Core.GraphQL
 {
@@ -52,7 +53,25 @@ namespace P7.BlogStore.Core.GraphQL
                         var userContext = context.UserContext.As<GraphQLUserContext>();
                         var blogsPageHandle = context.GetArgument<BlogsPageHandle>("input");
 
-                        var result = await _blogStore.FetchAsync(Guid.Empty);
+                        var pagingState = blogsPageHandle.PagingState.SafeConvertFromBase64String();
+
+                        var categories = blogsPageHandle.Categories?.ToArray();
+                        var tags = blogsPageHandle.Tags?.ToArray();
+                        DateTime baseDateTime = new DateTime();
+                        DateTime? timeStampLowerBoundary = baseDateTime == blogsPageHandle.TimeStampLowerBoundary
+                            ? (DateTime?) null
+                            : blogsPageHandle.TimeStampLowerBoundary;
+                        DateTime? timeStampUpperBoundary = baseDateTime == blogsPageHandle.TimeStampUpperBoundary
+                            ? (DateTime?) null
+                            : blogsPageHandle.TimeStampUpperBoundary;
+                        var result = await _blogStore.PageAsync(
+                            blogsPageHandle.PageSize,
+                            pagingState,
+                            timeStampLowerBoundary,
+                            timeStampUpperBoundary,
+                            categories,
+                            tags);
+                        var resultd = await _blogStore.FetchAsync(Guid.Empty);
                         return result;
                     }
                     catch (Exception e)

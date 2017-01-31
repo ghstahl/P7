@@ -47,6 +47,8 @@ namespace P7.BlogStore.Core
         /// <returns></returns>
         Task<IPage<Blog>> PageAsync(int pageSize,
             byte[] pagingState,
+            DateTime? timeStampLowerBoundary = null,
+            DateTime? timeStampUpperBoundary = null,
             string[] categories = null,
             string[] tags = null);
 
