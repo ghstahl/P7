@@ -16,6 +16,7 @@ using GraphQLParser.Exceptions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using P7.BlogStore.Core;
 using P7.BlogStore.Hugo;
@@ -35,6 +36,7 @@ namespace Test.P7.GraphQLCoreTest
     [DeploymentItem("source", "source")]
     public class GraphQLTests
     {
+        private List<Blog> BlogEntries { get; set; }
         private JsonDocumentWriter _DocumentWriter;
 
         protected JsonDocumentWriter JsonDocumentWriter
@@ -64,7 +66,8 @@ namespace Test.P7.GraphQLCoreTest
         [TestInitialize]
         public void Initialize()
         {
-            _targetFolder = Path.Combine(UnitTestHelpers.BaseDir, @"source", DateTime.Now.ToString("yyyy-dd-M__HH-mm-ss"));
+            _targetFolder = Path.Combine(UnitTestHelpers.BaseDir, @"source",
+                DateTime.Now.ToString("yyyy-dd-M__HH-mm-ss")+"_"+ Guid.NewGuid().ToString() );
             Directory.CreateDirectory(_targetFolder);
             GlobalTenantDatabaseBiggyConfig = new TenantDatabaseBiggyConfig();
             GlobalTenantDatabaseBiggyConfig.UsingFolder(TargetFolder);
@@ -87,7 +90,10 @@ namespace Test.P7.GraphQLCoreTest
             Executer = AutofacStoreFactory.Resolve<IDocumentExecuter>();
             Writer = AutofacStoreFactory.Resolve<IDocumentWriter>();
             GraphQLUserContext = AutofacStoreFactory.Resolve<GraphQLUserContext>();
+
+            InsertBlogEntriesIntoStore(10);
         }
+
         [TestMethod]
         public void default_culture_kvo_success_request()
         {
@@ -135,139 +141,295 @@ namespace Test.P7.GraphQLCoreTest
             Assert.AreEqual(42, 42);
         }
 
-        [TestMethod]
-        public void blog_paging_request()
+        List<Blog> CreateBlogEntries(int nCount)
         {
-
-            var dtBase = DateTime.UtcNow;
-            var tsS = dtBase.ToString(JsonDocumentWriter.JsonSerializerSettings.DateFormatString);
-
-            dtBase = DateTime.Parse(tsS, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal);
-
-
-
-            List<Blog> blogEntries = new List<Blog>();
-
-            int timeMultipier = 1;
-            for (int i = 0; i < 10; ++i)
+            if (this.BlogEntries == null)
             {
-                timeMultipier = timeMultipier * -1;
-                DateTime timeStamp = dtBase.AddMinutes(i* timeMultipier);
-                int n = i % 2;
-                Blog blog = new Blog()
+                this.BlogEntries = new EditableList<Blog>();
+
+                var dtBase = DateTime.UtcNow;
+                dtBase = dtBase.AddYears(10);
+                var tsS = dtBase.ToString(JsonDocumentWriter.JsonSerializerSettings.DateFormatString);
+
+                dtBase = DateTime.Parse(tsS, CultureInfo.InvariantCulture,
+                    DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal);
+
+
+
+                int timeMultipier = 1;
+                for (int i = 0; i < 10; ++i)
                 {
-                    Id = Guid.NewGuid(),
-                    Categories = new List<string>() { "c1"+n, "c2" + n },
-                    Tags = new List<string>() { "t1" + n, "t2" + n },
-                    MetaData = new BlogMetaData() { Category = "c0", Version = "1.0.0.0" },
-                    Data = "This is my blog",
-                    TimeStamp = timeStamp,
-                    Summary = "My Summary",
-                    Title = "My Title"
-                };
-                blogEntries.Add(blog);
+                    timeMultipier = timeMultipier * -1;
+                    DateTime timeStamp = dtBase.AddMinutes(i * timeMultipier);
+                    int n = i % 2;
+                    Blog blog = new Blog()
+                    {
+                        Id = Guid.NewGuid(),
+                        Categories = new List<string>() {"c1" + n, "c2" + i },
+                        Tags = new List<string>() {"t1" + n, "t2" + i },
+                        MetaData = new BlogMetaData() {Category = "c0", Version = "1.0.0.0"},
+                        Data = "This is my blog",
+                        TimeStamp = timeStamp,
+                        Summary = "My Summary",
+                        Title = "My Title"
+                    };
+                    BlogEntries.Add(blog);
+                }
             }
-            foreach (var blogEntry in blogEntries)
-            {
-                var jsonBlog = JsonDocumentWriter.SerializeObjectSingleQuote(blogEntry);
+            return BlogEntries;
+        }
 
-                var rawInput = $"{{'input': {jsonBlog} }}";
-                var gqlInputs = rawInput.ToInputs();
-                var mutation = @"
+        void InsertBlogEntriesIntoStore(int count)
+        {
+            if (!Inserted)
+            {
+                CreateBlogEntries(count);
+                foreach (var blogEntry in BlogEntries)
+                {
+                    var jsonBlog = JsonDocumentWriter.SerializeObjectSingleQuote(blogEntry);
+
+                    var rawInput = $"{{'input': {jsonBlog} }}";
+                    var gqlInputs = rawInput.ToInputs();
+                    var mutation = @"
                 mutation Q($input: BlogMutationInput!) {
                   blog(input: $input)
                 }";
 
-                var expected = @"{'blog':true}";
-                AssertQuerySuccess(mutation, expected, gqlInputs, root: null, userContext: GraphQLUserContext);
-                rawInput = $"{{'input': {{'id':'{blogEntry.Id.ToString()}' }} }}";
-                gqlInputs = rawInput.ToInputs();
-                var query = @"query Q($input: BlogQueryInput!) {
+                    var expected = @"{'blog':true}";
+                    AssertQuerySuccess(mutation, expected, gqlInputs, root: null, userContext: GraphQLUserContext);
+                    rawInput = $"{{'input': {{'id':'{blogEntry.Id.ToString()}' }} }}";
+                    gqlInputs = rawInput.ToInputs();
+                    var query = @"query Q($input: BlogQueryInput!) {
                   blog(input: $input)
                 }";
-                var runResult = ExecuteQuery(query, gqlInputs, root: null, userContext: GraphQLUserContext);
-                bool bRun = runResult.Errors?.Any() == true;
-                Assert.IsFalse(bRun);
+                    var runResult = ExecuteQuery(query, gqlInputs, root: null, userContext: GraphQLUserContext);
+                    bool bRun = runResult.Errors?.Any() == true;
+                    Assert.IsFalse(bRun);
 
-                Dictionary<string, object> data = (Dictionary<string, object>)runResult.Data;
-                Dictionary<string, object> dataExpected = new Dictionary<string, object> { { "blog", blogEntry } };
+                    Dictionary<string, object> data = (Dictionary<string, object>)runResult.Data;
+                    Dictionary<string, object> dataExpected = new Dictionary<string, object> { { "blog", blogEntry } };
 
-                string additionalInfo = null;
-                blogEntry.EnableDeepCompare = true;
-                data.ShouldBe(dataExpected, additionalInfo);
+                    string additionalInfo = null;
+                    blogEntry.EnableDeepCompare = true;
+                    data.ShouldBe(dataExpected, additionalInfo);
+                }
+                BlogEntries = BlogEntries.OrderBy(o => o.TimeStamp).ToList();
+                foreach (var item in BlogEntries)
+                {
+                    item.EnableDeepCompare = true;
+                }
+
             }
-            blogEntries = blogEntries.OrderBy(o => o.TimeStamp).ToList();
+            Inserted = true;
+        }
 
+        public bool Inserted { get; set; }
 
-            var pageSize = 3;
-            var rawInput2 = $"{{'input': {{'pageSize':'{pageSize}' }} }}";
+        [TestMethod]
+        public void blog_timestamp_lower_and_upper_boundary_paging_request()
+        {
+
+            var timestampLowerBoundary = BlogEntries[3].TimeStamp;
+            var timestampUpperBoundary = BlogEntries[4].TimeStamp;
+            var tsLowerAsString = timestampLowerBoundary.ToString("u");
+            var tsUpperAsString = timestampUpperBoundary.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'");
+            // ASK FOR THEM ALL
+            var pageSize = BlogEntries.Count;
+            var rawInput2 = $"{{'input': {{'pageSize':'{pageSize}','timestampLowerBoundary':'{tsLowerAsString}','timestampUpperBoundary':'{tsUpperAsString}' }} }}";
             var gqlInputs2 = rawInput2.ToInputs();
             var query2 = @"query Q($input: BlogsQueryInput!) {
                   blogs(input: $input)
                 }";
             var runResult2 = ExecuteQuery(query2, gqlInputs2, root: null, userContext: GraphQLUserContext);
-            bool bRun2 = runResult2.Errors?.Any() == true;
+            var bRun2 = runResult2.Errors?.Any() == true;
             Assert.IsFalse(bRun2);
 
-        
-            var slice = blogEntries.Skip(0).Take(pageSize).ToList();
+            var slice = BlogEntries.Skip(3).Take(2).ToList();
             foreach (var item in slice)
             {
                 item.EnableDeepCompare = true;
             }
-            Dictionary<string, object> result = (Dictionary<string, object>) runResult2.Data;
-            IPage<Blog> page = (IPage<Blog>) result["blogs"];
+            var result = (Dictionary<string, object>)runResult2.Data;
+            var page = (IPage<Blog>)result["blogs"];
 
             var read = page.ToList();
             slice.ShouldBe(read);
+            page.Count.ShouldBe(slice.Count);
 
-            var pagingState = page.PagingState;
-            rawInput2 = $"{{'input': {{'pageSize':'{pageSize}','pagingState':'{pagingState.SafeConvertToBase64String()}' }} }}";
-            gqlInputs2 = rawInput2.ToInputs();
-            query2 = @"query Q($input: BlogsQueryInput!) {
-                  blogs(input: $input)
-                }";
-            runResult2 = ExecuteQuery(query2, gqlInputs2, root: null, userContext: GraphQLUserContext);
-            bRun2 = runResult2.Errors?.Any() == true;
-            Assert.IsFalse(bRun2);
+        }
+        
 
-            slice = blogEntries.Skip(3).Take(pageSize).ToList();
-            foreach (var item in slice)
-            {
-                item.EnableDeepCompare = true;
-            }
-            result = (Dictionary<string, object>)runResult2.Data;
-            page = (IPage<Blog>)result["blogs"];
+        [TestMethod]
+        public void blog_timestamp_categories_lower_and_upper_boundary_paging_request()
+        {
 
-            read = page.ToList();
-            slice.ShouldBe(read);
-            page.CurrentPagingState.ShouldBe(pagingState);
-
-
-
+            var timestampLowerBoundary = BlogEntries[0].TimeStamp;
+            var timestampUpperBoundary = BlogEntries[9].TimeStamp;
+            var categories = BlogEntries[2].Categories;
+            var jsonCategories = JsonConvert.SerializeObject(categories);
+            var tsLowerAsString = timestampLowerBoundary.ToString("u");
+            var tsUpperAsString = timestampUpperBoundary.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'");
             // ASK FOR THEM ALL
-            pageSize = 100;
-            rawInput2 = $"{{'input': {{'pageSize':'{pageSize}' }} }}";
-            gqlInputs2 = rawInput2.ToInputs();
-            query2 = @"query Q($input: BlogsQueryInput!) {
+            var pageSize = BlogEntries.Count;
+            var rawInput2 = $"{{'input': {{'pageSize':'{pageSize}','timestampLowerBoundary':'{tsLowerAsString}','timestampUpperBoundary':'{tsUpperAsString}','categories':{jsonCategories} }} }}";
+            var gqlInputs2 = rawInput2.ToInputs();
+            var query2 = @"query Q($input: BlogsQueryInput!) {
                   blogs(input: $input)
                 }";
-            runResult2 = ExecuteQuery(query2, gqlInputs2, root: null, userContext: GraphQLUserContext);
-            bRun2 = runResult2.Errors?.Any() == true;
+            var runResult2 = ExecuteQuery(query2, gqlInputs2, root: null, userContext: GraphQLUserContext);
+            var bRun2 = runResult2.Errors?.Any() == true;
             Assert.IsFalse(bRun2);
+            var query = from item in BlogEntries
+                where item.Categories.Any(a => categories.Contains(a))
+                select item;
+            var slice = query.ToList();
 
-            slice = blogEntries.Skip(0).Take(pageSize).ToList();
-            foreach (var item in slice)
-            {
-                item.EnableDeepCompare = true;
-            }
-            result = (Dictionary<string, object>)runResult2.Data;
-            page = (IPage<Blog>)result["blogs"];
+            var result = (Dictionary<string, object>)runResult2.Data;
+            var page = (IPage<Blog>)result["blogs"];
 
-            read = page.ToList();
+            var read = page.ToList();
             slice.ShouldBe(read);
             page.Count.ShouldBe(slice.Count);
 
+        }
+        [TestMethod]
+        public void blog_timestamp_tags_lower_and_upper_boundary_paging_request()
+        {
+
+            var timestampLowerBoundary = BlogEntries[0].TimeStamp;
+            var timestampUpperBoundary = BlogEntries[9].TimeStamp;
+            var tags = BlogEntries[2].Tags;
+            var jsonTags = JsonConvert.SerializeObject(tags);
+            var tsLowerAsString = timestampLowerBoundary.ToString("u");
+            var tsUpperAsString = timestampUpperBoundary.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'");
+            // ASK FOR THEM ALL
+            var pageSize = BlogEntries.Count;
+            var rawInput2 = $"{{'input': {{'pageSize':'{pageSize}','timestampLowerBoundary':'{tsLowerAsString}','timestampUpperBoundary':'{tsUpperAsString}','tags':{jsonTags} }} }}";
+            var gqlInputs2 = rawInput2.ToInputs();
+            var query2 = @"query Q($input: BlogsQueryInput!) {
+                  blogs(input: $input)
+                }";
+            var runResult2 = ExecuteQuery(query2, gqlInputs2, root: null, userContext: GraphQLUserContext);
+            var bRun2 = runResult2.Errors?.Any() == true;
+            Assert.IsFalse(bRun2);
+            var query = from item in BlogEntries
+                        where item.Tags.Any(a => tags.Contains(a))
+                        select item;
+            var slice = query.ToList();
+
+            var result = (Dictionary<string, object>)runResult2.Data;
+            var page = (IPage<Blog>)result["blogs"];
+
+            var read = page.ToList();
+            slice.ShouldBe(read);
+            page.Count.ShouldBe(slice.Count);
+
+        }
+        [TestMethod]
+        public void blog_timestamp_lower_boundary_paging_request()
+        {
+            BlogEntries.Count.ShouldBe(10);
+            var timestampLowerBoundary = BlogEntries[3].TimeStamp;
+            var tsAsString = timestampLowerBoundary.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'");
+            // ASK FOR THEM ALL
+            var pageSize = BlogEntries.Count;
+            var rawInput2 = $"{{'input': {{'pageSize':'{pageSize}','timestampLowerBoundary':'{tsAsString}' }} }}";
+            var gqlInputs2 = rawInput2.ToInputs();
+            var query2 = @"query Q($input: BlogsQueryInput!) {
+                  blogs(input: $input)
+                }";
+            var runResult2 = ExecuteQuery(query2, gqlInputs2, root: null, userContext: GraphQLUserContext);
+            var bRun2 = runResult2.Errors?.Any() == true;
+            Assert.IsFalse(bRun2);
+
+            var slice = BlogEntries.Skip(3).Take(pageSize).ToList();
+            foreach (var item in slice)
+            {
+                item.EnableDeepCompare = true;
+            }
+            var result = (Dictionary<string, object>)runResult2.Data;
+            var page = (IPage<Blog>)result["blogs"];
+
+            var read = page.ToList();
+            slice.ShouldBe(read);
+            page.Count.ShouldBe(slice.Count);
+
+        }
+        [TestMethod]
+        public void blog_timestamp_upper_boundary_paging_request()
+        {
+            BlogEntries.Count.ShouldBe(10);
+
+            var timestampUpperBoundary = BlogEntries[3].TimeStamp;
+            var tsAsString = timestampUpperBoundary.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'");
+            // ASK FOR THEM ALL
+            var pageSize = BlogEntries.Count;
+            var rawInput2 = $"{{'input': {{'pageSize':'{pageSize}','timestampUpperBoundary':'{tsAsString}' }} }}";
+            var gqlInputs2 = rawInput2.ToInputs();
+            var query2 = @"query Q($input: BlogsQueryInput!) {
+                  blogs(input: $input)
+                }";
+            var runResult2 = ExecuteQuery(query2, gqlInputs2, root: null, userContext: GraphQLUserContext);
+            var bRun2 = runResult2.Errors?.Any() == true;
+            Assert.IsFalse(bRun2);
+
+            var slice = BlogEntries.Skip(0).Take(4).ToList();
+            foreach (var item in slice)
+            {
+                item.EnableDeepCompare = true;
+            }
+            var result = (Dictionary<string, object>)runResult2.Data;
+            var page = (IPage<Blog>)result["blogs"];
+
+            var read = page.ToList();
+            slice.ShouldBe(read);
+            page.Count.ShouldBe(slice.Count);
+
+        }
+        [TestMethod]
+        public void blog_basic_paging_request()
+        {
+
+            BlogEntries.Count.ShouldBe(10);
+
+            var pageSize = 3;
+            var currentIndex = 0;
+            var count = 0;
+            byte[] pagingState = null;
+            byte[] currentPagingState = null;
+            bool keepGoing = true;
+            do
+            {
+                var rawInput2 = $"{{'input': {{'pageSize':'{pageSize}','pagingState':'{pagingState.SafeConvertToBase64String()}' }} }}";
+                var gqlInputs2 = rawInput2.ToInputs();
+                var query2 = @"query Q($input: BlogsQueryInput!) {
+                  blogs(input: $input)
+                }";
+                var runResult2 = ExecuteQuery(query2, gqlInputs2, root: null, userContext: GraphQLUserContext);
+                bool bRun2 = runResult2.Errors?.Any() == true;
+                Assert.IsFalse(bRun2);
+
+                var slice = BlogEntries.Skip(currentIndex).Take(pageSize).ToList();
+                foreach (var item in slice)
+                {
+                    item.EnableDeepCompare = true;
+                }
+                Dictionary<string, object> result = (Dictionary<string, object>)runResult2.Data;
+                IPage<Blog> page = (IPage<Blog>)result["blogs"];
+
+                var read = page.ToList();
+                slice.ShouldBe(read);
+                pagingState = page.PagingState;
+                currentPagingState = page.CurrentPagingState;
+
+                count += page.Count;
+                currentIndex += pageSize;
+                keepGoing = pagingState != null;
+               
+            } while (keepGoing);
+
+            System.Diagnostics.Debug.WriteLine("Count:"+count);
+            count.ShouldBe(BlogEntries.Count);
         }
 
         [TestMethod]

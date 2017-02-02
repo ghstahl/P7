@@ -71,7 +71,7 @@ namespace P7.BlogStore.Core.GraphQL
                             timeStampUpperBoundary,
                             categories,
                             tags);
-                        var resultd = await _blogStore.FetchAsync(Guid.Empty);
+                      
                         return result;
                     }
                     catch (Exception e)

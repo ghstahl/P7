@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hugo.Data.Json;
 using P7.BlogStore.Core;
+using P7.Core.Linq;
 using P7.Core.Utils;
 using P7.Store;
 
@@ -11,6 +12,26 @@ namespace P7.BlogStore.Hugo
 {
     public class HugoStoreBase<T> where T: class, IDocumentBase, new()
     {
+        public delegate bool ContainsAnyInList<T>(List<T> a, List<T> b);
+
+        private ContainsAnyInList<string> _containsAnyInList;
+
+        public ContainsAnyInList<string> DelegateContainsAnyInStringList
+        {
+            get
+            {
+                if (_containsAnyInList == null)
+                {
+                    _containsAnyInList = (a, b) =>
+                    {
+                        var result = a.Any(x => b.Contains(x));
+                        return result;
+                    };
+                }
+                return _containsAnyInList;
+            }
+        }
+
         protected IBiggyConfiguration _biggyConfiguration;
         private ISorter<T> _sorter;
         protected HugoStoreBase(IBiggyConfiguration biggyConfiguration, string collection, ISorter<T> sorter)
@@ -136,18 +157,14 @@ namespace P7.BlogStore.Hugo
             );
             return result;
         }
-        public async Task<IPage<T>> PageAsync(
+        public async Task<IPage<T>> PagedAsync(
             int pageSize, 
-            byte[] pagingState, 
-            DateTime? timeStampLowerBoundary = null,   
-            DateTime? timeStampUpperBoundary = null, 
-            string[] categories = null, 
-            string[] tags = null)
+            byte[] pagingState)
         {
             byte[] currentPagingState = pagingState;
             PagingState ps = pagingState.Deserialize();
             var records = await RetrieveAsync();
-
+          
             var slice = records.Skip(ps.CurrentIndex).Take(pageSize).ToList();
             if (slice.Count < pageSize)
             {
