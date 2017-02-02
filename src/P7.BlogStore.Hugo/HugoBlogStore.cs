@@ -11,6 +11,37 @@ namespace P7.BlogStore.Hugo
 {
     public class HugoBlogStore: HugoStoreBase<Blog>, IBlogStore
     {
+        public delegate bool ContainsAnyInTagsOrCategories(Blog source, List<string> tags, List<string> categories);
+
+        private ContainsAnyInTagsOrCategories _containsAnyInTagsOrCategories;
+
+        public ContainsAnyInTagsOrCategories DelegateContainsAnyInTagsOrCategories
+        {
+            get
+            {
+                if (_containsAnyInTagsOrCategories == null)
+                {
+                    _containsAnyInTagsOrCategories = (blog, tags,categories) =>
+                    {
+                        if (tags == null && categories == null)
+                            return true;
+                        var result = false;
+                        if (tags != null)
+                        {
+                            var bTags = blog.Tags.Any(x => tags.Contains(x));
+                            result = result || bTags;
+                        }
+                        if (categories != null)
+                        {
+                            var bCategories = blog.Categories.Any(x => categories.Contains(x));
+                            result = result || bCategories;
+                        }
+                        return result;
+                    };
+                }
+                return _containsAnyInTagsOrCategories;
+            }
+        }
         public HugoBlogStore(IBiggyConfiguration biggyConfiguration,
             ISorter<Blog> sorter) :
             base(biggyConfiguration,"blog", sorter)
@@ -34,14 +65,11 @@ namespace P7.BlogStore.Hugo
                 predicate = predicate.And(i => i.TimeStamp <= timeStampUpperBoundary);
             }
 
-            if (categories != null && categories.Length > 0)
-            {
-                predicate = predicate.And(i => DelegateContainsAnyInStringList(i.Categories, new List<string>(categories)));
-            }
-            if (tags != null && tags.Length > 0)
-            {
-                predicate = predicate.And(i => DelegateContainsAnyInStringList(i.Tags, new List<string>(tags)));
-            }
+            // this is an AND that return an OR match for tags and categories.
+            List<string> safeTagList = (tags == null) ? null : new List<string>(tags);
+            List<string> safeCategoriesList = (categories == null) ? null : new List<string>(categories);
+            predicate = predicate.And(i => DelegateContainsAnyInTagsOrCategories(i, safeTagList, safeCategoriesList));
+
 
             var filtered = records.Where(predicate.Compile()).Select(i => i);
 

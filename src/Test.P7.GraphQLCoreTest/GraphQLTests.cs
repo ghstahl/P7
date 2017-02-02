@@ -257,7 +257,7 @@ namespace Test.P7.GraphQLCoreTest
             page.Count.ShouldBe(slice.Count);
 
         }
-        
+
 
         [TestMethod]
         public void blog_timestamp_categories_lower_and_upper_boundary_paging_request()
@@ -425,7 +425,7 @@ namespace Test.P7.GraphQLCoreTest
                 count += page.Count;
                 currentIndex += pageSize;
                 keepGoing = pagingState != null;
-               
+
             } while (keepGoing);
 
             System.Diagnostics.Debug.WriteLine("Count:"+count);
