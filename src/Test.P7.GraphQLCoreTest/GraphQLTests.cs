@@ -164,7 +164,7 @@ namespace Test.P7.GraphQLCoreTest
                     int n = i % 2;
                     Blog blog = new Blog()
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.NewGuid().ToString(),
                         Categories = new List<string>() {"c1" + n, "c2" + i },
                         Tags = new List<string>() {"t1" + n, "t2" + i },
                         MetaData = new BlogMetaData() {Category = "c0", Version = "1.0.0.0"},
@@ -447,7 +447,7 @@ namespace Test.P7.GraphQLCoreTest
 
             Blog blog = new Blog()
             {
-                Id = Guid.NewGuid(),
+                Id = Guid.NewGuid().ToString(),
                 Categories = new List<string>() {"c1", "c2"},
                 Tags = new List<string>() {"t1", "t2"},
                 MetaData = new BlogMetaData() {Category = "c0", Version = "1.0.0.0"},

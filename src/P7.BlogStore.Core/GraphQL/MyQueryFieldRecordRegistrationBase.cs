@@ -30,7 +30,7 @@ namespace P7.BlogStore.Core.GraphQL
                     {
                         var userContext = context.UserContext.As<GraphQLUserContext>();
                         var blog = context.GetArgument<Blog>("input");
-                        var result = await _blogStore.FetchAsync(blog.Id);
+                        var result = await _blogStore.FetchAsync(blog.Id_G);
                         return result;
                     }
                     catch (Exception e)

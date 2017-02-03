@@ -28,14 +28,17 @@ namespace P7.BlogStore.Hugo
 
         public async Task DeleteAsync(Guid blogId, Guid id)
         {
-            BlogCommentRecord record = new BlogCommentRecord() { BlogId = blogId, BlogComment = new BlogComment() {Id = id} };
-            await DeleteAsync(record.Id);
+            BlogCommentRecord record = new BlogCommentRecord()
+            {
+                BlogId = blogId, BlogComment = new BlogComment() {Id = id.ToString()}
+            };
+            await DeleteAsync(record.Id_G);
         }
 
         public async Task<BlogComment> FetchAsync(Guid blogId, Guid id)
         {
-            BlogCommentRecord record = new BlogCommentRecord() { BlogId = blogId, BlogComment = new BlogComment() { Id = id } };
-            var result = await FetchAsync(record.Id);
+            BlogCommentRecord record = new BlogCommentRecord() { BlogId = blogId, BlogComment = new BlogComment() { Id = id.ToString() } };
+            var result = await FetchAsync(record.Id_G);
             return result.BlogComment;
         }
 

@@ -4,7 +4,7 @@ using P7.Core.Utils;
 
 namespace P7.BlogStore.Hugo
 {
-    public class BlogCommentRecord: IDocumentBase
+    public class BlogCommentRecord: DocumentBase
     {
         public Guid BlogId { get; set; }
         public BlogComment BlogComment { get; set; }
@@ -46,15 +46,17 @@ namespace P7.BlogStore.Hugo
         {
             return BlogComment.Id.GetHashCode() ^ BlogId.GetHashCode();
         }
-        private Guid _id = Guid.Empty;
 
-        public Guid Id
+        private string _id = Guid.Empty.ToString();
+        private Guid _id_G = Guid.Empty;
+        public string Id
         {
             get
             {
-                if (_id == Guid.Empty && BlogComment != null)
+                if (_id_G == Guid.Empty &&  BlogComment != null)
                 {
-                    _id = GuidGenerator.CreateGuid(BlogId, BlogComment.Id.ToString());
+                    _id_G = GuidGenerator.CreateGuid(BlogId, BlogComment.Id);
+                    _id = _id_G.ToString();
                 }
                 return _id;
             }

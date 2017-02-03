@@ -3,11 +3,11 @@ using Newtonsoft.Json;
 
 namespace P7.BlogStore.Core
 {
-    public class BlogComment : IDocumentBase
+    public class BlogComment : DocumentBase
     {
         [JsonIgnore]
         public bool EnableDeepCompare { get; set; }
-        public Guid Id { get; set; }
+
         public string Comment { get; set; }
         public DateTime TimeStamp { get; set; }
 

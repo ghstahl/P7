@@ -10,7 +10,7 @@ using P7.Store;
 
 namespace P7.BlogStore.Hugo
 {
-    public class HugoStoreBase<T> where T: class, IDocumentBase, new()
+    public class HugoStoreBase<T> where T : class, IDocumentBase, new()
     {
         public delegate bool ContainsAnyInList<T>(List<T> a, List<T> b);
 
@@ -34,12 +34,14 @@ namespace P7.BlogStore.Hugo
 
         protected IBiggyConfiguration _biggyConfiguration;
         private ISorter<T> _sorter;
+
         protected HugoStoreBase(IBiggyConfiguration biggyConfiguration, string collection, ISorter<T> sorter)
         {
             _biggyConfiguration = biggyConfiguration;
             _collection = collection;
             _sorter = sorter;
         }
+
         protected static object TheLock
         {
             get { return ConcurrencyLock.TheLock; }
@@ -76,9 +78,10 @@ namespace P7.BlogStore.Hugo
             return result;
 
         }
+
         public async Task InsertAsync(T doc)
         {
-            var existing = await FetchAsync(doc.Id);
+            var existing = await FetchAsync(doc.Id_G);
             await GoAsync(() =>
             {
                 lock (TheLock)
@@ -95,6 +98,7 @@ namespace P7.BlogStore.Hugo
                 }
             });
         }
+
         public async Task<T> FetchAsync(Guid id)
         {
             var result = await GoAsync(() =>
@@ -104,7 +108,7 @@ namespace P7.BlogStore.Hugo
                     {
                         var collection = this.Store.TryLoadData();
                         var query = from item in collection
-                            where id == item.Id
+                            where item.Id_G == id
                             select item;
                         if (!query.Any())
                             return null;
@@ -117,10 +121,12 @@ namespace P7.BlogStore.Hugo
             );
             return result;
         }
+
         public async Task UpdateAsync(T doc)
         {
             await InsertAsync(doc);
         }
+
         public async Task DeleteAsync(Guid id)
         {
             await GoAsync(() =>
@@ -129,7 +135,7 @@ namespace P7.BlogStore.Hugo
                 {
                     var collection = this.Store.TryLoadData();
                     var query = from item in collection
-                        where item.Id == id
+                        where item.Id_G == id
                         select item;
                     foreach (var item in query)
                     {
@@ -138,6 +144,7 @@ namespace P7.BlogStore.Hugo
                 }
             });
         }
+
         public async Task<List<T>> RetrieveAsync()
         {
 
@@ -157,14 +164,15 @@ namespace P7.BlogStore.Hugo
             );
             return result;
         }
+
         public async Task<IPage<T>> PagedAsync(
-            int pageSize, 
+            int pageSize,
             byte[] pagingState)
         {
             byte[] currentPagingState = pagingState;
             PagingState ps = pagingState.Deserialize();
             var records = await RetrieveAsync();
-          
+
             var slice = records.Skip(ps.CurrentIndex).Take(pageSize).ToList();
             if (slice.Count < pageSize)
             {

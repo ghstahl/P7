@@ -5,11 +5,11 @@ using Newtonsoft.Json;
 
 namespace P7.BlogStore.Core
 {
-    public class Blog: IDocumentBase
+    public class Blog: DocumentBase
     {
         [JsonIgnore]
         public bool EnableDeepCompare { get; set; }
-        public Guid Id { get; set; }
+
         public BlogMetaData MetaData { get; set; }
         public List<string> Categories { get; set; }
         public List<string> Tags { get; set; }
