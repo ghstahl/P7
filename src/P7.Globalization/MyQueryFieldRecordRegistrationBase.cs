@@ -12,7 +12,7 @@ using P7.GraphQLCore;
 
 namespace P7.Globalization
 {
-    public class MyQueryFieldRecordRegistrationBase : QueryFieldRecordRegistrationBase
+    public class MyQueryFieldRecordRegistrationBase : IQueryFieldRecordRegistration
     {
         private IResourceFetcher _resourceFetcher;
 
@@ -22,14 +22,13 @@ namespace P7.Globalization
             _resourceFetcher = resourceFetcher;
         }
 
-        protected override void PopulateStringGraphTypes()
+        public void AddGraphTypeFields(QueryCore queryCore)
         {
-            ListStringGraphTypeFieldRecords.Add(new FieldRecord<StringGraphType>()
-            {
-                Name = "resource",
-                QueryArguments = new QueryArguments(new QueryArgument<ResourceQueryInput> {Name = "input"}),
 
-                Resolve = async context =>
+            queryCore.FieldAsync<StringGraphType>(name: "resource",
+                description: null,
+                arguments: new QueryArguments(new QueryArgument<ResourceQueryInput> {Name = "input"}),
+                resolve: async context =>
                 {
                     var userContext = context.UserContext.As<GraphQLUserContext>();
                     var rqf = userContext.HttpContextAccessor.HttpContext.Features.Get<IRequestCultureFeature>();
@@ -57,8 +56,8 @@ namespace P7.Globalization
                             Treatment = input.Treatment
                         });
                     return obj;
-                }
-            });
+                },
+                deprecationReason: null);
         }
     }
 }

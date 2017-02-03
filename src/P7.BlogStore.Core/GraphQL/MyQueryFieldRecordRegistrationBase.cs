@@ -6,25 +6,22 @@ using P7.Store;
 
 namespace P7.BlogStore.Core.GraphQL
 {
-    public class MyQueryFieldRecordRegistrationBase : QueryFieldRecordRegistrationBase
+    public class MyQueryFieldRecordRegistrationBase : IQueryFieldRecordRegistration
     {
         private IBlogStore _blogStore;
+
         public MyQueryFieldRecordRegistrationBase(
             IBlogStore blogStore)
         {
             _blogStore = blogStore;
         }
 
-
-
-        protected override void PopulateStringGraphTypes()
+        public  void AddGraphTypeFields(QueryCore queryCore)
         {
-            ListStringGraphTypeFieldRecords.Add(new FieldRecord<StringGraphType>()
-            {
-                Name = "blog",
-                QueryArguments = new QueryArguments(new QueryArgument<BlogQueryInput> {Name = "input"}),
-
-                Resolve = async context =>
+            queryCore.FieldAsync<StringGraphType>(name: "blog",
+                description: null,
+                arguments: new QueryArguments(new QueryArgument<BlogQueryInput> {Name = "input"}),
+                resolve: async context =>
                 {
                     try
                     {
@@ -39,14 +36,12 @@ namespace P7.BlogStore.Core.GraphQL
                     }
                     return null;
                     //                    return await Task.Run(() => { return ""; });
-                }
-            });
-            ListStringGraphTypeFieldRecords.Add(new FieldRecord<StringGraphType>()
-            {
-                Name = "blogs",
-                QueryArguments = new QueryArguments(new QueryArgument<BlogsQueryInput> { Name = "input" }),
-
-                Resolve = async context =>
+                },
+                deprecationReason: null);
+            queryCore.FieldAsync<StringGraphType>(name: "blogs",
+                description: null,
+                arguments: new QueryArguments(new QueryArgument<BlogsQueryInput> {Name = "input"}),
+                resolve: async context =>
                 {
                     try
                     {
@@ -71,7 +66,7 @@ namespace P7.BlogStore.Core.GraphQL
                             timeStampUpperBoundary,
                             categories,
                             tags);
-                      
+
                         return result;
                     }
                     catch (Exception e)
@@ -80,8 +75,8 @@ namespace P7.BlogStore.Core.GraphQL
                     }
                     return null;
                     //                    return await Task.Run(() => { return ""; });
-                }
-            });
+                },
+                deprecationReason: null);
         }
     }
 }

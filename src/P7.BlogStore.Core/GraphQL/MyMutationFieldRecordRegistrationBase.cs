@@ -5,7 +5,7 @@ using P7.GraphQLCore;
 
 namespace P7.BlogStore.Core.GraphQL
 {
-    public class MyMutationFieldRecordRegistrationBase : MutationFieldRecordRegistrationBase
+    public class MyMutationFieldRecordRegistrationBase : IMutationFieldRecordRegistration
     {
         private IBlogStore _blogStore;
 
@@ -14,14 +14,13 @@ namespace P7.BlogStore.Core.GraphQL
         {
             _blogStore = blogStore;
         }
-        protected override void PopulateStringGraphTypes()
-        {
-            ListStringGraphTypeFieldRecords.Add(new FieldRecord<StringGraphType>()
-            {
-                Name = "blog",
-                QueryArguments = new QueryArguments(new QueryArgument<BlogMutationInput> { Name = "input" }),
 
-                Resolve = async context =>
+        public void AddGraphTypeFields(MutationCore mutationCore)
+        {
+            mutationCore.FieldAsync<StringGraphType>(name: "blog",
+                description: null,
+                arguments: new QueryArguments(new QueryArgument<BlogMutationInput> {Name = "input"}),
+                resolve: async context =>
                 {
                     try
                     {
@@ -32,13 +31,14 @@ namespace P7.BlogStore.Core.GraphQL
                     }
                     catch (Exception e)
                     {
-                        
+
                     }
                     return false;
-//                    return await Task.Run(() => { return ""; });
+                    //                    return await Task.Run(() => { return ""; });
 
-                }
-            });
+                },
+                deprecationReason: null
+            );
         }
     }
 }
