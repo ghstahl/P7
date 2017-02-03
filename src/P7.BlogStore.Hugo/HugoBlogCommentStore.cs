@@ -16,13 +16,13 @@ namespace P7.BlogStore.Hugo
 
         public async Task InsertAsync(Guid blogId, BlogComment blogComment)
         {
-            BlogCommentRecord record = new BlogCommentRecord() {BlogId = blogId, BlogComment = blogComment};
+            BlogCommentRecord record = new BlogCommentRecord() {BlogId = blogId.ToString(), BlogComment = blogComment};
             await InsertAsync(record);
         }
 
         public async Task UpdateAsync(Guid blogId, BlogComment blogComment)
         {
-            BlogCommentRecord record = new BlogCommentRecord() { BlogId = blogId, BlogComment = blogComment };
+            BlogCommentRecord record = new BlogCommentRecord() { BlogId = blogId.ToString(), BlogComment = blogComment };
             await UpdateAsync(record);
         }
 
@@ -30,14 +30,14 @@ namespace P7.BlogStore.Hugo
         {
             BlogCommentRecord record = new BlogCommentRecord()
             {
-                BlogId = blogId, BlogComment = new BlogComment() {Id = id.ToString()}
+                BlogId = blogId.ToString(), BlogComment = new BlogComment() {Id = id.ToString()}
             };
             await DeleteAsync(record.Id_G);
         }
 
         public async Task<BlogComment> FetchAsync(Guid blogId, Guid id)
         {
-            BlogCommentRecord record = new BlogCommentRecord() { BlogId = blogId, BlogComment = new BlogComment() { Id = id.ToString() } };
+            BlogCommentRecord record = new BlogCommentRecord() { BlogId = blogId.ToString(), BlogComment = new BlogComment() { Id = id.ToString() } };
             var result = await FetchAsync(record.Id_G);
             return result.BlogComment;
         }
@@ -50,7 +50,7 @@ namespace P7.BlogStore.Hugo
 
             // only interested in this blog's comments, not all of them.
             var query = from item in records
-                where item.BlogId == blogId
+                where item.BlogId_G == blogId
                 select item.BlogComment;
 
             var slice = query.Skip(ps.CurrentIndex).Take(pageSize).ToList();

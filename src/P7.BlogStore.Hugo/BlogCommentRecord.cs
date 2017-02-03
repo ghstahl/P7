@@ -6,7 +6,19 @@ namespace P7.BlogStore.Hugo
 {
     public class BlogCommentRecord: DocumentBase
     {
-        public Guid BlogId { get; set; }
+        public Guid BlogId_G
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(BlogId))
+                {
+                    return Guid.Empty;
+                }
+                return Guid.Parse(BlogId);
+            }
+        }
+
+        public string BlogId { get; set; }
         public BlogComment BlogComment { get; set; }
 
         public BlogCommentRecord()
@@ -18,7 +30,7 @@ namespace P7.BlogStore.Hugo
             this.BlogId = doc.BlogId;
             this.BlogComment = doc.BlogComment;
         }
-        public BlogCommentRecord(Guid blogId,BlogComment blogComment)
+        public BlogCommentRecord(string blogId,BlogComment blogComment)
         {
             this.BlogId = blogId;
             this.BlogComment = blogComment;
@@ -55,7 +67,7 @@ namespace P7.BlogStore.Hugo
             {
                 if (_id_G == Guid.Empty &&  BlogComment != null)
                 {
-                    _id_G = GuidGenerator.CreateGuid(BlogId, BlogComment.Id);
+                    _id_G = GuidGenerator.CreateGuid(BlogId_G, BlogComment.Id);
                     _id = _id_G.ToString();
                 }
                 return _id;
