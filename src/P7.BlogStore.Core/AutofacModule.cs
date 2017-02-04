@@ -13,7 +13,7 @@ namespace P7.BlogStore.Core
             builder.RegisterType<BlogMetaDataType>();
             builder.RegisterType<Blog>();
             builder.RegisterType<BlogComment>();
-            
+            builder.RegisterType<BlogType>();
         }
     }
 }

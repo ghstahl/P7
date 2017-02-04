@@ -190,28 +190,49 @@ namespace Test.P7.GraphQLCoreTest
 
                     var rawInput = $"{{'input': {jsonBlog} }}";
                     var gqlInputs = rawInput.ToInputs();
-                    var mutation = @"
-                mutation Q($input: BlogMutationInput!) {
-                  blog(input: $input)
-                }";
+                    var mutation = @"  mutation Q($input: BlogMutationInput!) {
+                      blog(input: $input)
+                    }";
 
                     var expected = @"{'blog':true}";
                     AssertQuerySuccess(mutation, expected, gqlInputs, root: null, userContext: GraphQLUserContext);
                     rawInput = $"{{'input': {{'id':'{blogEntry.Id.ToString()}' }} }}";
                     gqlInputs = rawInput.ToInputs();
                     var query = @"query Q($input: BlogQueryInput!) {
-                  blog(input: $input)
-                }";
+                      blog(input: $input)
+                    }";
                     var runResult = ExecuteQuery(query, gqlInputs, root: null, userContext: GraphQLUserContext);
                     bool bRun = runResult.Errors?.Any() == true;
                     Assert.IsFalse(bRun);
 
-                    Dictionary<string, object> data = (Dictionary<string, object>)runResult.Data;
-                    Dictionary<string, object> dataExpected = new Dictionary<string, object> { { "blog", blogEntry } };
+                    Dictionary<string, object> data = (Dictionary<string, object>) runResult.Data;
+                    Dictionary<string, object> dataExpected = new Dictionary<string, object> {{"blog", blogEntry}};
 
                     string additionalInfo = null;
                     blogEntry.EnableDeepCompare = true;
                     data.ShouldBe(dataExpected, additionalInfo);
+
+                    rawInput = $"{{'idValue':'{blogEntry.Id.ToString()}' }}";
+                    gqlInputs = rawInput.ToInputs();
+                    query = @"query Q($idValue: String!) {
+                      droid(id:$idValue){
+                        __typename    
+                            id
+                            title
+                            summary
+                            categories
+                            tags
+                            timeStamp
+                            metaData
+                            data
+                        }
+                    }";
+
+                    runResult = ExecuteQuery(query, gqlInputs, root: null, userContext: GraphQLUserContext);
+                    bRun = runResult.Errors?.Any() == true;
+                    Assert.IsFalse(bRun);
+
+
                 }
                 BlogEntries = BlogEntries.OrderBy(o => o.TimeStamp).ToList();
                 foreach (var item in BlogEntries)

@@ -14,8 +14,19 @@ namespace P7.BlogStore.Core.GraphQL
 
         public override object Serialize(object value)
         {
+            string result;
+            /*
             var model = value as Dictionary<string, object>;
-            var result = JsonConvert.SerializeObject(model);
+            var model2 = value as BlogMetaData;
+            if (model != null)
+                result = JsonConvert.SerializeObject(model);
+            else
+            {
+                result = JsonConvert.SerializeObject(value);
+            }
+            */
+
+            result = JsonConvert.SerializeObject(value);
             return result;
         }
 

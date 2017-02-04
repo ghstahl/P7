@@ -18,6 +18,27 @@ namespace P7.BlogStore.Core.GraphQL
 
         public  void AddGraphTypeFields(QueryCore queryCore)
         {
+            queryCore.FieldAsync<BlogType>(
+                "droid",
+                arguments: new QueryArguments(new QueryArgument<StringGraphType> {Name = "id"}),
+                resolve: async context =>
+                {
+                    try
+                    {
+                        var userContext = context.UserContext.As<GraphQLUserContext>();
+                        var id = context.GetArgument<string>("id");
+                        var result = await _blogStore.FetchAsync(Guid.Parse(id));
+                        return result;
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+                    return null;
+                    //                    return await Task.Run(() => { return ""; });
+                },
+                deprecationReason: null);
+
             queryCore.FieldAsync<StringGraphType>(name: "blog",
                 description: null,
                 arguments: new QueryArguments(new QueryArgument<BlogQueryInput> {Name = "input"}),
