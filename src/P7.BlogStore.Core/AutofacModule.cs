@@ -14,6 +14,11 @@ namespace P7.BlogStore.Core
             builder.RegisterType<Blog>();
             builder.RegisterType<BlogComment>();
             builder.RegisterType<BlogType>();
+            builder.RegisterType<BlogPage>();
+            builder.RegisterType<BlogPageType>();
+
+
+
         }
     }
 }

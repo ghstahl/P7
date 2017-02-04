@@ -430,6 +430,25 @@ namespace Test.P7.GraphQLCoreTest
                 bool bRun2 = runResult2.Errors?.Any() == true;
                 Assert.IsFalse(bRun2);
 
+                var query3 = @"query Q($input: BlogsQueryInput!) {
+                  droids(input: $input){
+                    __typename    
+                    pagingState
+                    currentPagingState
+                    blogs {
+                            id
+                            title
+                            summary
+                          
+                            timeStamp
+                         
+                        }
+                    }
+                }";
+                var runResult3 = ExecuteQuery(query3, gqlInputs2, root: null, userContext: GraphQLUserContext);
+                bool bRun3 = runResult3.Errors?.Any() == true;
+                Assert.IsFalse(bRun3);
+
                 var slice = BlogEntries.Skip(currentIndex).Take(pageSize).ToList();
                 foreach (var item in slice)
                 {
