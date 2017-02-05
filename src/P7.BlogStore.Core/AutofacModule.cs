@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using P7.BlogStore.Core.GraphQL;
+using P7.BlogStore.Core.Models;
 
 namespace P7.BlogStore.Core
 {
@@ -16,9 +17,7 @@ namespace P7.BlogStore.Core
             builder.RegisterType<BlogType>();
             builder.RegisterType<BlogPage>();
             builder.RegisterType<BlogPageType>();
-
-
-
+            builder.RegisterType<BlogMetaDataInput>();
         }
     }
 }

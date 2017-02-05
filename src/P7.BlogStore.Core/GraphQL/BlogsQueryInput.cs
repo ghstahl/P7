@@ -13,6 +13,7 @@ namespace P7.BlogStore.Core.GraphQL
             Field<DateGraphType>("timestampUpperBoundary");
             Field<ListGraphType<StringGraphType>>("categories");
             Field<ListGraphType<StringGraphType>>("tags");
+
         }
     }
 }

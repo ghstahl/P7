@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace P7.BlogStore.Core.GraphQL
+namespace P7.BlogStore.Core.Models
 {
     public class BlogPage
     {

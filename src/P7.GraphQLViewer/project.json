@@ -33,13 +33,13 @@
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.1.0",
     "Microsoft.NETCore.App": "1.1.0",
     "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.1.0",
-    "Serilog": "2.3.0",
     "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "1.1.0",
     "Microsoft.AspNetCore.Identity": "1.1.0",
     "P7.Core": "1.0.0-*",
     "GraphQL-Parser": "2.0.0",
     "P7.GraphQLCore": "1.0.0-*",
     "GraphQL": "0.14.6.657",
-    "Microsoft.AspNetCore.Mvc": "1.1.1"
+    "Microsoft.AspNetCore.Mvc": "1.1.1",
+    "Serilog": "2.4.0"
   }
 }

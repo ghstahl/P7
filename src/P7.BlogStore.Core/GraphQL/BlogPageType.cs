@@ -1,4 +1,5 @@
 using GraphQL.Types;
+using P7.BlogStore.Core.Models;
 
 namespace P7.BlogStore.Core.GraphQL
 {

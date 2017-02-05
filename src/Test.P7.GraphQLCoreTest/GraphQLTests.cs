@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -19,6 +20,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using P7.BlogStore.Core;
+using P7.BlogStore.Core.GraphQL;
 using P7.BlogStore.Hugo;
 using P7.Core;
 using P7.Core.Writers;
@@ -223,7 +225,10 @@ namespace Test.P7.GraphQLCoreTest
                             categories
                             tags
                             timeStamp
-                            metaData
+                            metaData {
+                                category
+                                version
+                            }
                             data
                         }
                     }";
@@ -436,12 +441,18 @@ namespace Test.P7.GraphQLCoreTest
                     pagingState
                     currentPagingState
                     blogs {
+                            __typename    
                             id
                             title
                             summary
-                          
+                            categories
+                            tags
+                            metaData {
+                                category
+                                version
+                            }
                             timeStamp
-                         
+                            data
                         }
                     }
                 }";
@@ -455,9 +466,25 @@ namespace Test.P7.GraphQLCoreTest
                     item.EnableDeepCompare = true;
                 }
                 Dictionary<string, object> result = (Dictionary<string, object>)runResult2.Data;
+                Dictionary<string, object> result3 = (Dictionary<string, object>)runResult3.Data;
                 IPage<Blog> page = (IPage<Blog>)result["blogs"];
+                Dictionary<string, object>  blogPage = (Dictionary<string, object>) result3["droids"];
+                Array kkA = (Array)blogPage["blogs"];
+
+ 
+                var query = from Dictionary<string, object> kaD in kkA
+                    let jsonC = JsonConvert.SerializeObject(kaD)
+                    select JsonConvert.DeserializeObject<Blog>(jsonC);
+                List<Blog> blogsRead = query.ToList();
+
+                slice.ShouldBe(blogsRead);
 
                 var read = page.ToList();
+
+               // var read2 = blogPage.Blogs;
+              //  read2.ShouldBe(read);
+
+
                 slice.ShouldBe(read);
                 pagingState = page.PagingState;
                 currentPagingState = page.CurrentPagingState;

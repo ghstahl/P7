@@ -2,6 +2,7 @@
 using System.Linq;
 using GraphQL;
 using GraphQL.Types;
+using P7.BlogStore.Core.Models;
 using P7.GraphQLCore;
 using P7.Store;
 
