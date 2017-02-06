@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Security.Claims;
 using Autofac;
 using FakeItEasy;
 using GraphQL;
@@ -63,10 +64,16 @@ namespace Test.P7.GraphQLCoreTest
                     A.CallTo(() => featureCollection.Get<IRequestCultureFeature>()).Returns(requestCultureFeature);
                     A.CallTo(() => requestCultureFeature.RequestCulture).Returns(requestCulture);
 
+                    var user = A.Fake<ClaimsPrincipal>();
+                    var claims = A.Fake<List<Claim>>();
+                    
 
+                    var claim = new Claim("herb", ClaimTypes.NameIdentifier);
+                    claims.Add(claim);
 
+                    A.CallTo(() => user.Claims).Returns(claims);
 
-
+                    
                     builder.RegisterInstance(httpContextAccessor).As<IHttpContextAccessor>();
                     builder.RegisterType<GraphQLUserContext>();
 

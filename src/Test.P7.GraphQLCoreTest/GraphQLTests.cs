@@ -458,7 +458,8 @@ namespace Test.P7.GraphQLCoreTest
                     }
                 }";
 
-                var validationRules = AutofacStoreFactory.Resolve<IEnumerable<IValidationRule>>();
+                var validationRules = (AutofacStoreFactory.Resolve<IEnumerable<IValidationRule>>()).ToList();
+                validationRules.Concat(DocumentValidator.CoreRules());
 
                 var runResult3 = ExecuteQuery(
                     query3, gqlInputs2, root: null, userContext: GraphQLUserContext,
