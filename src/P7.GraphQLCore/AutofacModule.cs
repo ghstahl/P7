@@ -7,6 +7,7 @@ using GraphQL.Types;
 using GraphQL.Validation;
 using GraphQL.Validation.Complexity;
 using P7.Core.Reflection;
+using P7.GraphQLCore.Validators;
 
 namespace P7.GraphQLCore
 {
@@ -61,6 +62,17 @@ namespace P7.GraphQLCore
                 };
             });
 
+            /*
+             * this autofac module is reserved for things that everyone gets.
+             * This IRequiresAuthValidationRuleConfig has to be done in your unit test code or
+             * your main application's registrations.
+            builder.RegisterType<InMemoryRequiresAuthValidationRuleConfig>()
+                .As<IRequiresAuthValidationRuleConfig>()
+                .SingleInstance();
+                */
+            builder.RegisterType<TestValidationRule>()
+                .As<IValidationRule>()
+                .SingleInstance();
         }
     }
 }

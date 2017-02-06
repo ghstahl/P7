@@ -21,6 +21,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using P7.BlogStore.Hugo;
 using P7.Core;
+using P7.GraphQLCore.Validators;
 
 namespace Test.P7.GraphQLCoreTest
 {
@@ -29,6 +30,7 @@ namespace Test.P7.GraphQLCoreTest
         public IBiggyConfiguration BiggyConfiguration { get; set; }
 
         private IContainer _autofacContainer;
+
         public IContainer AutofacContainer
         {
             get
@@ -81,8 +83,11 @@ namespace Test.P7.GraphQLCoreTest
                     builder.RegisterType<MemoryCacheOptions>()
                         .As<IOptions<MemoryCacheOptions>>();
                     builder.RegisterType<MemoryCache>()
-                       .As<IMemoryCache>();
+                        .As<IMemoryCache>();
 
+                    builder.RegisterType<InMemoryRequiresAuthValidationRuleConfig>()
+                        .As<IRequiresAuthValidationRuleConfig>()
+                        .SingleInstance();
 
                     var container = builder.Build();
 
@@ -95,8 +100,12 @@ namespace Test.P7.GraphQLCoreTest
 
         public T Resolve<T>()
         {
+            AutofacContainer.Resolve<T>();
             return AutofacContainer.Resolve<T>();
         }
-
+        public IEnumerable<T> ResolveMany<T>()
+        {
+            return Resolve<IEnumerable<T>>();
+        }
     }
 }

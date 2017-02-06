@@ -457,12 +457,12 @@ namespace Test.P7.GraphQLCoreTest
                         }
                     }
                 }";
+
+                var validationRules = AutofacStoreFactory.Resolve<IEnumerable<IValidationRule>>();
+
                 var runResult3 = ExecuteQuery(
                     query3, gqlInputs2, root: null, userContext: GraphQLUserContext,
-                    rules: new List<IValidationRule>()
-                    {
-                        new TestValidationRule()
-                    });
+                    rules: validationRules);
                 bool bRun3 = runResult3.Errors?.Any() == true;
                 Assert.IsFalse(bRun3);
 
