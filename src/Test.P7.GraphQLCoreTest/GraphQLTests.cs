@@ -25,6 +25,7 @@ using P7.BlogStore.Hugo;
 using P7.Core;
 using P7.Core.Writers;
 using P7.GraphQLCore;
+using P7.GraphQLCore.Validators;
 using P7.Store;
 using Shouldly;
 namespace Test.P7.GraphQLCoreTest
@@ -456,7 +457,12 @@ namespace Test.P7.GraphQLCoreTest
                         }
                     }
                 }";
-                var runResult3 = ExecuteQuery(query3, gqlInputs2, root: null, userContext: GraphQLUserContext);
+                var runResult3 = ExecuteQuery(
+                    query3, gqlInputs2, root: null, userContext: GraphQLUserContext,
+                    rules: new List<IValidationRule>()
+                    {
+                        new TestValidationRule()
+                    });
                 bool bRun3 = runResult3.Errors?.Any() == true;
                 Assert.IsFalse(bRun3);
 
@@ -471,7 +477,7 @@ namespace Test.P7.GraphQLCoreTest
                 Dictionary<string, object>  blogPage = (Dictionary<string, object>) result3["droids"];
                 Array kkA = (Array)blogPage["blogs"];
 
- 
+
                 var query = from Dictionary<string, object> kaD in kkA
                     let jsonC = JsonConvert.SerializeObject(kaD)
                     select JsonConvert.DeserializeObject<Blog>(jsonC);
