@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using GraphQL;
@@ -13,16 +12,6 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace P7.GraphQLCore.Validators
 {
-    public interface IGraphQLAuthorizationCheck
-    {
-        bool ShouldDoAuthorizationCheck(OperationType operationTye, string fieldName);
-    }
-
-    public interface IGraphQLClaimsAuthorizationCheck
-    {
-        bool ShouldDoAuthorizationCheck(ClaimsPrincipal claimsPrincipal,OperationType operationTye, string fieldName);
-    }
-
     public class TestValidationRule : IValidationRule
     {
         private List<IGraphQLAuthorizationCheck> _graphQLAuthorizationChecks;

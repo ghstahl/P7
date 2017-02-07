@@ -6,7 +6,7 @@ using P7.GraphQLCore.Validators;
 
 namespace Test.P7.GraphQLCoreTest.GraphQLAuth
 {
-    public class OptOutGraphQLClaimsAuthorizationCheck : IGraphQLClaimsAuthorizationCheck
+    public class TestAllUsersOptOutGraphQLClaimsPrincipalAuthStore : IAllUsersOptOutGraphQLClaimsPrincipalAuthStore
     {
         private static Dictionary<OperationType, Dictionary<string, List<string>>> _individualUsersOptOut;
 
@@ -28,33 +28,22 @@ namespace Test.P7.GraphQLCoreTest.GraphQLAuth
             }
         }
 
-        public bool ShouldDoAuthorizationCheck(ClaimsPrincipal claimsPrincipal, OperationType operationTye, string fieldName)
+        public bool Contains(ClaimsPrincipal claimsPrincipal, OperationType operationType, string fieldName)
         {
-            if (!IndividualUsersOptOut.ContainsKey(operationTye))
-                return true;
+            if (!IndividualUsersOptOut.ContainsKey(operationType))
+                return false;
 
-            var individualMap = IndividualUsersOptOut[operationTye];
+            var individualMap = IndividualUsersOptOut[operationType];
             if (!individualMap.ContainsKey(fieldName))
-                return true;
+                return false;
 
             var fieldList = individualMap[fieldName];
 
-
-            var result = from claim in claimsPrincipal.Claims
-                where claim.Type == ClaimTypes.NameIdentifier
-                select claim;
-
-            foreach (var item in result)
-            {
-                var id = item.Value;
-                var q = from f in fieldList
-                    where f == id
-                    select f;
-                if (q.Any())
-                    return false;
-            }
-
-            return true;
+            var q = from f in fieldList
+                where f == fieldName
+                select f;
+            bool result = q.Any();
+            return result;
         }
     }
 }

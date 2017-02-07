@@ -11,7 +11,7 @@ using P7.GraphQLCore.Validators;
 
 namespace WebApplication5.GraphQLOpts
 {
-    public class LocalSettingsRequiresAuthValidationRuleConfig : IRequiresAuthValidationRuleConfig
+    public class LocalSettingsRequiresAuthValidationRuleConfig
     {
         private readonly IOptions<FiltersGraphQLConfig> _settings;
         private readonly ILogger<LocalSettingsRequiresAuthValidationRuleConfig> _logger;

@@ -7,7 +7,8 @@ using P7.GraphQLCore.Validators;
 
 namespace Test.P7.GraphQLCoreTest.GraphQLAuth
 {
-    public class OptOutGraphQlAuthorizationCheck : IGraphQLAuthorizationCheck
+
+    public class TestGraphQLAuthStore: IAllUsersOptOutGraphQLAuthStore
     {
         private static Dictionary<OperationType, Dictionary<string, bool>> _allUsersOptOut;
         private static Dictionary<OperationType, Dictionary<string, bool>> AllUsersOptOut
@@ -20,21 +21,18 @@ namespace Test.P7.GraphQLCoreTest.GraphQLAuth
                 });
             }
         }
-
-        public bool ShouldDoAuthorizationCheck(OperationType operationTye, string fieldName)
+        public bool Contains(OperationType operationType, string fieldName)
         {
-            if (!AllUsersOptOut.ContainsKey(operationTye))
-                return true;
+            if (!AllUsersOptOut.ContainsKey(operationType))
+                return false;
 
-            var theMap = AllUsersOptOut[operationTye];
+            var theMap = AllUsersOptOut[operationType];
 
             // if the fieldname is in the optout map then everybody gets access.
             //  i.e. the field name has opted out of this authorization check
-            if (theMap.ContainsKey(fieldName))
-                return false;
-
-            return true;
+            return theMap.ContainsKey(fieldName);
         }
     }
+   
 
 }

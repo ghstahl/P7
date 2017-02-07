@@ -77,7 +77,7 @@ namespace Test.P7.GraphQLCoreTest
                     A.CallTo(() => identity.Name).Returns("gName");
                     A.CallTo(() => user.Identity).Returns(identity);
 
-                    var claim = new Claim(ClaimTypes.NameIdentifier,"herb" );
+                    var claim = new Claim(ClaimTypes.NameIdentifier, "herb");
                     claims.Add(claim);
                     A.CallTo(() => user.Claims).Returns(claims);
 
@@ -100,16 +100,24 @@ namespace Test.P7.GraphQLCoreTest
                     builder.RegisterType<MemoryCache>()
                         .As<IMemoryCache>();
 
-                 
-                    builder.RegisterType<OptOutGraphQlAuthorizationCheck>()
-                       .As<IGraphQLAuthorizationCheck>()
-                       .SingleInstance();
+                    builder.RegisterType<TestGraphQLAuthStore>()
+                        .As<IAllUsersOptOutGraphQLAuthStore>()
+                        .SingleInstance();
+
+                    builder.RegisterType<TestAllUsersOptOutGraphQLClaimsPrincipalAuthStore>()
+                        .As<IAllUsersOptOutGraphQLClaimsPrincipalAuthStore>()
+                        .SingleInstance();
+
+
+                    builder.RegisterType<OptOutGraphQLAuthorizationCheck>()
+                        .As<IGraphQLAuthorizationCheck>()
+                        .SingleInstance();
 
                     builder.RegisterType<OptOutGraphQLClaimsAuthorizationCheck>()
-                       .As<IGraphQLClaimsAuthorizationCheck>()
-                       .SingleInstance();
+                        .As<IGraphQLClaimsAuthorizationCheck>()
+                        .SingleInstance();
 
-                  var container = builder.Build();
+                    var container = builder.Build();
 
                     _autofacContainer = container;
                 }
