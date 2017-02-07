@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
+using System.Security.Principal;
 using Autofac;
 using FakeItEasy;
 using GraphQL;
@@ -23,6 +24,7 @@ using Microsoft.Extensions.Options;
 using P7.BlogStore.Hugo;
 using P7.Core;
 using P7.GraphQLCore.Validators;
+using Test.P7.GraphQLCoreTest.GraphQLAuth;
 
 namespace Test.P7.GraphQLCoreTest
 {
@@ -56,24 +58,30 @@ namespace Test.P7.GraphQLCoreTest
                     builder.RegisterInstance(Global.HostingEnvironment).As<IHostingEnvironment>();
                     var httpContextAccessor = A.Fake<IHttpContextAccessor>();
                     var httpContext = A.Fake<HttpContext>();
+                    A.CallTo(() => httpContextAccessor.HttpContext).Returns(httpContext);
                     var featureCollection = A.Fake<IFeatureCollection>();
                     var requestCultureFeature = A.Fake<IRequestCultureFeature>();
                     var requestCulture = new RequestCulture(new CultureInfo("en-US"));
-                    A.CallTo(() => httpContextAccessor.HttpContext).Returns(httpContext);
+
                     A.CallTo(() => httpContext.Features).Returns(featureCollection);
                     A.CallTo(() => featureCollection.Get<IRequestCultureFeature>()).Returns(requestCultureFeature);
                     A.CallTo(() => requestCultureFeature.RequestCulture).Returns(requestCulture);
 
                     var user = A.Fake<ClaimsPrincipal>();
+                    A.CallTo(() => httpContext.User).Returns(user);
+
                     var claims = A.Fake<List<Claim>>();
-                    
+                    var identity = A.Fake<IIdentity>();
+                    A.CallTo(() => identity.IsAuthenticated).Returns(true);
+                    A.CallTo(() => identity.AuthenticationType).Returns("google");
+                    A.CallTo(() => identity.Name).Returns("gName");
+                    A.CallTo(() => user.Identity).Returns(identity);
 
-                    var claim = new Claim("herb", ClaimTypes.NameIdentifier);
+                    var claim = new Claim(ClaimTypes.NameIdentifier,"herb" );
                     claims.Add(claim);
-
                     A.CallTo(() => user.Claims).Returns(claims);
 
-                    
+
                     builder.RegisterInstance(httpContextAccessor).As<IHttpContextAccessor>();
                     builder.RegisterType<GraphQLUserContext>();
 
@@ -92,11 +100,16 @@ namespace Test.P7.GraphQLCoreTest
                     builder.RegisterType<MemoryCache>()
                         .As<IMemoryCache>();
 
-                    builder.RegisterType<InMemoryRequiresAuthValidationRuleConfig>()
-                        .As<IRequiresAuthValidationRuleConfig>()
-                        .SingleInstance();
+                 
+                    builder.RegisterType<OptOutGraphQlAuthorizationCheck>()
+                       .As<IGraphQLAuthorizationCheck>()
+                       .SingleInstance();
 
-                    var container = builder.Build();
+                    builder.RegisterType<OptOutGraphQLClaimsAuthorizationCheck>()
+                       .As<IGraphQLClaimsAuthorizationCheck>()
+                       .SingleInstance();
+
+                  var container = builder.Build();
 
                     _autofacContainer = container;
                 }

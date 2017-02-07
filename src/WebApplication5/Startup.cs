@@ -57,6 +57,7 @@ namespace WebApplication5
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile("appsettings-filters.json", optional: true, reloadOnChange: true)
+                .AddJsonFile("appsettings-filters-graphql.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 
             if (env.IsDevelopment())

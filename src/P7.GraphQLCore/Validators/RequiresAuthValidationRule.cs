@@ -13,92 +13,35 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace P7.GraphQLCore.Validators
 {
-    public interface IRequiresAuthValidationRuleConfig
+    public interface IGraphQLAuthorizationCheck
     {
-        bool AllowAccess(ClaimsPrincipal claimsPrincipal, string fieldName);
-
+        bool ShouldDoAuthorizationCheck(OperationType operationTye, string fieldName);
     }
 
-    public class InMemoryRequiresAuthValidationRuleConfig : IRequiresAuthValidationRuleConfig
+    public interface IGraphQLClaimsAuthorizationCheck
     {
-        private static Dictionary<string, bool> _allUsers;
-
-        private static Dictionary<string, bool> AllUsers
-        {
-            get
-            {
-                return _allUsers ?? (_allUsers = new Dictionary<string, bool>()
-                {
-                    {"droids", true}
-                });
-            }
-        }
-
-        private static Dictionary<string, Dictionary<string, bool>> _individualUsers;
-
-        private static Dictionary<string, Dictionary<string, bool>> IndividualUsers
-        {
-            get
-            {
-                return _individualUsers ?? (_individualUsers = new Dictionary<string, Dictionary<string, bool>>()
-                {
-                    {"blogs", new Dictionary<string, bool>() {{"herb", true}, {"susan", true}}}
-                });
-            }
-        }
-
-        private IMemoryCache _cache;
-
-        public InMemoryRequiresAuthValidationRuleConfig(IMemoryCache cache)
-        {
-            _cache = cache;
-        }
-
-        public bool AllowAccess(ClaimsPrincipal claimsPrincipal, string fieldName)
-        {
-            if (claimsPrincipal == null)
-            {
-                return false;
-            }
-
-            // AllUsers win   
-            if (AllUsers.ContainsKey(fieldName))
-            {
-                return true;
-            }
-            if (IndividualUsers.ContainsKey(fieldName))
-            {
-                var individualMap = IndividualUsers[fieldName];
-                var result = from claim in claimsPrincipal.Claims
-                    where claim.Type == ClaimTypes.NameIdentifier
-                    select claim;
-
-                foreach (var item in result)
-                {
-                    var id = item.Value;
-                    if (individualMap.ContainsKey(id))
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
+        bool ShouldDoAuthorizationCheck(ClaimsPrincipal claimsPrincipal,OperationType operationTye, string fieldName);
     }
 
     public class TestValidationRule : IValidationRule
     {
-        private IRequiresAuthValidationRuleConfig _requiresAuthValidationRuleConfig;
-        public TestValidationRule(IRequiresAuthValidationRuleConfig requiresAuthValidationRuleConfig)
-        {
-            _requiresAuthValidationRuleConfig = requiresAuthValidationRuleConfig;
+        private List<IGraphQLAuthorizationCheck> _graphQLAuthorizationChecks;
+        private List<IGraphQLClaimsAuthorizationCheck> _graphQLClaimsAuthorizationChecks;
 
+
+        public TestValidationRule(
+            IEnumerable<IGraphQLAuthorizationCheck> graphQLAuthorizationChecks,
+            IEnumerable<IGraphQLClaimsAuthorizationCheck> graphQLClaimsAuthorizationChecks)
+        {
+            _graphQLAuthorizationChecks = graphQLAuthorizationChecks.ToList();
+            _graphQLClaimsAuthorizationChecks = graphQLClaimsAuthorizationChecks.ToList();
         }
+
         public INodeVisitor Validate(ValidationContext context)
         {
             var userContext = context.UserContext.As<GraphQLUserContext>();
             var user = userContext.HttpContextAccessor.HttpContext.User;
-          
+
 
             var authenticated = user?.Identity.IsAuthenticated ?? false;
 
@@ -113,7 +56,30 @@ namespace P7.GraphQLCore.Validators
                     List<string> fieldNames = query.ToList();
                     foreach (var fieldName in fieldNames)
                     {
-                        if (!_requiresAuthValidationRuleConfig.AllowAccess(user, fieldName))
+                        bool doAuthCheck = true;
+
+                        bool AllUsersCheck = false;
+                        foreach (var authCheck in _graphQLAuthorizationChecks)
+                        {
+                            AllUsersCheck = authCheck.ShouldDoAuthorizationCheck(opType, fieldName);
+                            if (AllUsersCheck == true)
+                                break;
+
+                        }
+
+                        bool justThisUserCheck = true;
+                        foreach (var authCheck in _graphQLClaimsAuthorizationChecks)
+                        {
+                            justThisUserCheck = authCheck.ShouldDoAuthorizationCheck(user, opType, fieldName);
+                            if (justThisUserCheck == false)
+                                break;
+                        }
+
+                        // Any no is a no
+                        doAuthCheck = AllUsersCheck && justThisUserCheck;
+
+
+                        if (doAuthCheck && !authenticated)
                         {
                             context.ReportError(new ValidationError(
                                 context.OriginalQuery,

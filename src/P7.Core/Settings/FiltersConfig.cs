@@ -2,6 +2,14 @@
 
 namespace P7.Core.Settings
 {
+    public class FiltersGraphQLConfig
+    {
+        public const string WellKnown_SectionName = "filters-graphQL";
+        public SimpleManyConfig SimpleMany { get; set; }
+        public GlobalPathConfig GlobalPath { get; set; }
+        public MiddleWareConfig MiddleWare { get; set; }
+    }
+
     public class FiltersConfig
     {
         public const string WellKnown_SectionName = "Filters";
