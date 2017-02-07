@@ -109,13 +109,7 @@ namespace Test.P7.GraphQLCoreTest
                         .SingleInstance();
 
 
-                    builder.RegisterType<OptOutGraphQLAuthorizationCheck>()
-                        .As<IGraphQLAuthorizationCheck>()
-                        .SingleInstance();
-
-                    builder.RegisterType<OptOutGraphQLClaimsAuthorizationCheck>()
-                        .As<IGraphQLClaimsAuthorizationCheck>()
-                        .SingleInstance();
+                   
 
                     var container = builder.Build();
 

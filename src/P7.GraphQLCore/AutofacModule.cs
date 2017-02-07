@@ -62,17 +62,19 @@ namespace P7.GraphQLCore
                 };
             });
 
-            /*
-             * this autofac module is reserved for things that everyone gets.
-             * This IRequiresAuthValidationRuleConfig has to be done in your unit test code or
-             * your main application's registrations.
-            builder.RegisterType<InMemoryRequiresAuthValidationRuleConfig>()
-                .As<IRequiresAuthValidationRuleConfig>()
-                .SingleInstance();
-                */
+            
             builder.RegisterType<TestValidationRule>()
                 .As<IValidationRule>()
                 .SingleInstance();
+
+            builder.RegisterType<OptOutGraphQLAuthorizationCheck>()
+                       .As<IGraphQLAuthorizationCheck>()
+                       .SingleInstance();
+
+            builder.RegisterType<OptOutGraphQLClaimsAuthorizationCheck>()
+                .As<IGraphQLClaimsAuthorizationCheck>()
+                .SingleInstance();
+
         }
     }
 }
