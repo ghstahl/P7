@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -19,61 +20,119 @@ namespace P7.Core.Providers
     }
     public interface IOptOutOptInAuthorizeStore
     {
-        IEnumerable<FilterTypeRecord> GetFilterTypes();
+        IEnumerable<FilterItem> GetFilterItems(string areaName, string controllerName, string actionName);
     }
 
     public class LocalSettingsOptOutOptInAuthorizeStore : IOptOutOptInAuthorizeStore
     {
+        private IServiceProvider _serviceProvider;
         private readonly IOptions<FiltersConfig> _settings;
         private readonly ILogger<LocalSettingsOptOutOptInAuthorizeStore> _logger;
+
         public LocalSettingsOptOutOptInAuthorizeStore(
+            IServiceProvider serviceProvider,
             ILogger<LocalSettingsOptOutOptInAuthorizeStore> logger,
             IOptions<FiltersConfig> settings)
         {
             _settings = settings;
             _logger = logger;
+            _serviceProvider = serviceProvider;
         }
 
-        
-        private List<FilterTypeRecord> _filterTypes;
-        public IEnumerable<FilterTypeRecord> GetFilterTypes()
+        private Dictionary<string, FilterItem> _typeToFilterItem;
+
+        private Dictionary<string, FilterItem> TypeToFilterItem
         {
-            _logger.LogInformation("Enter");
-            try
+            get
             {
-                if (_filterTypes == null)
+                if (_typeToFilterItem == null)
                 {
-                    _filterTypes = new List<FilterTypeRecord>();
-
-                    FilterItem filterItem;
-                    if (_settings.Value.SimpleMany.OptOut != null)
+                    _logger.LogInformation("Enter");
+                    try
                     {
-                        foreach (var record in _settings.Value.SimpleMany.OptOut)
+                        if (_settings.Value.SimpleMany == null)
                         {
-                            _logger.LogInformation("Processing OptOut Record: {0}", record);
-                            var type = TypeHelper<Type>.GetTypeByFullName(record.Filter);
-                            _filterTypes.Add(new FilterTypeRecord() {Key = record.Filter, Type = type});
+                            throw new Exception("_settings.Value.SimpleMany cannot be NULL.  Check your appsettings.json.");
                         }
+
+                        List<FilterTypeRecord> filterTypes;
+                        FilterItem filterItem;
+
+                        filterTypes = new List<FilterTypeRecord>();
+
+                        if (_settings.Value.SimpleMany.OptOut != null)
+                        {
+                            foreach (var record in _settings.Value.SimpleMany.OptOut)
+                            {
+                                _logger.LogInformation("Processing OptOut Record: {0}", record);
+                                var type = TypeHelper<Type>.GetTypeByFullName(record.Filter);
+                                filterTypes.Add(new FilterTypeRecord() { Key = record.Filter, Type = type });
+                            }
+                        }
+
+                        if (_settings.Value.SimpleMany.OptIn != null)
+                        {
+                            foreach (var record in _settings.Value.SimpleMany.OptIn)
+                            {
+                                _logger.LogInformation("Processing OptIn Record: {0}", record);
+                                var type = TypeHelper<Type>.GetTypeByFullName(record.Filter);
+                                filterTypes.Add(new FilterTypeRecord() { Key = record.Filter, Type = type });
+                            }
+                        }
+                        _typeToFilterItem = new Dictionary<string, FilterItem>();
+                        foreach (var filterType in filterTypes)
+                        {
+                            _logger.LogInformation("Processing OptOut Record: {0}", filterType.Key);
+                            try
+                            {
+                                filterItem = _serviceProvider.CreateFilterItem(filterType.Type);
+                            }
+                            catch (Exception e)
+                            {
+                                throw new Exception(
+                                    $"fiter:{filterType.Key}, seems to be bad, are you sure it is referenced.", e);
+                            }
+                            _typeToFilterItem.Add(filterType.Key, filterItem);
+                        }
+
                     }
-
-                    if (_settings.Value.SimpleMany.OptIn != null)
+                    catch (Exception e)
                     {
-                        foreach (var record in _settings.Value.SimpleMany.OptIn)
-                        {
-                            _logger.LogInformation("Processing OptIn Record: {0}", record);
-                            var type = TypeHelper<Type>.GetTypeByFullName(record.Filter);
-                            _filterTypes.Add(new FilterTypeRecord() { Key = record.Filter, Type = type });
-                        }
+                        _logger.LogCritical(e.Message);
+                        _typeToFilterItem = null;
                     }
                 }
+                return _typeToFilterItem;
             }
-            catch (Exception e)
+        }
+
+        public IEnumerable<FilterItem> GetFilterItems(string areaName, string controllerName, string actionName)
+        {
+            var filters = new List<FilterItem>();
+
+            FilterItem filterItem;
+
+            // the following are generic optin and optout
+            foreach (var record in _settings.Value.SimpleMany.OptOut)
             {
-                _filterTypes = null;
-                _logger.LogCritical(e.Message);
+                var match = record.RouteTree.ContainsMatch(areaName,controllerName,actionName);
+                if (!match)
+                {
+                    filterItem = TypeToFilterItem[record.Filter];
+                    filters.Add(filterItem);
+                }
             }
-            _logger.LogInformation("Exit");
-            return _filterTypes;
+
+            foreach (var record in _settings.Value.SimpleMany.OptIn)
+            {
+                var match = record.RouteTree.ContainsMatch(areaName, controllerName, actionName);
+                if (match)
+                {
+                    filterItem = TypeToFilterItem[record.Filter];
+                    filters.Add(filterItem);
+                }
+            }
+            return filters;
         }
     }
 
@@ -81,56 +140,20 @@ namespace P7.Core.Providers
     {
         private readonly ILogger<OptOutOptInFilterProvider> _logger;
         private IOptOutOptInAuthorizeStore _authorizeStore;
-        private IOptions<FiltersConfig> _settings;
         private IServiceProvider _serviceProvider;
         private static readonly object locker = new object();
         private static Dictionary<string, List<FilterItem>> ActionFilterMap = new Dictionary<string, List<FilterItem>>();
         private static Dictionary<string, FilterItem> TypeToFilterItem = new Dictionary<string, FilterItem>();
 
-        public OptOutOptInFilterProvider(IServiceProvider serviceProvider,
-             IOptOutOptInAuthorizeStore authorizeStore,IOptions<FiltersConfig> settings,
+        public OptOutOptInFilterProvider(
+            IServiceProvider serviceProvider,
+            IOptOutOptInAuthorizeStore authorizeStore, 
+            IOptions<FiltersConfig> settings,
             ILogger<OptOutOptInFilterProvider> logger)
         {
             _authorizeStore = authorizeStore;
             _logger = logger;
-            _settings = settings;
             _serviceProvider = serviceProvider;
-            FrontLoadFilterItems();
-        }
-
-        private void FrontLoadFilterItems()
-        {
-            _logger.LogInformation("Enter");
-            try
-            {
-                if (_settings.Value.SimpleMany == null)
-                {
-                    throw new Exception("_settings.Value.SimpleMany cannot be NULL.  Check your appsettings.json.");
-                }
-
-                FilterItem filterItem;
-                var filterTypes = _authorizeStore.GetFilterTypes();
-                foreach (var filterType in filterTypes)
-                {
-                    _logger.LogInformation("Processing OptOut Record: {0}", filterType.Key);
-                    try
-                    {
-                        filterItem = _serviceProvider.CreateFilterItem(filterType.Type);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(
-                            $"fiter:{filterType.Key}, seems to be bad, are you sure it is referenced.", e);
-                    }
-                    TypeToFilterItem.Add(filterType.Key, filterItem);
-                }
-            }
-            catch (Exception e)
-            {
-                _logger.LogCritical(e.Message);
-                throw;
-            }
-            _logger.LogInformation("Exit");
         }
 
 
@@ -141,30 +164,9 @@ namespace P7.Core.Providers
                 List<FilterItem> filters;
                 if (!ActionFilterMap.TryGetValue(context.ActionContext.ActionDescriptor.DisplayName, out filters))
                 {
-                    filters = new List<FilterItem>();
-
-                    FilterItem filterItem;
-
-                    // the following are generic optin and optout
-                    foreach (var record in _settings.Value.SimpleMany.OptOut)
-                    {
-                        var match = record.RouteTree.ContainsMatch(context);
-                        if (!match)
-                        {
-                            filterItem = TypeToFilterItem[record.Filter];
-                            filters.Add(filterItem);
-                        }
-                    }
-
-                    foreach (var record in _settings.Value.SimpleMany.OptIn)
-                    {
-                        var match = record.RouteTree.ContainsMatch(context);
-                        if (match)
-                        {
-                            filterItem = TypeToFilterItem[record.Filter];
-                            filters.Add(filterItem);
-                        }
-                    }
+                    ControllerActionDescriptor cad = (ControllerActionDescriptor)context.ActionContext.ActionDescriptor;
+                    string area = (string)context.ActionContext.RouteData.Values["area"];
+                    filters = _authorizeStore.GetFilterItems(area, cad.ControllerName, cad.ActionName).ToList();
                     ActionFilterMap.Add(context.ActionContext.ActionDescriptor.DisplayName, filters);
                 }
                 return filters;
@@ -186,7 +188,6 @@ namespace P7.Core.Providers
             {
                 context.Results.Add(filter);
             }
-
         }
 
         public void OnProvidersExecuted(FilterProviderContext context)

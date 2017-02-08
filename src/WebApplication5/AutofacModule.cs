@@ -56,8 +56,12 @@ namespace WebApplication5
                 .As<ISimpleRedirectorStore>()
                 .SingleInstance();
 
-            builder.RegisterType<LocalSettingsGlobalPathAuthorizeStore>().As<IGlobalPathAuthorizeStore>();
-            builder.RegisterType<LocalSettingsOptOutOptInAuthorizeStore>().As<IOptOutOptInAuthorizeStore>();
+            builder.RegisterType<LocalSettingsGlobalPathAuthorizeStore>()
+                .As<IGlobalPathAuthorizeStore>()
+                .SingleInstance();
+            builder.RegisterType<LocalSettingsOptOutOptInAuthorizeStore>()
+                .As<IOptOutOptInAuthorizeStore>()
+                .SingleInstance();
 
         }
     }

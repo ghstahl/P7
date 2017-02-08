@@ -28,35 +28,38 @@ namespace P7.Core.Providers
             return fi;
         }
 
-        public static bool ContainsMatch(this List<AreaNode> routeTree, FilterProviderContext context)
+        public static bool ContainsMatch(this List<AreaNode> routeTree, string areaName, string controllerName, string actionName)
         {
-            ControllerActionDescriptor cad = (ControllerActionDescriptor)context.ActionContext.ActionDescriptor;
-            string area = (string)context.ActionContext.RouteData.Values["area"];
-
             var areaNode = routeTree.Find(x =>
             {
-                if (string.IsNullOrEmpty(x.Area) && string.IsNullOrEmpty(area))
+                if (string.IsNullOrEmpty(x.Area) && string.IsNullOrEmpty(areaName))
                     return true;
-                return String.Compare(area, x.Area, StringComparison.OrdinalIgnoreCase) == 0;
+                return String.Compare(areaName, x.Area, StringComparison.OrdinalIgnoreCase) == 0;
 
             });
-
             if (areaNode != null)
             {
                 if (areaNode.Controllers == null || !areaNode.Controllers.Any())
                     return true;
 
-                var controllerNode = areaNode.Controllers.Find(x => String.Compare(cad.ControllerName, x.Controller, StringComparison.OrdinalIgnoreCase) == 0);
+                var controllerNode = areaNode.Controllers.Find(x => String.Compare(controllerName, x.Controller, StringComparison.OrdinalIgnoreCase) == 0);
                 if (controllerNode != null)
                 {
                     if (controllerNode.Actions == null || !controllerNode.Actions.Any())
                         return true;
 
-                    var action = controllerNode.Actions.Find(x => String.Compare(cad.ActionName, x.Action, StringComparison.OrdinalIgnoreCase) == 0);
+                    var action = controllerNode.Actions.Find(x => String.Compare(actionName, x.Action, StringComparison.OrdinalIgnoreCase) == 0);
                     return action != null;
                 }
             }
             return false;
+        }
+
+        public static bool ContainsMatch(this List<AreaNode> routeTree, FilterProviderContext context)
+        {
+            ControllerActionDescriptor cad = (ControllerActionDescriptor)context.ActionContext.ActionDescriptor;
+            string area = (string)context.ActionContext.RouteData.Values["area"];
+            return routeTree.ContainsMatch(area, cad.ControllerName, cad.ActionName);
         }
     }
 }
