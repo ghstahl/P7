@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.Extensions.Logging;
+using P7.Core.Middleware;
+using P7.Core.Providers;
 using P7.GraphQLCore.Validators;
 using P7.SimpleRedirect.Core;
 using WebApplication5.GraphQLOpts;
@@ -40,6 +42,7 @@ namespace WebApplication5
             return query.FirstOrDefault();
         }
     }
+
     public class AutofacModule : Module
     {
         protected override void Load(ContainerBuilder builder)
@@ -53,7 +56,9 @@ namespace WebApplication5
                 .As<ISimpleRedirectorStore>()
                 .SingleInstance();
 
-            
+            builder.RegisterType<LocalSettingsGlobalPathAuthorizeStore>().As<IGlobalPathAuthorizeStore>();
+            builder.RegisterType<LocalSettingsOptOutOptInAuthorizeStore>().As<IOptOutOptInAuthorizeStore>();
+
         }
     }
 }
