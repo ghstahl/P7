@@ -115,7 +115,7 @@ namespace P7.Core.Providers
                     _logger.LogInformation("Processing OptOut Record: {0}", filterType.Key);
                     try
                     {
-                        filterItem = CreateFilterItem(filterType.Type);
+                        filterItem = _serviceProvider.CreateFilterItem(filterType.Type);
                     }
                     catch (Exception e)
                     {
@@ -133,21 +133,7 @@ namespace P7.Core.Providers
             _logger.LogInformation("Exit");
         }
 
-        private FilterItem CreateFilterItem(string filterType)
-        {
-            var type = TypeHelper<Type>.GetTypeByFullName(filterType);
-            return CreateFilterItem(type);
-        }
 
-        private FilterItem CreateFilterItem(Type filterType)
-        {
-            var typeFilterAttribute = new TypeFilterAttribute(filterType) { Order = 0 };
-            var filterDescriptor = new FilterDescriptor(typeFilterAttribute, 0);
-            var filterInstance = _serviceProvider.GetService(filterType);
-            var filterMetaData = (IFilterMetadata)filterInstance;
-            var fi = new FilterItem(filterDescriptor, filterMetaData);
-            return fi;
-        }
         private List<FilterItem> FetchFilters(FilterProviderContext context)
         {
             lock (locker)

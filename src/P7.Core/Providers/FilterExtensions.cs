@@ -2,15 +2,32 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
+using P7.Core.Reflection;
 using P7.Core.Settings;
 
 namespace P7.Core.Providers
 {
     public static class FilterExtensions
     {
+        public static  FilterItem CreateFilterItem(this IServiceProvider serviceProvider,string filterType)
+        {
+            var type = TypeHelper<Type>.GetTypeByFullName(filterType);
+            return serviceProvider.CreateFilterItem(type);
+        }
+
+        public static FilterItem CreateFilterItem(this IServiceProvider serviceProvider, Type filterType)
+        {
+            var typeFilterAttribute = new TypeFilterAttribute(filterType) { Order = 0 };
+            var filterDescriptor = new FilterDescriptor(typeFilterAttribute, 0);
+            var filterInstance = serviceProvider.GetService(filterType);
+            var filterMetaData = (IFilterMetadata)filterInstance;
+            var fi = new FilterItem(filterDescriptor, filterMetaData);
+            return fi;
+        }
+
         public static bool ContainsMatch(this List<AreaNode> routeTree, FilterProviderContext context)
         {
             ControllerActionDescriptor cad = (ControllerActionDescriptor)context.ActionContext.ActionDescriptor;

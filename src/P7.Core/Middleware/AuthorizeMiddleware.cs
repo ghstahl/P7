@@ -93,20 +93,7 @@ namespace P7.Core.Middleware
             FrontLoadFilterItems();
         }
 
-        private IMiddlewarePlugin CreateMiddlewareInstance(string filterType)
-        {
-            var type = TypeHelper<Type>.GetTypeByFullName(filterType);
-            return CreateMiddlewareInstance(type);
-        }
-
-        private IMiddlewarePlugin CreateMiddlewareInstance(Type filterType)
-        {
-            var typeFilterAttribute = new TypeFilterAttribute(filterType) { Order = 0 };
-            var filterDescriptor = new FilterDescriptor(typeFilterAttribute, 0);
-            var instance = _serviceProvider.GetService(filterType);
-            var iMiddlewarePlugin = (IMiddlewarePlugin)instance;
-            return iMiddlewarePlugin;
-        }
+      
         private void FrontLoadFilterItems()
         {
             _logger.LogInformation("Enter");
@@ -124,7 +111,7 @@ namespace P7.Core.Middleware
                     _logger.LogInformation("Processing filterType: {0}", filterType.Key);
                     try
                     {
-                        middlewarePluginInstance = CreateMiddlewareInstance(filterType.Type);
+                        middlewarePluginInstance = _serviceProvider.CreateMiddlewareInstance(filterType.Type);
                     }
                     catch (Exception e)
                     {
@@ -181,16 +168,6 @@ namespace P7.Core.Middleware
             {
                 await _next(httpContext);
             }
-        }
-    }
-    // You may need to install the Microsoft.AspNet.Http.Abstractions package into your project
-
-    // Extension method used to add the middleware to the HTTP request pipeline.
-    public static class MiddlewareExtensions
-    {
-        public static IApplicationBuilder UseAuthorizeMiddleware(this IApplicationBuilder builder)
-        {
-            return builder.UseMiddleware<AuthorizeMiddleware>();
         }
     }
 }
