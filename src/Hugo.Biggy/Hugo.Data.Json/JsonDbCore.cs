@@ -6,7 +6,7 @@ namespace Hugo.Data.Json
 {
 	public class JsonDbCore
 	{
-		public virtual IDataStore<T> CreateStoreFor<T>() where T : new()
+		public virtual IDataStore<T> CreateStoreFor<T>() where T : class, new()
 		{
 			return new JsonStore<T>(this);
 		}

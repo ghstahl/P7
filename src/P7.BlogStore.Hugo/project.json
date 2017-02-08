@@ -1,0 +1,31 @@
+{
+  "dependencies": {
+    "Autofac": "4.3.0",
+    "Autofac.Configuration": "4.0.1",
+    "Autofac.Extensions.DependencyInjection": "4.0.0",
+    "Hugo.Core": "1.0.0-*",
+    "Hugo.Data.Json": "1.0.0-*",
+    "Microsoft.AspNetCore": "1.1.0",
+    "Microsoft.AspNetCore.Mvc": "1.1.1",
+    "Microsoft.AspNetCore.Mvc.Core": "1.1.1",
+    "Microsoft.AspNetCore.Mvc.Localization": "1.1.1",
+    "Microsoft.AspNetCore.Routing": "1.1.0",
+    "Microsoft.EntityFrameworkCore": "1.1.0",
+    "Microsoft.Extensions.Caching.Abstractions": "1.1.0",
+    "Microsoft.Extensions.Configuration.Abstractions": "1.1.0",
+    "Newtonsoft.Json": "9.0.1",
+    "P7.BlogStore.Core": "1.0.0-*",
+    "P7.GraphQLCore": "1.0.0-*",
+    "Serilog": "2.4.0",
+    "System.Runtime.Serialization.Formatters": "4.3.0"
+  },
+  "frameworks": {
+    "netcoreapp1.1": {
+      "imports": "dnxcore50"
+    }
+  },
+  "version": "1.0.0-*",
+  "buildOptions": {
+    "outputName": "P7.BlogStore.Hugo"
+  }
+}

@@ -24,14 +24,19 @@ namespace P7.Core
             logger.Information("Found these types: {DerivedTypes}", derivedTypesName);
             builder.RegisterTypes(derivedTypes).SingleInstance();
 
+            //////
+            // Localization Services
+            //////
             builder.RegisterType<TreatmentMap>().As<ITreatmentMap>().SingleInstance();
             // This is a global sweep to find all types that implement IFieldRecordRegistration.  We then register every one of them.
             // Future would be to database this, but for now if it is referenced it is in.
-            var myTypes = TypeHelper<ILocalizedStringResultTreatment>.FindTypesInAssemblies(TypeHelper<ILocalizedStringResultTreatment>.IsType);
+            var myTypes = TypeHelper<ILocalizedStringResultTreatment>
+                .FindTypesInAssemblies(TypeHelper<ILocalizedStringResultTreatment>.IsType);
             foreach (var type in myTypes)
             {
                 builder.RegisterType(type).As<ILocalizedStringResultTreatment>();
             }
+            builder.RegisterType<ResourceFetcher>().As<IResourceFetcher>();
         }
     }
 }

@@ -9,7 +9,7 @@ namespace P7.Core.Writers
     {
         private readonly Formatting _formatting;
         private readonly JsonSerializerSettings _settings;
-
+        public JsonSerializerSettings JsonSerializerSettings { get { return _settings;} }
         public JsonDocumentWriter()
             : this(indent: false)
         {
@@ -22,7 +22,8 @@ namespace P7.Core.Writers
                 {
                     ContractResolver = new CamelCasePropertyNamesContractResolver(),
                     DateFormatHandling = DateFormatHandling.IsoDateFormat,
-                    DateFormatString = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
+                    DateFormatString = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'",
+                    DateTimeZoneHandling = DateTimeZoneHandling.Utc
                 })
         {
         }

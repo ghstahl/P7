@@ -4,12 +4,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Microsoft.Extensions.Logging;
+using P7.Core.Middleware;
+using P7.Core.Providers;
+using P7.GraphQLCore.Validators;
 using P7.SimpleRedirect.Core;
+using WebApplication5.GraphQLOpts;
 using WebApplication5.Services;
 
 namespace WebApplication5
 {
-    class CInMemorySimpleRedirectStore : ISimpleRedirectorStore
+    class InMemorySimpleRedirectStore : ISimpleRedirectorStore
     {
         private List<SimpleRedirectRecord> _simpleRedirectRecords;
 
@@ -38,6 +42,7 @@ namespace WebApplication5
             return query.FirstOrDefault();
         }
     }
+
     public class AutofacModule : Module
     {
         protected override void Load(ContainerBuilder builder)
@@ -47,9 +52,17 @@ namespace WebApplication5
             builder.Register(c => new ValuesService(c.Resolve<ILogger<ValuesService>>()))
                 .As<IValuesService>()
                 .InstancePerLifetimeScope();
-            builder.Register(c => new CInMemorySimpleRedirectStore())
+            builder.Register(c => new InMemorySimpleRedirectStore())
                 .As<ISimpleRedirectorStore>()
                 .SingleInstance();
+
+            builder.RegisterType<LocalSettingsGlobalPathAuthorizeStore>()
+                .As<IGlobalPathAuthorizeStore>()
+                .SingleInstance();
+            builder.RegisterType<LocalSettingsOptOutOptInAuthorizeStore>()
+                .As<IOptOutOptInAuthorizeStore>()
+                .SingleInstance();
+
         }
     }
 }

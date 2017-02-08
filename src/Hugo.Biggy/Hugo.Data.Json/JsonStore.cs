@@ -13,10 +13,11 @@ using System.Text;
 
 namespace Hugo.Data.Json
 {
-	public class JsonStore<T> : IDataStore<T> where T : new()
+	public class JsonStore<T> : IDataStore<T> where T : class, new()
 	{
+        public ISorter<T> Sorter { get; set; }
 
-		public bool KeyIsAutoIncrementing { get; set; }
+        public bool KeyIsAutoIncrementing { get; set; }
 		public string TableName { get; set; }
 		public string DbDirectory { get { return this.Database.DbDirectory; } set { this.DbDirectory = value; } }
 
@@ -185,18 +186,17 @@ namespace Hugo.Data.Json
 				if (itemKeyProperty != null)
 				{
 					var itemKeyValue = itemKeyProperty.GetValue(item, null);
-					foreach (var dataItem in _items)
-					{
-						var dataItemAsDictionary = dataItem.ToDictionary();
-						if (dataItemAsDictionary[ KeyName ].Equals(itemKeyValue))
-						{
-							int index = _items.IndexOf(dataItem);
-							_items.Remove(dataItem);
-							_items.Insert(index, item);
-							break;
-						}
-					}
-				}
+				    var query = from record in _items
+				        let c = record.ToDictionary()
+				        where c[KeyName].Equals(itemKeyValue)
+				        select record;
+                    var found = query.FirstOrDefault();
+				    if (found != null)
+				    {
+                        _items.Remove(found);
+                    }
+                    _items.Add(item);
+                }
 				else
 				{
 					throw new Exception("The Key property for the object to be updated is null or is not defined.");
@@ -498,8 +498,12 @@ namespace Hugo.Data.Json
 		{
 			var completed = false;
 			IsFlushing = true;
-			// Serialize json directly to the output stream
-			var tries = 20;
+            // Serialize json directly to the output stream
+            if (Sorter != null)
+            {
+                _items = Sorter.Sort(_items);
+            }
+            var tries = 20;
 			for (int numTries = 0; numTries <= tries; numTries++)
 			{
 				try
@@ -509,7 +513,7 @@ namespace Hugo.Data.Json
 					using (var outstream = new StreamWriter(stream))
 					{
 						var writer     = new JsonTextWriter(outstream);
-						var serializer = JsonSerializer.CreateDefault();
+						var serializer = JsonSerializer.CreateDefault(); 
 						serializer.Serialize(writer, _items);
 						// outstream.Close();
 						completed = true;
@@ -531,4 +535,9 @@ namespace Hugo.Data.Json
 			return completed;
 		}
 	}
+
+    public interface ISorter<T> where T: class
+    {
+        List<T> Sort(List<T> items);
+    }
 }
