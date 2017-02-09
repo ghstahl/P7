@@ -4,7 +4,6 @@
     "Autofac.Configuration": "4.0.1",
     "Autofac.Extensions.DependencyInjection": "4.0.0",
     "Microsoft.AspNetCore": "1.1.0",
-    "Microsoft.AspNetCore.Mvc": "1.1.1",
     "Microsoft.AspNetCore.Mvc.Core": "1.1.1",
     "Microsoft.AspNetCore.Mvc.Localization": "1.1.1",
     "Microsoft.AspNetCore.Routing": "1.1.0",

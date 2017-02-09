@@ -39,7 +39,6 @@
     "GraphQL-Parser": "2.0.0",
     "P7.GraphQLCore": "1.0.0-*",
     "GraphQL": "0.14.6.657",
-    "Microsoft.AspNetCore.Mvc": "1.1.1",
     "Serilog": "2.4.0"
   }
 }
