@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -25,20 +24,15 @@ using p7.Services;
 using P7.Core;
 using P7.Core.FileProviders;
 using Serilog;
-
-using WebApplication5.Services;
 using P7.Core.Startup;
 using P7.Core.IoC;
-using P7.Core.Localization;
 using P7.Core.TagHelpers;
 using P7.GraphQLCore;
-using Serilog.Exceptions;
 
 namespace WebApplication5
 {
     public class Startup
     {
-
 
         private readonly IHostingEnvironment _hostingEnvironment;
 
@@ -49,7 +43,6 @@ namespace WebApplication5
 
             var RollingPath = Path.Combine(env.ContentRootPath, "logs/myapp-{Date}.txt");
             Log.Logger = new LoggerConfiguration()
-                .Enrich.WithExceptionDetails()
                 .Enrich.FromLogContext()
                 .WriteTo.RollingFile(RollingPath)
                 .WriteTo.LiterateConsole()

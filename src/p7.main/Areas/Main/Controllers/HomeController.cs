@@ -4,9 +4,17 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using p7.main.Models;
+using Serilog;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace p7.main.Areas.Main.Controllers
 {
+    class HomeControllerLoggingEvents
+    {
+        public const int EMULTATE_ERROR = 1000;
+
+    }
+
     [Area("Main")]
     public class HomeController : Controller
     {
@@ -57,7 +65,17 @@ namespace p7.main.Areas.Main.Controllers
         }
         public IActionResult EmulateError()
         {
-            throw new Exception("Let's assume that there is an error in the controller action.");
+            try
+            {
+                throw new Exception("Let's assume that there is an error in the controller action.");
+
+            }
+            catch (Exception e)
+            {
+                Log.Logger.Error(e,"in eumulate error");
+                Logger.LogError(HomeControllerLoggingEvents.EMULTATE_ERROR,e, "in eumulate error");
+                throw;
+            }
         }
     }
 }
