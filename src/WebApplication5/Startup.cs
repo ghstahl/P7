@@ -32,6 +32,7 @@ using P7.Core.IoC;
 using P7.Core.Localization;
 using P7.Core.TagHelpers;
 using P7.GraphQLCore;
+using Serilog.Exceptions;
 
 namespace WebApplication5
 {
@@ -48,7 +49,10 @@ namespace WebApplication5
 
             var RollingPath = Path.Combine(env.ContentRootPath, "logs/myapp-{Date}.txt");
             Log.Logger = new LoggerConfiguration()
+                .Enrich.WithExceptionDetails()
+                .Enrich.FromLogContext()
                 .WriteTo.RollingFile(RollingPath)
+                .WriteTo.LiterateConsole()
                 .CreateLogger();
             Log.Information("Ah, there you are!");
 
@@ -72,6 +76,7 @@ namespace WebApplication5
             // Initialize the global configuration static
             GlobalConfigurationRoot.Configuration = Configuration;
         }
+
         public IContainer ApplicationContainer { get; private set; }
         public IConfigurationRoot Configuration { get; }
 
@@ -111,12 +116,14 @@ namespace WebApplication5
 
             services.AddSingleton<IFilterProvider, P7.Core.Providers.OptOutOptInFilterProvider>();
             services.AddTransient<ClaimsPrincipal>(
-               s => s.GetService<IHttpContextAccessor>().HttpContext.User);
+                s => s.GetService<IHttpContextAccessor>().HttpContext.User);
 
             services.Configure<IdentityOptions>(options =>
             {
-                options.Cookies.ApplicationCookie.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Identity/Account/Login");
-                options.Cookies.ApplicationCookie.LogoutPath = new Microsoft.AspNetCore.Http.PathString("/Identity/Account/LogOff");
+                options.Cookies.ApplicationCookie.LoginPath =
+                    new Microsoft.AspNetCore.Http.PathString("/Identity/Account/Login");
+                options.Cookies.ApplicationCookie.LogoutPath =
+                    new Microsoft.AspNetCore.Http.PathString("/Identity/Account/LogOff");
             });
             services.AddAllConfigureServicesRegistrants(Configuration);
             services.AddDependencies();
@@ -127,11 +134,15 @@ namespace WebApplication5
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(
+            IApplicationBuilder app,
+            IHostingEnvironment env,
+            ILoggerFactory loggerFactory,
+            IApplicationLifetime appLifetime)
         {
             var dd = P7.Core.Global.ServiceProvider.GetServices<IQueryFieldRecordRegistration>();
             var vv = P7.Core.Global.ServiceProvider.GetService<IQueryFieldRecordRegistrationStore>();
-            
+
 
             var supportedCultures = new List<CultureInfo>
             {
@@ -146,7 +157,7 @@ namespace WebApplication5
             };
             var options = new RequestLocalizationOptions
             {
-           //     RequestCultureProviders = new List<IRequestCultureProvider>(),
+                //     RequestCultureProviders = new List<IRequestCultureProvider>(),
                 DefaultRequestCulture = new RequestCulture("en-US"),
                 SupportedCultures = supportedCultures,
                 SupportedUICultures = supportedCultures
@@ -156,12 +167,12 @@ namespace WebApplication5
 
 
             var version = typeof(Startup).GetTypeInfo()
-                        .Assembly
-                        .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-                        .InformationalVersion;
+                .Assembly
+                .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                .InformationalVersion;
             if (env.EnvironmentName == "Development")
             {
-                version += "."+ Guid.NewGuid().ToString().GetHashCode();
+                version += "." + Guid.NewGuid().ToString().GetHashCode();
             }
 
             P7TagHelperBase.Version = version;
@@ -169,6 +180,8 @@ namespace WebApplication5
             loggerFactory.AddDebug();
             // Add Serilog to the logging pipeline
             loggerFactory.AddSerilog();
+            // Ensure any buffered events are sent at shutdown
+            appLifetime.ApplicationStopped.Register(Log.CloseAndFlush);
 
             app.UseIdentity()
                 .UseDevAuthAuthentication(
