@@ -111,10 +111,6 @@ namespace WebApplication5
             services.AddDistributedMemoryCache();
             services.AddSession();
 
-            // register the global configuration root
-            services.AddSingleton<IConfigurationRoot, GlobalConfigurationRoot>();
-
-            services.AddSingleton<IFilterProvider, P7.Core.Providers.OptOutOptInFilterProvider>();
             services.AddTransient<ClaimsPrincipal>(
                 s => s.GetService<IHttpContextAccessor>().HttpContext.User);
 
@@ -126,7 +122,7 @@ namespace WebApplication5
                     new Microsoft.AspNetCore.Http.PathString("/Identity/Account/LogOff");
             });
             services.AddAllConfigureServicesRegistrants(Configuration);
-            services.AddDependencies();
+            services.AddDependenciesUsingAutofacModules();
             var serviceProvider = services.BuildServiceProvider(Configuration);
             P7.Core.Global.ServiceProvider = serviceProvider;
             return serviceProvider;

@@ -32,7 +32,7 @@ namespace P7.Core.IoC
             return null;
         }
 
-        public static IServiceCollection AddDependencies(this IServiceCollection services)
+        public static IServiceCollection AddDependenciesUsingAutofacModules(this IServiceCollection services)
         {
             DependencyResolver dependencyResolver = new DependencyResolver();
             dependencyResolver.Populate(services);

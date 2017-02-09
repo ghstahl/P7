@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -53,6 +54,10 @@ namespace p7.main.Areas.Main.Controllers
         {
             Logger.LogInformation("Hello from the Home Error Controller");
             return View();
+        }
+        public IActionResult EmulateError()
+        {
+            throw new Exception("Let's assume that there is an error in the controller action.");
         }
     }
 }

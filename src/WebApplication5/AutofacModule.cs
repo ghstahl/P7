@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using P7.Core;
 using P7.Core.Middleware;
 using P7.Core.Providers;
 using P7.GraphQLCore.Validators;
@@ -63,6 +66,14 @@ namespace WebApplication5
                 .As<IOptOutOptInAuthorizeStore>()
                 .SingleInstance();
 
+            builder.RegisterType<OptOutOptInFilterProvider>()
+                .As<IFilterProvider>()
+                .SingleInstance();
+
+            // register the global configuration root
+            builder.RegisterType<GlobalConfigurationRoot>()
+                .As<IConfigurationRoot>()
+                .SingleInstance();
         }
     }
 }
