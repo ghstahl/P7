@@ -32,15 +32,19 @@ namespace P7.HugoStore.Core
         }
 
         protected IBiggyConfiguration _biggyConfiguration;
-        private ISorter<T> _sorter;
+//        private ISorter<T> _sorter;
 
         protected HugoStoreBase(IBiggyConfiguration biggyConfiguration, string collection, ISorter<T> sorter)
         {
             _biggyConfiguration = biggyConfiguration;
             _collection = collection;
-            _sorter = sorter;
+//            _sorter = sorter;
         }
-
+        protected HugoStoreBase(IBiggyConfiguration biggyConfiguration, string collection)
+        {
+            _biggyConfiguration = biggyConfiguration;
+            _collection = collection;
+        }
         protected static object TheLock
         {
             get { return ConcurrencyLock.TheLock; }
@@ -58,7 +62,7 @@ namespace P7.HugoStore.Core
                     _theStore =
                         new JsonStore<T>(_biggyConfiguration.FolderStorage,
                             _biggyConfiguration.DatabaseName, _collection);
-                    _theStore.Sorter = _sorter;
+    //                _theStore.Sorter = _sorter;
                 }
                 return _theStore;
             }

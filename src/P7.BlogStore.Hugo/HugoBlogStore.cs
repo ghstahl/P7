@@ -56,6 +56,8 @@ namespace P7.BlogStore.Hugo
             byte[] currentPagingState = pagingState;
             PagingState ps = pagingState.Deserialize();
             var records = await RetrieveAsync();
+            records =  records.OrderBy(o => o.TimeStamp).ToList();
+
             var predicate = PredicateBuilder.True<Blog>();
             if (timeStampLowerBoundary != null)
             {

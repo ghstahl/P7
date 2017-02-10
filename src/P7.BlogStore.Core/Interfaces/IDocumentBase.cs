@@ -12,8 +12,8 @@ namespace P7.BlogStore.Core
             {
                 if(string.IsNullOrEmpty(Id))
                     return Guid.Empty;
-                
-                return Guid.Parse(Id); 
+
+                return Guid.Parse(Id);
             }
         }
 

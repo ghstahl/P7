@@ -47,6 +47,7 @@ namespace P7.BlogStore.Hugo
             byte[] currentPagingState = pagingState;
             PagingState ps = pagingState.Deserialize();
             var records = await RetrieveAsync();
+            records = records.OrderBy(o => o.BlogComment.TimeStamp).ToList();
 
             // only interested in this blog's comments, not all of them.
             var query = from item in records
