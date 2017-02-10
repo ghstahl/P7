@@ -26,6 +26,7 @@ using P7.Core;
 using P7.Core.Writers;
 using P7.GraphQLCore;
 using P7.GraphQLCore.Validators;
+using P7.HugoStore.Core;
 using P7.Store;
 using Shouldly;
 namespace Test.P7.GraphQLCoreTest

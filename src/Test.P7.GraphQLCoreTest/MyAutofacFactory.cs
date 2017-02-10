@@ -24,6 +24,7 @@ using Microsoft.Extensions.Options;
 using P7.BlogStore.Hugo;
 using P7.Core;
 using P7.GraphQLCore.Validators;
+using P7.HugoStore.Core;
 using Test.P7.GraphQLCoreTest.GraphQLAuth;
 
 namespace Test.P7.GraphQLCoreTest

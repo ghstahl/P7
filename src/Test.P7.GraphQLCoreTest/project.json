@@ -24,6 +24,7 @@
     "P7.Core": "1.0.0-*",
     "P7.Globalization": "1.0.0-*",
     "P7.GraphQLCore": "1.0.0-*",
+    "P7.HugoStore.Core": "1.0.0-*",
     "Serilog": "2.4.0",
     "Shouldly": "2.8.2"
   },

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using P7.BlogStore.Core;
-
+using P7.HugoStore.Core;
 using P7.Store;
 
 namespace P7.BlogStore.Hugo

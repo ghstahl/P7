@@ -1,6 +1,6 @@
 using System;
 
-namespace P7.BlogStore.Hugo
+namespace P7.HugoStore.Core
 {
     public class TenantDatabaseBiggyConfig : BiggyConfig
     {
