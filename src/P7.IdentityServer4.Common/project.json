@@ -15,7 +15,6 @@
     "Microsoft.Extensions.Configuration.Abstractions": "1.1.0",
     "Newtonsoft.Json": "9.0.1",
     "P7.HugoStore.Core": "1.0.0-*",
-    "P7.IdentityServer4.Common": "1.0.0-*",
     "Serilog": "2.4.0"
   },
   "frameworks": {
@@ -25,6 +24,6 @@
   },
   "version": "1.0.0-*",
   "buildOptions": {
-    "outputName": "P7.IdentityServer4.BiggyStore"
+    "outputName": "P7.IdentityServer4.Common"
   }
 }

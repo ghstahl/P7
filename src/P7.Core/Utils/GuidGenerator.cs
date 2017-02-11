@@ -9,6 +9,13 @@ namespace P7.Core.Utils
 {
     public static class GuidGenerator
     {
+        private static Guid DefaultNameSpace => Guid.Parse("00000000-1111-0000-0000-000000000000");
+
+        public static Guid CreateGuid(params string[] items)
+        {
+            return CreateGuid(DefaultNameSpace, items);
+        }
+
         public static Guid CreateGuid(Guid @namespace, params string[] items)
         {
             return CreateGuidFromName(@namespace, string.Join("", items), 5);
