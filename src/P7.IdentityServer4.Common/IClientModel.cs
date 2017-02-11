@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 
 namespace P7.IdentityServer4.Common
 {
-    public interface IClientHandle
+    public interface IClientModel
     {
         Task<global::IdentityServer4.Models.Client> MakeClientAsync();
         string ClientId { get; set; }
