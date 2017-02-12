@@ -6,6 +6,7 @@ using System.Net;
 using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Castle.Components.DictionaryAdapter;
 using FakeItEasy;
 using GraphQL;
 using GraphQL.Http;
@@ -179,6 +180,107 @@ namespace Test.P7.IdentityServer4.BiggyStore
 
             result = await theStore.GetUserConsentAsync(consent.SubjectId, consent.ClientId);
             Assert.IsNull(result);
+        }
+
+        [TestMethod]
+        public async Task add_read_delete_persisted_grant()
+        {
+            var theStore = AutofacStoreFactory.Resolve<IPersistedGrantStore>();
+            var grant = MakeNewPersistedGrant();
+
+            await theStore.StoreAsync(grant);
+
+            var result = await theStore.GetAsync(grant.Key);
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.ClientId == grant.ClientId);
+            Assert.IsTrue(result.SubjectId == grant.SubjectId);
+            Assert.IsTrue(result.Type == grant.Type);
+
+            await theStore.RemoveAsync(grant.Key);
+
+            result = await theStore.GetAsync(grant.Key);
+            Assert.IsNull(result);
+        }
+        [TestMethod]
+        public async Task add_read_delete_persisted_grants()
+        {
+            var theStore = AutofacStoreFactory.Resolve<IPersistedGrantStore>();
+            var grants = MakeNewPersistedGrants(10);
+
+            var clientId = Guid.NewGuid().ToString();
+            var subjectId = Guid.NewGuid().ToString();
+            var type = Guid.NewGuid().ToString();
+            int i = 0;
+            foreach (var grant in grants)
+            {
+                grant.ClientId = clientId;
+                if (i % 2 == 0)
+                {
+                    grant.SubjectId = subjectId;
+                    grant.Type = type;
+                }
+                await theStore.StoreAsync(grant);
+                ++i;
+            }
+
+            var result = await theStore.GetAllAsync(subjectId);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(grants.Count/2, result.Count());
+
+
+            await theStore.RemoveAllAsync(subjectId,clientId);
+            result = await theStore.GetAllAsync(subjectId);
+            Assert.IsFalse(result.Any());
+        }
+
+        [TestMethod]
+        public async Task add_read_delete_persisted_grants_and_types()
+        {
+            var theStore = AutofacStoreFactory.Resolve<IPersistedGrantStore>();
+            var grants = MakeNewPersistedGrants(10);
+
+            var clientId = Guid.NewGuid().ToString();
+            var subjectId = Guid.NewGuid().ToString();
+
+            foreach (var grant in grants)
+            {
+                grant.ClientId = clientId;
+                grant.SubjectId = subjectId;
+                await theStore.StoreAsync(grant);
+            }
+
+
+
+            var grantR = grants[0];
+            await theStore.RemoveAllAsync(grantR.SubjectId, grantR.ClientId, grantR.Type);
+            var result = await theStore.GetAllAsync(subjectId);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(grants.Count -1, result.Count());
+        }
+        private List<PersistedGrant> MakeNewPersistedGrants(int count)
+        {
+            var final = new List<PersistedGrant>();
+
+            for (int i = 0; i < count; ++i)
+            {
+                final.Add(MakeNewPersistedGrant());
+            }
+            return final;
+        }
+        private PersistedGrant MakeNewPersistedGrant()
+        {
+            return new PersistedGrant()
+            {
+             ClientId = Guid.NewGuid().ToString(),
+             CreationTime = DateTime.UtcNow,
+             Data = Guid.NewGuid().ToString(),
+             Expiration = DateTime.UtcNow,
+             Key = Guid.NewGuid().ToString(),
+             SubjectId = Guid.NewGuid().ToString(),
+             Type = Guid.NewGuid().ToString()
+            };
         }
 
         private Consent MakeNewConsent()

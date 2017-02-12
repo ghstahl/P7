@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using IdentityServer4.Models;
 
-namespace P7.IdentityServer4.Common.Models.Consent
+namespace P7.IdentityServer4.Common
 {
     public class ConsentModel :
-        AbstractConsentHandle<List<string>>
+        AbstractConsentModel<List<string>>
     {
         public ConsentModel()
             : base()

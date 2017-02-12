@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 
-namespace P7.IdentityServer4.Common.Models.Consent
+namespace P7.IdentityServer4.Common
 {
     public class FlattenedConsentModel :
-        AbstractConsentHandle<string>
+        AbstractConsentModel<string>
     {
         public FlattenedConsentModel()
             : base()

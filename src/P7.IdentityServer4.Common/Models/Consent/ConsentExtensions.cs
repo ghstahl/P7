@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using P7.IdentityServer4.Common.Models.Consent;
+ 
 
 namespace P7.IdentityServer4.Common
 {

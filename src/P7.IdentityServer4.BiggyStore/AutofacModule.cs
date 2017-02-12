@@ -10,6 +10,7 @@ namespace P7.IdentityServer4.BiggyStore
         {
             builder.RegisterType<ClientStore>().As<IFullClientStore>();
             builder.RegisterType<UserConsentStore>().As<IUserConsentStore>();
+            builder.RegisterType<PersistedGrantStore>().As<IPersistedGrantStore>();
         }
     }
 }

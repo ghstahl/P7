@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 namespace P7.IdentityServer4.Common
 {
-    public abstract class AbstractConsentHandle<TScopes> : IConsentModel where TScopes : class
+    public abstract class AbstractConsentModel<TScopes> : IConsentModel where TScopes : class
     {
-        public AbstractConsentHandle()
+        public AbstractConsentModel()
         {
         }
 
-        public AbstractConsentHandle(global::IdentityServer4.Models.Consent consent)
+        public AbstractConsentModel(global::IdentityServer4.Models.Consent consent)
         {
             ClientId = consent.ClientId;
             CreationTime = consent.CreationTime;

@@ -4,11 +4,10 @@ using Newtonsoft.Json;
 using P7.BlogStore.Core;
 using P7.Core.Utils;
 using P7.IdentityServer4.Common;
- 
 
 namespace P7.IdentityServer4.BiggyStore
 {
-    public class ConsentDocument : ConsentModel, IDocumentBase
+    public class PersistedGrantDocument : PersistedGrantModel, IDocumentBase
     {
         [JsonIgnore]
         public Guid Id_G
@@ -22,10 +21,10 @@ namespace P7.IdentityServer4.BiggyStore
         }
         public virtual string Id { get; set; }
 
-        public ConsentDocument() { }
-        public ConsentDocument(Consent client) : base(client)
+        public PersistedGrantDocument() { }
+        public PersistedGrantDocument(PersistedGrant grant) : base(grant)
         {
-            Id = GuidGenerator.CreateGuid(client.ClientId, client.SubjectId).ToString();
+            Id = GuidGenerator.CreateGuid(grant.Key).ToString();
         }
     }
 }
