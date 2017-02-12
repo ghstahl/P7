@@ -72,6 +72,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IdentityServer4", "Identity
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Test.P7.IdentityServer4.BiggyStore", "src\Test.P7.IdentityServer4.BiggyStore\Test.P7.IdentityServer4.BiggyStore.xproj", "{F749C9B9-E9F9-4B82-8104-4FA71FD6A7B3}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "P7.Biggy.Store", "src\P7.Biggy.Store\P7.Biggy.Store.xproj", "{5DE833FD-A623-4EE5-A923-F5F7A4AC495B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -174,6 +176,10 @@ Global
 		{F749C9B9-E9F9-4B82-8104-4FA71FD6A7B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F749C9B9-E9F9-4B82-8104-4FA71FD6A7B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F749C9B9-E9F9-4B82-8104-4FA71FD6A7B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DE833FD-A623-4EE5-A923-F5F7A4AC495B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DE833FD-A623-4EE5-A923-F5F7A4AC495B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DE833FD-A623-4EE5-A923-F5F7A4AC495B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DE833FD-A623-4EE5-A923-F5F7A4AC495B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -204,5 +210,6 @@ Global
 		{1599EFDB-C3C4-40CC-81FC-A551DBDE10B6} = {AE3182A7-DDCE-403E-AC2C-00D158E3180B}
 		{CC854C3C-39AA-4A1D-A0C1-0E952B9CB7EF} = {69A0C3AF-BBE3-47DF-A604-5213347D455E}
 		{F749C9B9-E9F9-4B82-8104-4FA71FD6A7B3} = {CC854C3C-39AA-4A1D-A0C1-0E952B9CB7EF}
+		{5DE833FD-A623-4EE5-A923-F5F7A4AC495B} = {2564996B-926A-4C19-BC8F-88E1274FD0C9}
 	EndGlobalSection
 EndGlobal

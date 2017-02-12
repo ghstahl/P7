@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 namespace P7.Store
 {
+    // copied from Cassandra.Mapping
+    // this is a really nice abstraction interface to track page requests
     public interface IPage<T> : ICollection<T>, IEnumerable<T>, IEnumerable
     {
         // Summary:

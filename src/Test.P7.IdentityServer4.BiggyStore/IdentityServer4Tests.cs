@@ -10,6 +10,7 @@ using FakeItEasy;
 using GraphQL;
 using GraphQL.Http;
 using IdentityServer4.Models;
+using IdentityServer4.ResponseHandling;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -65,10 +66,8 @@ namespace Test.P7.IdentityServer4.BiggyStore
 
         public MyAutofacFactory AutofacStoreFactory { get; set; }
 
-        [TestMethod]
-        public async Task add_read_delete_client()
+        Client MakeNewClient()
         {
-            var fullClientStore = AutofacStoreFactory.Resolve<IFullClientStore>();
             string clientId = Guid.NewGuid().ToString();
             var client = new Client()
             {
@@ -76,9 +75,9 @@ namespace Test.P7.IdentityServer4.BiggyStore
                 AccessTokenLifetime = 1,
                 AccessTokenType = AccessTokenType.Jwt,
                 AllowAccessTokensViaBrowser = true,
-                AllowedCorsOrigins = new List<string>() {"a"},
-                AllowedGrantTypes = new List<string>() {"a"},
-                AllowedScopes = new List<string>() {"a"},
+                AllowedCorsOrigins = new List<string>() { "a" },
+                AllowedGrantTypes = new List<string>() { "a" },
+                AllowedScopes = new List<string>() { "a" },
                 AllowOfflineAccess = true,
                 AllowPlainTextPkce = true,
                 AllowRememberConsent = true,
@@ -90,37 +89,82 @@ namespace Test.P7.IdentityServer4.BiggyStore
                 RequirePkce = true,
                 ProtocolType = "protocoltype",
                 LogoutSessionRequired = true,
-                Claims = new List<Claim>() {new Claim("a-type", "a-value")},
+                Claims = new List<Claim>() { new Claim("a-type", "a-value") },
                 ClientName = "clientName",
-                ClientSecrets = new List<Secret>() {new Secret("a-value", "a-description")},
+                ClientSecrets = new List<Secret>() { new Secret("a-value", "a-description") },
                 ClientUri = "clientUri",
                 EnableLocalLogin = true,
                 Enabled = true,
-                IdentityProviderRestrictions = new List<string>() {"a"},
+                IdentityProviderRestrictions = new List<string>() { "a" },
                 IdentityTokenLifetime = 1,
                 IncludeJwtId = true,
                 LogoUri = "LogoUri",
                 LogoutUri = "logoutUri",
-                PostLogoutRedirectUris = new List<string>() {"a"},
+                PostLogoutRedirectUris = new List<string>() { "a" },
                 PrefixClientClaims = true,
-                RedirectUris = new List<string>() {"a"},
+                RedirectUris = new List<string>() { "a" },
                 RefreshTokenExpiration = TokenExpiration.Absolute,
                 RefreshTokenUsage = TokenUsage.OneTimeOnly,
                 RequireConsent = true,
                 SlidingRefreshTokenLifetime = 1,
                 UpdateAccessTokenClaimsOnRefresh = true
             };
+            return client;
+        }
+
+        List<Client> MakeNewClients(int count)
+        {
+            var result = new List<Client>();
+            for (int i = 0; i < count; ++i)
+            {
+                result.Add(MakeNewClient());
+            }
+            return result;
+        }
+        [TestMethod]
+        public async Task add_read_delete_client()
+        {
+            var fullClientStore = AutofacStoreFactory.Resolve<IFullClientStore>();
+            var client = MakeNewClient();
             await fullClientStore.InsertClientAsync(client);
             var result = await fullClientStore.FindClientByIdAsync(client.ClientId);
             Assert.IsNotNull(result);
-            Assert.IsTrue(result.ClientId == clientId);
+            Assert.IsTrue(result.ClientId == client.ClientId);
 
             await fullClientStore.DeleteClientByIdAsync(client.ClientId);
 
             result = await fullClientStore.FindClientByIdAsync(client.ClientId);
             Assert.IsNull(result);
         }
+        [TestMethod]
+        public async Task add_page_delete_clients()
+        {
+            var fullClientStore = AutofacStoreFactory.Resolve<IFullClientStore>();
+            var clients = MakeNewClients(10);
+            foreach (var client in clients)
+            {
+                await fullClientStore.InsertClientAsync(client);
+                var result = await fullClientStore.FindClientByIdAsync(client.ClientId);
+                Assert.IsNotNull(result);
+                Assert.IsTrue(result.ClientId == client.ClientId);
+            }
 
+            var page = await fullClientStore.PageAsync(11, null);
+            Assert.AreEqual(clients.Count,page.Count);
+            Assert.IsNull(page.CurrentPagingState);
+            Assert.IsNull(page.PagingState);
+
+            foreach (var client in clients)
+            {
+                await fullClientStore.DeleteClientByIdAsync(client.ClientId);
+                var result = await fullClientStore.FindClientByIdAsync(client.ClientId);
+                Assert.IsNull(result);
+            }
+
+
+
+
+        }
         [TestMethod]
         public void paging_state_conversions()
         {

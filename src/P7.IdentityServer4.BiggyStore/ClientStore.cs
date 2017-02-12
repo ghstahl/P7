@@ -1,8 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Linq;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
+using P7.Core.Linq;
 using P7.HugoStore.Core;
 using P7.IdentityServer4.Common;
+using P7.Store;
 
 namespace P7.IdentityServer4.BiggyStore
 {
@@ -32,6 +36,40 @@ namespace P7.IdentityServer4.BiggyStore
         {
             var doc = new ClientDocument(new Client() { ClientId = clientId });
             await DeleteAsync(doc.Id_G);
+        }
+
+        public async Task<IPage<Client>> PageAsync(int pageSize, byte[] pagingState)
+        {
+            byte[] currentPagingState = pagingState;
+            PagingState ps = pagingState.Deserialize();
+            var records = await RetrieveAsync();
+            records = records.OrderBy(o => o.Id).ToList();
+
+            var predicate = PredicateBuilder.True<ClientDocument>();
+
+            var filtered = records.Where(predicate.Compile()).Select(i => i);
+
+            var slice = filtered.Skip(ps.CurrentIndex).Take(pageSize).ToList();
+            if (slice.Count < pageSize)
+            {
+                // we are at the end
+                pagingState = null;
+            }
+            else
+            {
+                ps.CurrentIndex += pageSize;
+                pagingState = ps.Serialize();
+            }
+
+            List<Client> clientSlice = new List<Client>();
+            foreach (var item in slice)
+            {
+                var client = await item.MakeClientAsync();
+                clientSlice.Add(client);
+            }
+
+            var page = new PageProxy<Client>(currentPagingState, pagingState, clientSlice);
+            return page;
         }
     }
 }
