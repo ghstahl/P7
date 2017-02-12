@@ -7,7 +7,7 @@ using IdentityServer4.Models;
 
 namespace P7.IdentityServer4.Common
 {
-    public abstract class AbstractClientModel<TClaims, TSecrets, TStringList> : IClientHandle
+    public abstract class AbstractClientModel<TClaims, TSecrets, TStringList> : IClientModel
          where TClaims : class
          where TSecrets : class
          where TStringList : class

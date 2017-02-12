@@ -6,7 +6,7 @@ using P7.IdentityServer4.Common;
 
 namespace P7.IdentityServer4.BiggyStore
 {
-    public class ClientStore : HugoStoreBase<ClientDocument>, IClientStore, IFullClientStore
+    public class ClientStore : HugoStoreBase<ClientDocument>, IFullClientStore
     {
         public ClientStore(IIdentityServer4BiggyConfiguration biggyConfiguration) :
             base(biggyConfiguration, "client")
@@ -15,8 +15,10 @@ namespace P7.IdentityServer4.BiggyStore
 
         public async Task<Client> FindClientByIdAsync(string clientId)
         {
-            var doc = new ClientDocument() {Id = clientId};
+            var doc = new ClientDocument(new Client() {ClientId = clientId});
             var result = await FetchAsync(doc.Id_G);
+            if (result == null)
+                return null;
             return await result.ToClientAsync();
         }
 
@@ -28,7 +30,7 @@ namespace P7.IdentityServer4.BiggyStore
 
         public async Task DeleteClientByIdAsync(string clientId)
         {
-            var doc = new ClientDocument() {Id = clientId};
+            var doc = new ClientDocument(new Client() { ClientId = clientId });
             await DeleteAsync(doc.Id_G);
         }
     }
