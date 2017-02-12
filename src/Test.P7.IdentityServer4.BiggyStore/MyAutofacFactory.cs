@@ -34,6 +34,11 @@ namespace Test.P7.IdentityServer4.BiggyStore
                 if (_autofacContainer == null)
                 {
                     var builder = new ContainerBuilder();
+                    List<Assembly> assemblies = new List<Assembly>
+                    {
+                        Assembly.Load(new AssemblyName("P7.IdentityServer4.BiggyStore"))
+                    };
+                    builder.RegisterAssemblyModules(assemblies.ToArray());
 
                     builder.RegisterInstance(BiggyConfiguration).As<IIdentityServer4BiggyConfiguration>();
                     builder.RegisterType<ClientStore>().As<IFullClientStore>();

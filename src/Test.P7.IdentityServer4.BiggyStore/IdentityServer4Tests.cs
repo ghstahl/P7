@@ -11,6 +11,7 @@ using GraphQL;
 using GraphQL.Http;
 using IdentityServer4.Models;
 using IdentityServer4.ResponseHandling;
+using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -160,11 +161,38 @@ namespace Test.P7.IdentityServer4.BiggyStore
                 var result = await fullClientStore.FindClientByIdAsync(client.ClientId);
                 Assert.IsNull(result);
             }
-
-
-
-
         }
+
+        [TestMethod]
+        public async Task add_read_delete_consent()
+        {
+            var theStore = AutofacStoreFactory.Resolve<IUserConsentStore>();
+            var consent = MakeNewConsent();
+
+            await theStore.StoreUserConsentAsync(consent);
+            var result = await theStore.GetUserConsentAsync(consent.SubjectId,consent.ClientId);
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.ClientId == consent.ClientId);
+            Assert.IsTrue(result.SubjectId == consent.SubjectId);
+
+            await theStore.RemoveUserConsentAsync(consent.SubjectId, consent.ClientId);
+
+            result = await theStore.GetUserConsentAsync(consent.SubjectId, consent.ClientId);
+            Assert.IsNull(result);
+        }
+
+        private Consent MakeNewConsent()
+        {
+            return new Consent()
+            {
+                ClientId = Guid.NewGuid().ToString(),
+                CreationTime = DateTime.UtcNow,
+                Expiration = DateTime.UtcNow,
+                Scopes = new List<string>() {"a-scope"},
+                SubjectId = Guid.NewGuid().ToString()
+            };
+        }
+
         [TestMethod]
         public void paging_state_conversions()
         {

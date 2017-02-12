@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using IdentityServer4.Stores;
+using P7.IdentityServer4.Common;
 
 namespace P7.IdentityServer4.BiggyStore
 {
@@ -7,7 +8,8 @@ namespace P7.IdentityServer4.BiggyStore
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<ClientStore>().As<IClientStore>();
+            builder.RegisterType<ClientStore>().As<IFullClientStore>();
+            builder.RegisterType<UserConsentStore>().As<IUserConsentStore>();
         }
     }
 }

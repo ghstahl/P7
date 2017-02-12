@@ -41,6 +41,7 @@ namespace Test.P7.GraphQLCoreTest
             {
                 if (_autofacContainer == null)
                 {
+                    var builder = new ContainerBuilder();
                     List<Assembly> assemblies = new List<Assembly>
                     {
                         Assembly.Load(new AssemblyName("P7.Core")),
@@ -49,10 +50,7 @@ namespace Test.P7.GraphQLCoreTest
                         Assembly.Load(new AssemblyName("P7.GraphQLCore")),
                         Assembly.Load(new AssemblyName("P7.BlogStore.Core"))
                     };
-
-
-
-                    var builder = new ContainerBuilder();
+                    builder.RegisterAssemblyModules(assemblies.ToArray());
 
                     builder.RegisterInstance(BiggyConfiguration).As<IBiggyConfiguration>();
 
@@ -82,11 +80,8 @@ namespace Test.P7.GraphQLCoreTest
                     claims.Add(claim);
                     A.CallTo(() => user.Claims).Returns(claims);
 
-
                     builder.RegisterInstance(httpContextAccessor).As<IHttpContextAccessor>();
                     builder.RegisterType<GraphQLUserContext>();
-
-                    builder.RegisterAssemblyModules(assemblies.ToArray());
 
                     var locOptions = new LocalizationOptions();
                     var options = A.Fake<IOptions<LocalizationOptions>>();
@@ -110,7 +105,7 @@ namespace Test.P7.GraphQLCoreTest
                         .SingleInstance();
 
 
-                   
+
 
                     var container = builder.Build();
 
