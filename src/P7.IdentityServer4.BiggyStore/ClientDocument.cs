@@ -7,6 +7,7 @@ using P7.IdentityServer4.Common;
 
 namespace P7.IdentityServer4.BiggyStore
 {
+   
     public class ClientDocument : ClientModel, IDocumentBase
     {
         [JsonIgnore]

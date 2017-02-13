@@ -7,10 +7,10 @@ using IdentityServer4.Models;
 
 namespace P7.IdentityServer4.Common
 {
-    public abstract class AbstractClientModel<TClaims, TSecrets, TStringList> : IClientModel
+    public abstract class AbstractClientModel<TClaims, TSecrets, TStrings> : IClientModel
          where TClaims : class
          where TSecrets : class
-         where TStringList : class
+         where TStrings : class
     {
         protected AbstractClientModel()
         {
@@ -65,18 +65,18 @@ namespace P7.IdentityServer4.Common
             return Serialize(clientSecrets.ToList());
         }
 
-        private TStringList Serialize(IEnumerable<string> allowedGrantTypes)
+        private TStrings Serialize(IEnumerable<string> allowedGrantTypes)
         {
             return Serialize(allowedGrantTypes.ToList());
         }
 
-        private TStringList Serialize(ICollection<string> allowedCorsOrigins)
+        private TStrings Serialize(ICollection<string> allowedCorsOrigins)
         {
             return Serialize(allowedCorsOrigins.ToList());
         }
 
-        public abstract TStringList Serialize(List<string> stringList);
-        public abstract Task<List<string>> DeserializeStringsAsync(TStringList obj);
+        public abstract TStrings Serialize(List<string> stringList);
+        public abstract Task<List<string>> DeserializeStringsAsync(TStrings obj);
         public abstract TClaims Serialize(List<Claim> claims);
         public TClaims Serialize(ICollection<Claim> claims)
         {
@@ -143,9 +143,9 @@ namespace P7.IdentityServer4.Common
         public int AccessTokenLifetime { get; set; }
         public AccessTokenType AccessTokenType { get; set; }
         public bool AllowAccessTokensViaBrowser { get; set; }
-        public TStringList AllowedCorsOrigins { get; set; }
-        public TStringList AllowedGrantTypes { get; set; }
-        public TStringList AllowedScopes { get; set; }
+        public TStrings AllowedCorsOrigins { get; set; }
+        public TStrings AllowedGrantTypes { get; set; }
+        public TStrings AllowedScopes { get; set; }
         public bool AllowOfflineAccess { get; set; }
         public bool AllowPlainTextPkce { get; set; }
         public bool AllowRememberConsent { get; set; }
@@ -159,16 +159,16 @@ namespace P7.IdentityServer4.Common
         public string ClientUri { get; set; }
         public bool Enabled { get; set; }
         public bool EnableLocalLogin { get; set; }
-        public TStringList IdentityProviderRestrictions { get; set; }
+        public TStrings IdentityProviderRestrictions { get; set; }
         public int IdentityTokenLifetime { get; set; }
         public bool IncludeJwtId { get; set; }
         public string LogoUri { get; set; }
         public bool LogoutSessionRequired { get; set; }
         public string LogoutUri { get; set; }
-        public TStringList PostLogoutRedirectUris { get; set; }
+        public TStrings PostLogoutRedirectUris { get; set; }
         public bool PrefixClientClaims { get; set; }
         public string ProtocolType { get; set; }
-        public TStringList RedirectUris { get; set; }
+        public TStrings RedirectUris { get; set; }
         public TokenExpiration RefreshTokenExpiration { get; set; }
         public TokenUsage RefreshTokenUsage { get; set; }
         public bool RequireClientSecret { get; set; }

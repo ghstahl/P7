@@ -8,17 +8,7 @@ namespace P7.IdentityServer4.Common
     {
         public static IdentityResource ToIdentityResource(this IdentityResourceModel model)
         {
-            return new IdentityResource()
-            {
-                Description = model.Description,
-                DisplayName = model.DisplayName,
-                Emphasize = model.Emphasize,
-                Enabled = model.Enabled,
-                Name = model.Name,
-                Required = model.Required,
-                ShowInDiscoveryDocument = model.ShowInDiscoveryDocument,
-                UserClaims = model.UserClaims
-            };
+            return model.MakeIdentityResourceAsync().Result;
         }
         public static List<IdentityResource> ToIdentityResources(this List<IdentityResourceModel> models)
         {
@@ -30,17 +20,7 @@ namespace P7.IdentityServer4.Common
 
         public static IdentityResourceModel ToIdentityResourceModel(this IdentityResource model)
         {
-            return new IdentityResourceModel()
-            {
-                Description = model.Description,
-                DisplayName = model.DisplayName,
-                Emphasize = model.Emphasize,
-                Enabled = model.Enabled,
-                Name = model.Name,
-                Required = model.Required,
-                ShowInDiscoveryDocument = model.ShowInDiscoveryDocument,
-                UserClaims = model.UserClaims.ToList()
-            };
+            return new IdentityResourceModel(model);
         }
         public static List<IdentityResourceModel> ToIdentityResourceModels(this ICollection<IdentityResource> models)
         {
