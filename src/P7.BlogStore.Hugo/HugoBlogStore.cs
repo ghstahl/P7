@@ -43,9 +43,8 @@ namespace P7.BlogStore.Hugo
                 return _containsAnyInTagsOrCategories;
             }
         }
-        public HugoBlogStore(IBiggyConfiguration biggyConfiguration,
-            ISorter<Blog> sorter) :
-            base(biggyConfiguration,"blog", sorter)
+        public HugoBlogStore(IBiggyConfiguration biggyConfiguration) :
+            base(biggyConfiguration,"blog")
         {
 
         }

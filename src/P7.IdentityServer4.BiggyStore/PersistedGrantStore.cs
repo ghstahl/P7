@@ -11,7 +11,7 @@ namespace P7.IdentityServer4.BiggyStore
     public class PersistedGrantStore : HugoStoreBase<PersistedGrantDocument>, IPersistedGrantStore
     {
         public PersistedGrantStore(IIdentityServer4BiggyConfiguration biggyConfiguration) :
-            base(biggyConfiguration, "persistedgrant")
+            base(biggyConfiguration, "persisted_grant")
         {
         }
 

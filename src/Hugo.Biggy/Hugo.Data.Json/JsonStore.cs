@@ -15,8 +15,6 @@ namespace Hugo.Data.Json
 {
 	public class JsonStore<T> : IDataStore<T> where T : class, new()
 	{
-        public ISorter<T> Sorter { get; set; }
-
         public bool KeyIsAutoIncrementing { get; set; }
 		public string TableName { get; set; }
 		public string DbDirectory { get { return this.Database.DbDirectory; } set { this.DbDirectory = value; } }
@@ -499,10 +497,7 @@ namespace Hugo.Data.Json
 			var completed = false;
 			IsFlushing = true;
             // Serialize json directly to the output stream
-            if (Sorter != null)
-            {
-                _items = Sorter.Sort(_items);
-            }
+           
             var tries = 20;
 			for (int numTries = 0; numTries <= tries; numTries++)
 			{
@@ -535,9 +530,4 @@ namespace Hugo.Data.Json
 			return completed;
 		}
 	}
-
-    public interface ISorter<T> where T: class
-    {
-        List<T> Sort(List<T> items);
-    }
 }

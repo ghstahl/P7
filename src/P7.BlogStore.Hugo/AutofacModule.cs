@@ -8,9 +8,9 @@ namespace P7.BlogStore.Hugo
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<BlogSorter>().As<ISorter<Blog>>();
+          
             builder.RegisterType<HugoBlogStore>().As<IBlogStore>();
-            builder.RegisterType<BlogCommentSorter>().As<ISorter<BlogComment>>();
+          
             builder.RegisterType<HugoBlogCommentStore>().As<IBlogCommentStore>();   
         }
     }

@@ -32,14 +32,7 @@ namespace P7.HugoStore.Core
         }
 
         protected IBiggyConfiguration _biggyConfiguration;
-//        private ISorter<T> _sorter;
 
-        protected HugoStoreBase(IBiggyConfiguration biggyConfiguration, string collection, ISorter<T> sorter)
-        {
-            _biggyConfiguration = biggyConfiguration;
-            _collection = collection;
-//            _sorter = sorter;
-        }
         protected HugoStoreBase(IBiggyConfiguration biggyConfiguration, string collection)
         {
             _biggyConfiguration = biggyConfiguration;
