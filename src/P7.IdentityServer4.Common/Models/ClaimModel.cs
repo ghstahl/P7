@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using IdentityServer4.Models;
 
 namespace P7.IdentityServer4.Common
 {
