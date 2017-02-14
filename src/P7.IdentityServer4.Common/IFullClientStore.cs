@@ -12,25 +12,6 @@ namespace P7.IdentityServer4.Common
     {
         
     }
-    public interface IIdentityResourceStore
-    {
-        Task InsertIdentityResourceAsync(IdentityResource identityResource);
-
-        Task DeleteIdentityResourceByNameAsync(string name);
-
-        Task<IPage<IdentityResource>> PageAsync(int pageSize,
-            byte[] pagingState);
-    }
-
-    public interface IApiResourceStore
-    {
-        Task InsertApiResourceAsync(ApiResource apiResource);
-
-        Task DeleteApiResourceByNameAsync(string name);
-
-        Task<IPage<ApiResource>> PageAsync(int pageSize,
-            byte[] pagingState);
-    }
 
     public interface IFullClientStore : IClientStore
     {
