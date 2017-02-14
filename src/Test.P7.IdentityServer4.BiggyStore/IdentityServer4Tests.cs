@@ -237,28 +237,98 @@ namespace Test.P7.IdentityServer4.BiggyStore
         [TestMethod]
         public async Task add_read_delete_persisted_grants_and_types()
         {
-            var theStore = AutofacStoreFactory.Resolve<IPersistedGrantStore>();
-            var grants = MakeNewPersistedGrants(10);
-
-            var clientId = Guid.NewGuid().ToString();
-            var subjectId = Guid.NewGuid().ToString();
-
-            foreach (var grant in grants)
-            {
-                grant.ClientId = clientId;
-                grant.SubjectId = subjectId;
-                await theStore.StoreAsync(grant);
-            }
-
-
-
-            var grantR = grants[0];
-            await theStore.RemoveAllAsync(grantR.SubjectId, grantR.ClientId, grantR.Type);
-            var result = await theStore.GetAllAsync(subjectId);
-
-            Assert.IsNotNull(result);
-            Assert.AreEqual(grants.Count -1, result.Count());
         }
+
+        [TestMethod]
+        public async Task identity_resource_store_test()
+        {
+            var resourceStore = AutofacStoreFactory.Resolve<IResourceStore>();
+            var adminResourceStore = AutofacStoreFactory.Resolve<IAdminResourceStore>();
+            Assert.IsNotNull(resourceStore);
+            Assert.IsNotNull(adminResourceStore);
+            IdentityResource identityResource = new IdentityResource()
+            {
+                Description = Guid.NewGuid().ToString(),
+                DisplayName = Guid.NewGuid().ToString(),
+                Emphasize = true,
+                Enabled = true,
+                Name = Guid.NewGuid().ToString(),
+                Required = true,
+                ShowInDiscoveryDocument = true,
+                UserClaims = new List<string>()
+                {
+                    Guid.NewGuid().ToString(),
+                    Guid.NewGuid().ToString()
+                }
+            };
+            await adminResourceStore.IdentityResourceStore.InsertIdentityResourceAsync(identityResource);
+
+            var dd = await adminResourceStore.IdentityResourceStore.PageAsync(10, null);
+            Assert.AreEqual(1,dd.Count);
+            var item = dd.FirstOrDefault();
+            Assert.AreEqual(item.Name,identityResource.Name);
+
+            await adminResourceStore.IdentityResourceStore.DeleteIdentityResourceByNameAsync(item.Name);
+            dd = await adminResourceStore.IdentityResourceStore.PageAsync(10, null);
+            Assert.AreEqual(0, dd.Count);
+        }
+
+        [TestMethod]
+        public async Task api_resource_store_test()
+        {
+            var resourceStore = AutofacStoreFactory.Resolve<IResourceStore>();
+            var adminResourceStore = AutofacStoreFactory.Resolve<IAdminResourceStore>();
+            Assert.IsNotNull(resourceStore);
+            Assert.IsNotNull(adminResourceStore);
+            ApiResource apiResource = new ApiResource()
+            {
+                Description = Guid.NewGuid().ToString(),
+                DisplayName = Guid.NewGuid().ToString(),
+
+                Enabled = true,
+                Name = Guid.NewGuid().ToString(),
+
+                UserClaims = new List<string>()
+                {
+                    Guid.NewGuid().ToString(),
+                    Guid.NewGuid().ToString()
+                },
+                ApiSecrets = new List<Secret>()
+                {
+                    new Secret()
+                    {
+                        Description = Guid.NewGuid().ToString(),
+                        Expiration = DateTime.UtcNow,
+                        Type = Guid.NewGuid().ToString(),
+                        Value = Guid.NewGuid().ToString()
+                    }
+                },
+                Scopes = new List<Scope>()
+                {
+                    new Scope()
+                    {
+                        Description = Guid.NewGuid().ToString(),
+                        DisplayName = Guid.NewGuid().ToString(),
+                        Emphasize = true,
+                        Name = Guid.NewGuid().ToString(),
+                        Required = true,
+                        ShowInDiscoveryDocument = true,
+                        UserClaims = new List<string>() {Guid.NewGuid().ToString(), Guid.NewGuid().ToString()}
+                    }
+                }
+            };
+            await adminResourceStore.ApiResourceStore.InsertApiResourceAsync(apiResource);
+
+            var dd = await adminResourceStore.ApiResourceStore.PageAsync(10, null);
+            Assert.AreEqual(1, dd.Count);
+            var item = dd.FirstOrDefault();
+            Assert.AreEqual(item.Name, apiResource.Name);
+
+            await adminResourceStore.ApiResourceStore.DeleteApiResourceByNameAsync(item.Name);
+            dd = await adminResourceStore.ApiResourceStore.PageAsync(10, null);
+            Assert.AreEqual(0, dd.Count);
+        }
+
         private List<PersistedGrant> MakeNewPersistedGrants(int count)
         {
             var final = new List<PersistedGrant>();

@@ -36,7 +36,8 @@ namespace Test.P7.IdentityServer4.BiggyStore
                     var builder = new ContainerBuilder();
                     List<Assembly> assemblies = new List<Assembly>
                     {
-                        Assembly.Load(new AssemblyName("P7.IdentityServer4.BiggyStore"))
+                        Assembly.Load(new AssemblyName("P7.IdentityServer4.BiggyStore")),
+                        Assembly.Load(new AssemblyName("P7.IdentityServer4.Common"))
                     };
                     builder.RegisterAssemblyModules(assemblies.ToArray());
 
