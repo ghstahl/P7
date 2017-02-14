@@ -68,7 +68,7 @@ namespace Test.P7.IdentityServer4.BiggyStore
 
         public MyAutofacFactory AutofacStoreFactory { get; set; }
 
-        Client MakeNewClient()
+        Client MakeNewClient3()
         {
             string clientId = Guid.NewGuid().ToString();
             var client = new Client()
@@ -119,7 +119,7 @@ namespace Test.P7.IdentityServer4.BiggyStore
             var result = new List<Client>();
             for (int i = 0; i < count; ++i)
             {
-                result.Add(MakeNewClient());
+                result.Add(ModelTests.NewClient);
             }
             return result;
         }
@@ -127,7 +127,7 @@ namespace Test.P7.IdentityServer4.BiggyStore
         public async Task add_read_delete_client()
         {
             var fullClientStore = AutofacStoreFactory.Resolve<IFullClientStore>();
-            var client = MakeNewClient();
+            var client = ModelTests.NewClient;
             await fullClientStore.InsertClientAsync(client);
             var result = await fullClientStore.FindClientByIdAsync(client.ClientId);
             Assert.IsNotNull(result);

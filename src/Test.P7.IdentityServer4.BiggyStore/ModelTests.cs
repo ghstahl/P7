@@ -161,6 +161,56 @@ namespace Test.P7.IdentityServer4.BiggyStore
             }
         }
 
+        public static Client NewClient
+        {
+            get
+            {
+                var client = new Client()
+                {
+                    AbsoluteRefreshTokenLifetime = 1,
+                    AccessTokenLifetime = 1,
+                    AccessTokenType = AccessTokenType.Jwt,
+                    AllowAccessTokensViaBrowser = true,
+                    AllowedCorsOrigins = new List<string>() { UniqueGuid },
+                    AllowedGrantTypes = new List<string>() { UniqueGuid },
+                    AllowedScopes = new List<string>() { UniqueGuid },
+                    AllowOfflineAccess = true,
+                    AllowPlainTextPkce = true,
+                    AllowRememberConsent = true,
+                    AlwaysIncludeUserClaimsInIdToken = true,
+                    AlwaysSendClientClaims = true,
+                    AuthorizationCodeLifetime = 1,
+                    ClientId = UniqueGuid,
+                    RequireClientSecret = true,
+                    RequirePkce = true,
+                    ProtocolType = UniqueGuid,
+                    LogoutSessionRequired = true,
+                    Claims = new List<Claim>() { new Claim(UniqueGuid, UniqueGuid) },
+                    ClientName = UniqueGuid,
+                    ClientSecrets = new List<Secret>() { new Secret(UniqueGuid, UniqueGuid) },
+                    ClientUri = UniqueGuid,
+                    EnableLocalLogin = true,
+                    Enabled = true,
+                    IdentityProviderRestrictions = new List<string>() { UniqueGuid },
+                    IdentityTokenLifetime = 1,
+                    IncludeJwtId = true,
+                    LogoUri = UniqueGuid,
+                    LogoutUri = UniqueGuid,
+                    PostLogoutRedirectUris = new List<string>() { UniqueGuid },
+                    PrefixClientClaims = true,
+                    RedirectUris = new List<string>() { UniqueGuid },
+                    RefreshTokenExpiration = TokenExpiration.Absolute,
+                    RefreshTokenUsage = TokenUsage.OneTimeOnly,
+                    RequireConsent = true,
+                    SlidingRefreshTokenLifetime = 1,
+                    UpdateAccessTokenClaimsOnRefresh = true
+                };
+                return client;
+            }
+        }
+
+       
+
         [TestMethod]
         public void scope_model()
         {
@@ -239,6 +289,17 @@ namespace Test.P7.IdentityServer4.BiggyStore
             model.ShouldBe(model2);
             model.ShouldNotBe(model3);
         }
-       
+        [TestMethod]
+        public void client_model()
+        {
+            var model = ModelTests.NewClient.ToClientModel();
+            var model2 = new ClientModel(model.ToClient());
+
+            var model3 = ModelTests.NewClient.ToClientModel(); ;
+
+            model.ShouldBe(model2);
+            model.ShouldNotBe(model3);
+        }
+        
     }
 }
