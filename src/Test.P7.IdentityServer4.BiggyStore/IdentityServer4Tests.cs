@@ -202,7 +202,7 @@ namespace Test.P7.IdentityServer4.BiggyStore
             Assert.IsNull(result);
         }
         [TestMethod]
-        public async Task add_read_delete_persisted_grants()
+        public async Task add_read_delete_persisted_grants_by_subjectid()
         {
             var theStore = AutofacStoreFactory.Resolve<IPersistedGrantStore>();
             var grants = MakeNewPersistedGrants(10);
@@ -235,8 +235,73 @@ namespace Test.P7.IdentityServer4.BiggyStore
         }
 
         [TestMethod]
-        public async Task add_read_delete_persisted_grants_and_types()
+        public async Task add_read_delete_persisted_grants_by_subjectid_and_type()
         {
+            var theStore = AutofacStoreFactory.Resolve<IPersistedGrantStore>();
+            var grants = MakeNewPersistedGrants(10);
+
+            var clientId = Guid.NewGuid().ToString();
+            var subjectId = Guid.NewGuid().ToString();
+            var type = Guid.NewGuid().ToString();
+            int i = 0;
+            foreach (var grant in grants)
+            {
+                grant.SubjectId = subjectId;
+                grant.ClientId = clientId;
+                if (i % 2 == 0)
+                {
+                    grant.Type = type;
+                }
+                await theStore.StoreAsync(grant);
+                ++i;
+            }
+
+            var result = await theStore.GetAllAsync(subjectId);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(grants.Count , result.Count());
+
+            await theStore.RemoveAllAsync(subjectId, clientId,type);
+            result = await theStore.GetAllAsync(subjectId);
+
+            Assert.IsTrue(result.Any());
+            Assert.AreEqual(result.Count(), grants.Count/2);
+        }
+        [TestMethod]
+        public async Task add_read_delete_persisted_grants()
+        {
+            var theStore = AutofacStoreFactory.Resolve<IPersistedGrantStore>();
+            var grants = MakeNewPersistedGrants(10);
+
+            var clientId = Guid.NewGuid().ToString();
+            var subjectId = Guid.NewGuid().ToString();
+            var type = Guid.NewGuid().ToString();
+            int i = 0;
+            foreach (var grant in grants)
+            {
+                grant.SubjectId = subjectId;
+                grant.ClientId = clientId;
+                if (i % 2 == 0)
+                {
+                    grant.Type = type;
+                }
+                await theStore.StoreAsync(grant);
+                ++i;
+            }
+
+            var result = await theStore.GetAllAsync(subjectId);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(grants.Count, result.Count());
+
+            foreach (var grant in grants)
+            {
+                await theStore.RemoveAsync(grant.Key);
+            }
+
+            result = await theStore.GetAllAsync(subjectId);
+
+            Assert.IsFalse(result.Any());
         }
         private List<IdentityResource> MakeNewIdentityResources(int count)
         {
