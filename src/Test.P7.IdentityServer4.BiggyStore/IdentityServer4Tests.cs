@@ -187,10 +187,15 @@ namespace Test.P7.IdentityServer4.BiggyStore
         {
             var theStore = AutofacStoreFactory.Resolve<IPersistedGrantStore>();
             var grant = MakeNewPersistedGrant();
+            var grantModel = grant.ToPersistedGrantModel();
 
             await theStore.StoreAsync(grant);
 
             var result = await theStore.GetAsync(grant.Key);
+            var resultModel = result.ToPersistedGrantModel();
+
+            grantModel.ShouldBe(resultModel,(string)null);
+
             Assert.IsNotNull(result);
             Assert.IsTrue(result.ClientId == grant.ClientId);
             Assert.IsTrue(result.SubjectId == grant.SubjectId);
@@ -223,15 +228,21 @@ namespace Test.P7.IdentityServer4.BiggyStore
                 ++i;
             }
 
-            var result = await theStore.GetAllAsync(subjectId);
+            var results = await theStore.GetAllAsync(subjectId);
+            Assert.IsNotNull(results);
+            Assert.AreEqual(grants.Count / 2, results.Count());
 
-            Assert.IsNotNull(result);
-            Assert.AreEqual(grants.Count/2, result.Count());
+            foreach (var result in results)
+            {
+                result.SubjectId.ShouldBe(subjectId);
+            }
+
+
 
 
             await theStore.RemoveAllAsync(subjectId,clientId);
-            result = await theStore.GetAllAsync(subjectId);
-            Assert.IsFalse(result.Any());
+            results = await theStore.GetAllAsync(subjectId);
+            Assert.IsFalse(results.Any());
         }
 
         [TestMethod]
@@ -256,16 +267,26 @@ namespace Test.P7.IdentityServer4.BiggyStore
                 ++i;
             }
 
-            var result = await theStore.GetAllAsync(subjectId);
+            var results = await theStore.GetAllAsync(subjectId);
 
-            Assert.IsNotNull(result);
-            Assert.AreEqual(grants.Count , result.Count());
+            Assert.IsNotNull(results);
+            Assert.AreEqual(grants.Count , results.Count());
+
+
+            foreach (var result in results)
+            {
+                result.SubjectId.ShouldBe(subjectId);
+            }
 
             await theStore.RemoveAllAsync(subjectId, clientId,type);
-            result = await theStore.GetAllAsync(subjectId);
+            results = await theStore.GetAllAsync(subjectId);
+            foreach (var result in results)
+            {
+                result.SubjectId.ShouldBe(subjectId);
+            }
 
-            Assert.IsTrue(result.Any());
-            Assert.AreEqual(result.Count(), grants.Count/2);
+            Assert.IsTrue(results.Any());
+            Assert.AreEqual(results.Count(), grants.Count/2);
         }
         [TestMethod]
         public async Task add_read_delete_persisted_grants()
