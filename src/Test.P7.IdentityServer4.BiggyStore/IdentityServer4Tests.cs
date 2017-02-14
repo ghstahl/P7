@@ -186,8 +186,8 @@ namespace Test.P7.IdentityServer4.BiggyStore
         public async Task add_read_delete_persisted_grant()
         {
             var theStore = AutofacStoreFactory.Resolve<IPersistedGrantStore>();
-            var grant = ModelTests.NewPersistedGrant;
-            var grantModel = grant.ToPersistedGrantModel();
+            var grantModel = ModelTests.NewPersistedGrantModel;
+            var grant = grantModel.ToPersistedGrant();
 
             await theStore.StoreAsync(grant);
 
@@ -210,7 +210,7 @@ namespace Test.P7.IdentityServer4.BiggyStore
         public async Task add_read_delete_persisted_grants_by_subjectid()
         {
             var theStore = AutofacStoreFactory.Resolve<IPersistedGrantStore>();
-            var grants = ModelTests.MakeNewPersistedGrants(10);
+            var grants = ModelTests.MakeNewPersistedGrantModels(10).ToPersistedGrants();
 
             var clientId = Guid.NewGuid().ToString();
             var subjectId = Guid.NewGuid().ToString();
@@ -249,7 +249,7 @@ namespace Test.P7.IdentityServer4.BiggyStore
         public async Task add_read_delete_persisted_grants_by_subjectid_and_type()
         {
             var theStore = AutofacStoreFactory.Resolve<IPersistedGrantStore>();
-            var grants = ModelTests.MakeNewPersistedGrants(10);
+            var grants = ModelTests.MakeNewPersistedGrantModels(10).ToPersistedGrants();
 
             var clientId = Guid.NewGuid().ToString();
             var subjectId = Guid.NewGuid().ToString();
@@ -292,7 +292,7 @@ namespace Test.P7.IdentityServer4.BiggyStore
         public async Task add_read_delete_persisted_grants()
         {
             var theStore = AutofacStoreFactory.Resolve<IPersistedGrantStore>();
-            var grants = ModelTests.MakeNewPersistedGrants(10);
+            var grants = ModelTests.MakeNewPersistedGrantModels(10).ToPersistedGrants();
 
             var clientId = Guid.NewGuid().ToString();
             var subjectId = Guid.NewGuid().ToString();

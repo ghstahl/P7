@@ -100,11 +100,11 @@ namespace Test.P7.IdentityServer4.BiggyStore
             }
         }
 
-        public static PersistedGrant NewPersistedGrant
+        public static PersistedGrantModel NewPersistedGrantModel
         {
             get
             {
-                return new PersistedGrant()
+                return new PersistedGrantModel()
                 {
                     ClientId = Guid.NewGuid().ToString(),
                     CreationTime = DateTime.UtcNow,
@@ -117,13 +117,13 @@ namespace Test.P7.IdentityServer4.BiggyStore
             }
         }
 
-        public static List<PersistedGrant> MakeNewPersistedGrants(int count)
+        public static List<PersistedGrantModel> MakeNewPersistedGrantModels(int count)
         {
-            var final = new List<PersistedGrant>();
+            var final = new List<PersistedGrantModel>();
 
             for (int i = 0; i < count; ++i)
             {
-                final.Add(NewPersistedGrant);
+                final.Add(NewPersistedGrantModel);
             }
             return final;
         }
@@ -180,6 +180,17 @@ namespace Test.P7.IdentityServer4.BiggyStore
             var model2 = new IdentityResourceModel(model.ToIdentityResource());
 
             var model3 = NewIdentityResourceModel;
+
+            model.ShouldBe(model2);
+            model.ShouldNotBe(model3);
+        }
+        [TestMethod]
+        public void persisted_grant_model()
+        {
+            var model = NewPersistedGrantModel;
+            var model2 = new PersistedGrantModel(model.ToPersistedGrant());
+
+            var model3 = NewPersistedGrantModel;
 
             model.ShouldBe(model2);
             model.ShouldNotBe(model3);
