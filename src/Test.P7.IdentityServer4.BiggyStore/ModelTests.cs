@@ -80,6 +80,16 @@ namespace Test.P7.IdentityServer4.BiggyStore
                 return model;
             }
         }
+        public static List<ApiResourceModel> MakeNewApiResourceModels(int count)
+        {
+            var final = new List<ApiResourceModel>();
+
+            for (int i = 0; i < count; ++i)
+            {
+                final.Add(NewApiResourceModel);
+            }
+            return final;
+        }
 
         public static IdentityResourceModel NewIdentityResourceModel
         {
@@ -99,7 +109,16 @@ namespace Test.P7.IdentityServer4.BiggyStore
                 return model;
             }
         }
+        public static List<IdentityResourceModel> MakeNewIdentityResourceModels(int count)
+        {
+            var final = new List<IdentityResourceModel>();
 
+            for (int i = 0; i < count; ++i)
+            {
+                final.Add(NewIdentityResourceModel);
+            }
+            return final;
+        }
         public static PersistedGrantModel NewPersistedGrantModel
         {
             get
@@ -126,6 +145,20 @@ namespace Test.P7.IdentityServer4.BiggyStore
                 final.Add(NewPersistedGrantModel);
             }
             return final;
+        }
+
+        public static ResourcesModel NewResourcesModel
+        {
+            get
+            {
+                var model = new ResourcesModel()
+                {
+                    OfflineAccess = true,
+                    IdentityResources = MakeNewIdentityResourceModels(10),
+                    ApiResources = MakeNewApiResourceModels(10)
+                };
+                return model;
+            }
         }
 
         [TestMethod]
@@ -195,5 +228,17 @@ namespace Test.P7.IdentityServer4.BiggyStore
             model.ShouldBe(model2);
             model.ShouldNotBe(model3);
         }
+        [TestMethod]
+        public void resources_model()
+        {
+            var model = NewResourcesModel;
+            var model2 = new ResourcesModel(model.ToResources());
+
+            var model3 = NewResourcesModel;
+
+            model.ShouldBe(model2);
+            model.ShouldNotBe(model3);
+        }
+       
     }
 }

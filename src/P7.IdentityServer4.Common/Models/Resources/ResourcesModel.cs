@@ -36,5 +36,39 @@ namespace P7.IdentityServer4.Common
         {
             return obj;
         }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as ResourcesModel;
+            if (other == null)
+            {
+                return false;
+            }
+            var differenceApiResources = ApiResources.Except(other.ApiResources);
+            var equalsUserClaims = !differenceApiResources.Any();
+
+            var differenceIdentityResources = IdentityResources.Except(other.IdentityResources);
+            var equalsIdentityResources = !differenceIdentityResources.Any();
+
+           
+            var result = equalsUserClaims
+                         && OfflineAccess.Equals(other.OfflineAccess)
+                         && equalsIdentityResources;
+            return result;
+        }
+
+        public override int GetHashCode()
+        {
+            var code = OfflineAccess.GetHashCode();
+            foreach (var apiResource in ApiResources)
+            {
+                code ^= apiResource.GetHashCode();
+            }
+            foreach (var identityResource in IdentityResources)
+            {
+                code ^= identityResource.GetHashCode();
+            }
+            return code;
+        }
     }
 }
