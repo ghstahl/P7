@@ -289,10 +289,23 @@ namespace Test.P7.IdentityServer4.BiggyStore
                 ++i;
             }
 
+            var expectedGrantModels = grants.ToPersistedGrantModels();
+
+
             var result = await theStore.GetAllAsync(subjectId);
+            var resultList = result.ToList();
+
+            var readGrantModels = resultList.ToPersistedGrantModels();
+
+            string additionalInfo = null;
+            expectedGrantModels.ShouldBe(readGrantModels, additionalInfo);
+
+
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(grants.Count, result.Count());
+            Assert.AreEqual(grants.Count, resultList.Count());
+
+
 
             foreach (var grant in grants)
             {
