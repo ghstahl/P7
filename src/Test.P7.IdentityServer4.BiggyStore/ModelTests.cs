@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using IdentityServer4.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -35,6 +36,30 @@ namespace Test.P7.IdentityServer4.BiggyStore
             var scopeModel2 = new ScopeModel(scope);
 
             scopeModel2.ShouldBe(scopeModel);
+
+        }
+
+        [TestMethod]
+        public void claim_model()
+        {
+            var claimModel = new ClaimModel()
+            {
+                Type = UniqueGuid,
+                Value = UniqueGuid,
+                ValueType = UniqueGuid
+            };
+            var claimModel2 = new ClaimModel(claimModel);
+            var claimModel3 = new ClaimModel()
+            {
+                Type = UniqueGuid,
+                Value = UniqueGuid,
+                ValueType = UniqueGuid
+            };
+
+
+
+            claimModel2.ShouldBe(claimModel);
+            claimModel2.ShouldNotBe(claimModel3);
 
         }
     }
