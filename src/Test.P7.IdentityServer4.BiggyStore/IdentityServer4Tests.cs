@@ -238,14 +238,18 @@ namespace Test.P7.IdentityServer4.BiggyStore
         public async Task add_read_delete_persisted_grants_and_types()
         {
         }
-
-        [TestMethod]
-        public async Task identity_resource_store_test()
+        private List<IdentityResource> MakeNewIdentityResources(int count)
         {
-            var resourceStore = AutofacStoreFactory.Resolve<IResourceStore>();
-            var adminResourceStore = AutofacStoreFactory.Resolve<IAdminResourceStore>();
-            Assert.IsNotNull(resourceStore);
-            Assert.IsNotNull(adminResourceStore);
+            var final = new List<IdentityResource>();
+
+            for (int i = 0; i < count; ++i)
+            {
+                final.Add(MakeNewIdentityResource());
+            }
+            return final;
+        }
+        private IdentityResource MakeNewIdentityResource()
+        {
             IdentityResource identityResource = new IdentityResource()
             {
                 Description = Guid.NewGuid().ToString(),
@@ -261,6 +265,62 @@ namespace Test.P7.IdentityServer4.BiggyStore
                     Guid.NewGuid().ToString()
                 }
             };
+            return identityResource;
+        }
+
+        [TestMethod]
+        public async Task identity_resource_store_fullboat()
+        {
+            var resourceStore = AutofacStoreFactory.Resolve<IResourceStore>();
+            var adminResourceStore = AutofacStoreFactory.Resolve<IAdminResourceStore>();
+
+            var identityResources = MakeNewIdentityResources(10);
+            var apiResources = MakeNewApiResources(10);
+            int i = 0;
+            foreach (var identityResource in identityResources)
+            {
+                identityResource.Name = "Test:" + i;
+                ++i;
+                await adminResourceStore.IdentityResourceStore.InsertIdentityResourceAsync(identityResource);
+            }
+            i = 0;
+            foreach (var apiResource in apiResources)
+            {
+                apiResource.Name = "Test:" + i;
+                ++i;
+                apiResource.Scopes.Add(new Scope() {Name = "Test"});
+                await adminResourceStore.ApiResourceStore.InsertApiResourceAsync(apiResource);
+            }
+
+            var resource = await resourceStore.GetAllResources();
+            Assert.IsNotNull(resource);
+            Assert.AreEqual(resource.ApiResources.Count, apiResources.Count);
+            Assert.AreEqual(resource.IdentityResources.Count, identityResources.Count);
+
+            var filteredApiResources = await resourceStore.FindApiResourcesByScopeAsync(new List<string>() {"Test"});
+            Assert.AreEqual(resource.ApiResources.Count, filteredApiResources.Count());
+
+            ApiResource apiResource2 = await resourceStore.FindApiResourceAsync("Test:0");
+            Assert.IsNotNull(apiResource2);
+            Assert.AreEqual(apiResource2.Name, "Test:0");
+
+            var identityResources2 = await resourceStore.FindIdentityResourcesByScopeAsync(new List<string>() {"Test:0"});
+            Assert.IsNotNull(identityResources2);
+            Assert.AreEqual(1, identityResources2.Count());
+            Assert.AreEqual(identityResources2.FirstOrDefault().Name, "Test:0");
+        }
+
+
+        [TestMethod]
+        public async Task identity_resource_store_test()
+        {
+            var resourceStore = AutofacStoreFactory.Resolve<IResourceStore>();
+            var adminResourceStore = AutofacStoreFactory.Resolve<IAdminResourceStore>();
+            Assert.IsNotNull(resourceStore);
+            Assert.IsNotNull(adminResourceStore);
+
+            IdentityResource identityResource = MakeNewIdentityResource();
+
             await adminResourceStore.IdentityResourceStore.InsertIdentityResourceAsync(identityResource);
 
             var dd = await adminResourceStore.IdentityResourceStore.PageAsync(10, null);
@@ -272,14 +332,19 @@ namespace Test.P7.IdentityServer4.BiggyStore
             dd = await adminResourceStore.IdentityResourceStore.PageAsync(10, null);
             Assert.AreEqual(0, dd.Count);
         }
-
-        [TestMethod]
-        public async Task api_resource_store_test()
+        private List<ApiResource> MakeNewApiResources(int count)
         {
-            var resourceStore = AutofacStoreFactory.Resolve<IResourceStore>();
-            var adminResourceStore = AutofacStoreFactory.Resolve<IAdminResourceStore>();
-            Assert.IsNotNull(resourceStore);
-            Assert.IsNotNull(adminResourceStore);
+            var final = new List<ApiResource>();
+
+            for (int i = 0; i < count; ++i)
+            {
+                final.Add(MakeNewApiResource());
+            }
+            return final;
+        }
+
+        private ApiResource MakeNewApiResource()
+        {
             ApiResource apiResource = new ApiResource()
             {
                 Description = Guid.NewGuid().ToString(),
@@ -317,6 +382,17 @@ namespace Test.P7.IdentityServer4.BiggyStore
                     }
                 }
             };
+            return apiResource;
+        }
+
+        [TestMethod]
+        public async Task api_resource_store_test()
+        {
+            var resourceStore = AutofacStoreFactory.Resolve<IResourceStore>();
+            var adminResourceStore = AutofacStoreFactory.Resolve<IAdminResourceStore>();
+            Assert.IsNotNull(resourceStore);
+            Assert.IsNotNull(adminResourceStore);
+            var apiResource = MakeNewApiResource();
             await adminResourceStore.ApiResourceStore.InsertApiResourceAsync(apiResource);
 
             var dd = await adminResourceStore.ApiResourceStore.PageAsync(10, null);

@@ -57,12 +57,12 @@ namespace P7.IdentityServer4.Common.Stores
 
         public async Task<IEnumerable<ApiResource>> FindApiResourcesByScopeAsync(IEnumerable<string> names)
         {
-            if (names == null)
-                throw new ArgumentNullException(nameof(names));
-            var apis = await FetchAllApiResourceAsync();
-            var api = from i in apis
-                           where names.Contains(i.Name)
-                           select i;
+            if (names == null) throw new ArgumentNullException(nameof(names));
+            var apiResources = await FetchAllApiResourceAsync();
+            var api = from a in apiResources
+                      from s in a.Scopes
+                      where names.Contains(s.Name)
+                      select a;
 
             return api;
         }
