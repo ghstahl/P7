@@ -186,7 +186,7 @@ namespace Test.P7.IdentityServer4.BiggyStore
         public async Task add_read_delete_persisted_grant()
         {
             var theStore = AutofacStoreFactory.Resolve<IPersistedGrantStore>();
-            var grant = MakeNewPersistedGrant();
+            var grant = ModelTests.NewPersistedGrant;
             var grantModel = grant.ToPersistedGrantModel();
 
             await theStore.StoreAsync(grant);
@@ -210,7 +210,7 @@ namespace Test.P7.IdentityServer4.BiggyStore
         public async Task add_read_delete_persisted_grants_by_subjectid()
         {
             var theStore = AutofacStoreFactory.Resolve<IPersistedGrantStore>();
-            var grants = MakeNewPersistedGrants(10);
+            var grants = ModelTests.MakeNewPersistedGrants(10);
 
             var clientId = Guid.NewGuid().ToString();
             var subjectId = Guid.NewGuid().ToString();
@@ -249,7 +249,7 @@ namespace Test.P7.IdentityServer4.BiggyStore
         public async Task add_read_delete_persisted_grants_by_subjectid_and_type()
         {
             var theStore = AutofacStoreFactory.Resolve<IPersistedGrantStore>();
-            var grants = MakeNewPersistedGrants(10);
+            var grants = ModelTests.MakeNewPersistedGrants(10);
 
             var clientId = Guid.NewGuid().ToString();
             var subjectId = Guid.NewGuid().ToString();
@@ -292,7 +292,7 @@ namespace Test.P7.IdentityServer4.BiggyStore
         public async Task add_read_delete_persisted_grants()
         {
             var theStore = AutofacStoreFactory.Resolve<IPersistedGrantStore>();
-            var grants = MakeNewPersistedGrants(10);
+            var grants = ModelTests.MakeNewPersistedGrants(10);
 
             var clientId = Guid.NewGuid().ToString();
             var subjectId = Guid.NewGuid().ToString();
@@ -504,29 +504,7 @@ namespace Test.P7.IdentityServer4.BiggyStore
             Assert.AreEqual(0, dd.Count);
         }
 
-        private List<PersistedGrant> MakeNewPersistedGrants(int count)
-        {
-            var final = new List<PersistedGrant>();
-
-            for (int i = 0; i < count; ++i)
-            {
-                final.Add(MakeNewPersistedGrant());
-            }
-            return final;
-        }
-        private PersistedGrant MakeNewPersistedGrant()
-        {
-            return new PersistedGrant()
-            {
-             ClientId = Guid.NewGuid().ToString(),
-             CreationTime = DateTime.UtcNow,
-             Data = Guid.NewGuid().ToString(),
-             Expiration = DateTime.UtcNow,
-             Key = Guid.NewGuid().ToString(),
-             SubjectId = Guid.NewGuid().ToString(),
-             Type = Guid.NewGuid().ToString()
-            };
-        }
+       
 
         private Consent MakeNewConsent()
         {

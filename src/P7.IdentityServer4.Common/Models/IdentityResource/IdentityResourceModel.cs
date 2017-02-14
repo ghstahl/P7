@@ -25,5 +25,33 @@ namespace P7.IdentityServer4.Common
         {
             return obj;
         }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as IdentityResourceModel;
+            if (other == null)
+            {
+                return false;
+            }
+            var differenceUserClaims = UserClaims.Except(other.UserClaims);
+            var equalsUserClaims = !differenceUserClaims.Any();
+
+
+
+            var result = equalsUserClaims
+                         && Description.Equals(other.Description)
+                         && DisplayName.Equals(other.DisplayName)
+                         && Enabled.Equals(other.Enabled)
+                         && Emphasize.Equals(other.Emphasize)
+                         && Required.Equals(other.Required)
+                         && ShowInDiscoveryDocument.Equals(other.ShowInDiscoveryDocument);
+            return result;
+        }
+
+        public override int GetHashCode()
+        {
+            var code = Name.GetHashCode();
+            return code;
+        }
     }
 }

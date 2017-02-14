@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -42,5 +43,39 @@ namespace P7.IdentityServer4.Common
         {
             return apiSecrets;
         }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as ApiResourceModel;
+            if (other == null)
+            {
+                return false;
+            }
+            var differenceUserClaims = UserClaims.Except(other.UserClaims);
+            var equalsUserClaims = !differenceUserClaims.Any();
+
+            var differencesApiSecrets = ApiSecrets.Except(other.ApiSecrets);
+            var equalsUserApiSecrets = !differencesApiSecrets.Any();
+
+            var differencesScopes = Scopes.Except(other.Scopes);
+            var equalsScopes = !differencesScopes.Any();
+
+            var result = equalsUserApiSecrets
+                         && Description.Equals(other.Description)
+                         && DisplayName.Equals(other.DisplayName)
+                         && Enabled.Equals(other.Enabled)
+                         && Name.Equals(other.Name)
+                         && equalsScopes
+                         && Description.Equals(other.Description)
+                         && equalsUserClaims;
+            return result;
+        }
+
+        public override int GetHashCode()
+        {
+            var code = Name.GetHashCode();
+            return code;
+        }
     }
 }
+
