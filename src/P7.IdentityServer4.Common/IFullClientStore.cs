@@ -8,11 +8,6 @@ using P7.Store;
 
 namespace P7.IdentityServer4.Common
 {
-    public interface IFullResourceStore:IResourceStore, IIdentityResourceStore, IApiResourceStore
-    {
-        
-    }
-
     public interface IFullClientStore : IClientStore
     {
         /// <summary>

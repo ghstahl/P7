@@ -10,6 +10,7 @@ namespace P7.IdentityServer4.BiggyStore
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<DefaultResourcesStore>().As<IResourceStore>();
+            builder.RegisterType<AdminResourceStore>().As<IAdminResourceStore>();
         }
     }
 }
