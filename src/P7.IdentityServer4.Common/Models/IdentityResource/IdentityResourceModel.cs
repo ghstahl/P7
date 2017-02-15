@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using IdentityServer4.Models;
+using P7.Core.Utils;
 
 namespace P7.IdentityServer4.Common
 {
@@ -33,18 +34,14 @@ namespace P7.IdentityServer4.Common
             {
                 return false;
             }
-            var differenceUserClaims = UserClaims.Except(other.UserClaims);
-            var equalsUserClaims = !differenceUserClaims.Any();
-
-
-
-            var result = equalsUserClaims
-                         && Description.Equals(other.Description)
-                         && DisplayName.Equals(other.DisplayName)
-                         && Enabled.Equals(other.Enabled)
-                         && Emphasize.Equals(other.Emphasize)
-                         && Required.Equals(other.Required)
-                         && ShowInDiscoveryDocument.Equals(other.ShowInDiscoveryDocument);
+ 
+            var result = UserClaims.SafeListEquals(other.UserClaims)
+                         && Description.SafeEquals(other.Description)
+                         && DisplayName.SafeEquals(other.DisplayName)
+                         && Enabled.SafeEquals(other.Enabled)
+                         && Emphasize.SafeEquals(other.Emphasize)
+                         && Required.SafeEquals(other.Required)
+                         && ShowInDiscoveryDocument.SafeEquals(other.ShowInDiscoveryDocument);
             return result;
         }
 

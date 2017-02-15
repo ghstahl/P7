@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using IdentityServer4.Models;
+using P7.Core.Utils;
+
 
 namespace P7.IdentityServer4.Common
 {
@@ -44,16 +46,9 @@ namespace P7.IdentityServer4.Common
             {
                 return false;
             }
-            var differenceApiResources = ApiResources.Except(other.ApiResources);
-            var equalsUserClaims = !differenceApiResources.Any();
-
-            var differenceIdentityResources = IdentityResources.Except(other.IdentityResources);
-            var equalsIdentityResources = !differenceIdentityResources.Any();
-
-           
-            var result = equalsUserClaims
-                         && OfflineAccess.Equals(other.OfflineAccess)
-                         && equalsIdentityResources;
+            var result = ApiResources.SafeListEquals(other.ApiResources)
+                         && OfflineAccess.SafeEquals(other.OfflineAccess)
+                         && IdentityResources.SafeListEquals(other.IdentityResources);
             return result;
         }
 

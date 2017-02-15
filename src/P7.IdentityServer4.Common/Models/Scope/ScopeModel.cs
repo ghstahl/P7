@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using IdentityServer4.Models;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using P7.Core.Utils;
+
 
 namespace P7.IdentityServer4.Common
 {
@@ -35,16 +37,13 @@ namespace P7.IdentityServer4.Common
                 return false;
             }
 
-            IEnumerable<string> difference = UserClaims.Except(other.UserClaims);
-            var equalsUserClaims = !difference.Any();
-             
-            var result = Description.Equals(other.Description)
-                   && DisplayName.Equals(other.DisplayName)
-                   && Emphasize.Equals(other.Emphasize)
-                   && Name.Equals(other.Name)
-                   && Required.Equals(other.Required)
-                   && ShowInDiscoveryDocument.Equals(other.ShowInDiscoveryDocument)
-                   && equalsUserClaims;
+            var result = Description.SafeEquals(other.Description)
+                   && DisplayName.SafeEquals(other.DisplayName)
+                   && Emphasize.SafeEquals(other.Emphasize)
+                   && Name.SafeEquals(other.Name)
+                   && Required.SafeEquals(other.Required)
+                   && ShowInDiscoveryDocument.SafeEquals(other.ShowInDiscoveryDocument)
+                   && UserClaims.SafeListEquals(other.UserClaims);
             return result;
         }
 

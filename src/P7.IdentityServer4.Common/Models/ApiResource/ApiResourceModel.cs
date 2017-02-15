@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using IdentityServer4.Models;
+using P7.Core.Utils;
 
 namespace P7.IdentityServer4.Common
 {
@@ -51,23 +52,16 @@ namespace P7.IdentityServer4.Common
             {
                 return false;
             }
-            var differenceUserClaims = UserClaims.Except(other.UserClaims);
-            var equalsUserClaims = !differenceUserClaims.Any();
 
-            var differencesApiSecrets = ApiSecrets.Except(other.ApiSecrets);
-            var equalsUserApiSecrets = !differencesApiSecrets.Any();
 
-            var differencesScopes = Scopes.Except(other.Scopes);
-            var equalsScopes = !differencesScopes.Any();
-
-            var result = equalsUserApiSecrets
-                         && Description.Equals(other.Description)
-                         && DisplayName.Equals(other.DisplayName)
-                         && Enabled.Equals(other.Enabled)
-                         && Name.Equals(other.Name)
-                         && equalsScopes
-                         && Description.Equals(other.Description)
-                         && equalsUserClaims;
+            var result = UserClaims.SafeListEquals(other.UserClaims) &&
+                         ApiSecrets.SafeListEquals(other.ApiSecrets) &&
+                         Scopes.SafeListEquals(other.Scopes) &&
+                         Description.SafeEquals(other.Description) &&
+                         DisplayName.SafeEquals(other.DisplayName) &&
+                         Enabled.SafeEquals(other.Enabled) &&
+                         Name.SafeEquals(other.Name) && 
+                         Description.SafeEquals(other.Description);
             return result;
         }
 

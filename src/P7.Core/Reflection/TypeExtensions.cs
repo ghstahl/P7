@@ -23,6 +23,13 @@ namespace P7.Core.Reflection
                 master.Where(type => type.GetTypeInfo().GetCustomAttributes(typeof (TAttributeType), true).Any())
                     .ToList();
         }
+
+        public static bool IsGenericList(this object obj)
+        {
+            var oType = obj.GetType();
+            return (oType.GetTypeInfo().IsGenericType && (oType.GetGenericTypeDefinition() == typeof(List<>)));
+        }
+
         /*
         public static RouteConstraintAttribute GetRouteConstraintAttribute<TAttributeType>(this Type type)
         {

@@ -1,3 +1,6 @@
+using P7.Core.Utils;
+
+
 namespace P7.IdentityServer4.Common
 {
     public class PersistedGrantModel : AbstractPersistedGrantModel
@@ -18,13 +21,13 @@ namespace P7.IdentityServer4.Common
             }
 
 
-            var result = ClientId.Equals(other.ClientId)
-                   && CreationTime.Equals(other.CreationTime)
-                   && Data.Equals(other.Data)
-                   && Expiration.Equals(other.Expiration)
-                   && Key.Equals(other.Key)
-                   && SubjectId.Equals(other.SubjectId)
-                   && Type.Equals(other.Type);
+            var result = ClientId.SafeEquals(other.ClientId)
+                   && CreationTime.SafeEquals(other.CreationTime)
+                   && Data.SafeEquals(other.Data)
+                   && Expiration.SafeEquals(other.Expiration)
+                   && Key.SafeEquals(other.Key)
+                   && SubjectId.SafeEquals(other.SubjectId)
+                   && Type.SafeEquals(other.Type);
             return result;
         }
 

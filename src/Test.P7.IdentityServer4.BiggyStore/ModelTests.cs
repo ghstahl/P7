@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using Castle.Components.DictionaryAdapter;
 using IdentityServer4.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using P7.Core.Utils;
 using P7.IdentityServer4.Common;
+ 
 using Shouldly;
 
 namespace Test.P7.IdentityServer4.BiggyStore
@@ -300,6 +302,23 @@ namespace Test.P7.IdentityServer4.BiggyStore
             model.ShouldBe(model2);
             model.ShouldNotBe(model3);
         }
-        
+
+        [TestMethod]
+        public void safe_equal()
+        {
+            string a = null;
+            string b = "Hi";
+          
+            Assert.IsFalse(a.SafeEquals(b));
+           
+            Assert.IsFalse(b.SafeEquals(a));
+            b = null;
+            Assert.IsTrue(a.SafeEquals(b));
+            a = "hi";
+            b = "hi";
+            Assert.IsTrue(a.SafeEquals(b));
+            b = UniqueGuid;
+            Assert.IsFalse(b.SafeEquals(a));
+        }
     }
 }

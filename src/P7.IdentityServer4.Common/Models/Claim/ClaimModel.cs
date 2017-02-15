@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using IdentityServer4.Models;
+using P7.Core.Utils;
 
 namespace P7.IdentityServer4.Common
 {
@@ -34,9 +35,9 @@ namespace P7.IdentityServer4.Common
                 return false;
             }
 
-            var result = Type.Equals(other.Type)
-                         && Value.Equals(other.Value)
-                         && ValueType.Equals(other.ValueType);
+            var result = Type.SafeEquals(other.Type)
+                         && Value.SafeEquals(other.Value)
+                         && ValueType.SafeEquals(other.ValueType);
             return result;
         }
 
