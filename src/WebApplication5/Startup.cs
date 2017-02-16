@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Autofac;
+using IdentityServer4.Models;
+using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -30,6 +34,7 @@ using P7.Core.TagHelpers;
 using P7.GraphQLCore;
 using P7.HugoStore.Core;
 using P7.IdentityServer4.BiggyStore;
+using P7.IdentityServer4.Common;
 using Module = Autofac.Module;
 
 namespace WebApplication5
@@ -112,7 +117,7 @@ namespace WebApplication5
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddIdentityServer()
-            .AddTemporarySigningCredential();
+                .AddTemporarySigningCredential();
 
             services.TryAddSingleton(typeof(IStringLocalizerFactory), typeof(ResourceManagerStringLocalizerFactory));
             services.AddLocalization();
@@ -166,6 +171,7 @@ namespace WebApplication5
             ILoggerFactory loggerFactory,
             IApplicationLifetime appLifetime)
         {
+            LoadIdentityServer4Data();
             var dd = P7.Core.Global.ServiceProvider.GetServices<IQueryFieldRecordRegistration>();
             var vv = P7.Core.Global.ServiceProvider.GetService<IQueryFieldRecordRegistrationStore>();
 
@@ -264,6 +270,39 @@ namespace WebApplication5
                     name: "default",
                     template: "{area=Main}/{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        private async Task LoadIdentityServer4Data()
+        {
+            var fullClientStore = P7.Core.Global.ServiceProvider.GetServices<IFullClientStore>().FirstOrDefault();
+
+            var client = new Client
+            {
+                ClientId = "client",
+                AllowedGrantTypes = GrantTypes.ClientCredentials,
+
+                ClientSecrets =
+                {
+                    new Secret("secret".Sha256())
+                },
+                AllowedScopes = {"api1"}
+            };
+            await fullClientStore.InsertClientAsync(client);
+            var result = await fullClientStore.FindClientByIdAsync(client.ClientId);
+            var apiResourceList = new List<ApiResource>
+            {
+                new ApiResource("api1", "My API")
+            };
+
+            var resourceStore = P7.Core.Global.ServiceProvider.GetServices<IResourceStore>().FirstOrDefault();
+            var adminResourceStore = P7.Core.Global.ServiceProvider.GetServices<IAdminResourceStore>().FirstOrDefault();
+
+            foreach (var apiResource in apiResourceList)
+            {
+                await adminResourceStore.ApiResourceStore.InsertApiResourceAsync(apiResource);
+            }
+            
+            var dd = await adminResourceStore.ApiResourceStore.PageAsync(10, null);
         }
     }
 }
