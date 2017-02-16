@@ -28,9 +28,41 @@ using P7.Core.Startup;
 using P7.Core.IoC;
 using P7.Core.TagHelpers;
 using P7.GraphQLCore;
+using P7.HugoStore.Core;
+using P7.IdentityServer4.BiggyStore;
+using Module = Autofac.Module;
 
 namespace WebApplication5
 {
+    class MyBiggyConfiguration : IIdentityServer4BiggyConfiguration
+    {
+        public string DatabaseName { get; set; }
+        public string FolderStorage { get; set; }
+    }
+
+    public class MyIdentityServer4BiggyAutofacModule : Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+            var env = P7.Core.Global.HostingEnvironment;
+            var identityserver4Path = Path.Combine(env.ContentRootPath, "App_Data/identityserver4");
+            Directory.CreateDirectory(identityserver4Path);
+            var globalTenantDatabaseBiggyConfig = new TenantDatabaseBiggyConfig();
+            globalTenantDatabaseBiggyConfig.UsingFolder(identityserver4Path);
+            globalTenantDatabaseBiggyConfig.UsingTenantId(TenantDatabaseBiggyConfig.GlobalTenantId);
+            IIdentityServer4BiggyConfiguration biggyConfiguration = new MyBiggyConfiguration()
+            {
+                FolderStorage = globalTenantDatabaseBiggyConfig.Folder,
+                DatabaseName = globalTenantDatabaseBiggyConfig.Database
+            };
+
+            builder.Register(c => biggyConfiguration)
+                .As<IIdentityServer4BiggyConfiguration>()
+                .SingleInstance();
+
+        }
+    }
+
     public class Startup
     {
 
@@ -40,6 +72,8 @@ namespace WebApplication5
         {
             _hostingEnvironment = env;
             P7.Core.Global.HostingEnvironment = _hostingEnvironment;
+
+            var appDataPath = Path.Combine(env.ContentRootPath, "App_Data");
 
             var RollingPath = Path.Combine(env.ContentRootPath, "logs/myapp-{Date}.txt");
             Log.Logger = new LoggerConfiguration()
@@ -62,6 +96,7 @@ namespace WebApplication5
                 // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
                 builder.AddUserSecrets();
             }
+
 
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();

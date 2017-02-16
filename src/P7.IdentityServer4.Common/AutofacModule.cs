@@ -1,16 +1,14 @@
 ﻿using Autofac;
-using IdentityServer4.Stores;
-using P7.IdentityServer4.Common;
-using P7.IdentityServer4.Common.Stores;
+using P7.IdentityServer4.Common.Extensions;
 
-namespace P7.IdentityServer4.BiggyStore
+namespace P7.IdentityServer4.Common
 {
     public class AutofacModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<DefaultResourcesStore>().As<IResourceStore>();
-            builder.RegisterType<AdminResourceStore>().As<IAdminResourceStore>();
+            builder.AddDefaultResourceStore();
+            builder.AddAdminResourceStore();
         }
     }
 }
