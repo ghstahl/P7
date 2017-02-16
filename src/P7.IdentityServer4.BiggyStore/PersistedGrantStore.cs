@@ -15,12 +15,6 @@ namespace P7.IdentityServer4.BiggyStore
         {
         }
 
-        public async Task RemoveUserConsentAsync(string subjectId, string clientId)
-        {
-            var doc = new ConsentDocument(new Consent() { ClientId = clientId, SubjectId = subjectId });
-            await DeleteAsync(doc.Id_G);
-        }
-
         public async Task StoreAsync(PersistedGrant grant)
         {
             var doc = new PersistedGrantDocument(grant);

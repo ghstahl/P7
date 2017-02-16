@@ -1,9 +1,9 @@
 using System;
 using IdentityServer4.Models;
 using Newtonsoft.Json;
-using P7.BlogStore.Core;
 using P7.Core.Utils;
 using P7.IdentityServer4.Common;
+using P7.Store;
 
 namespace P7.IdentityServer4.BiggyStore
 {

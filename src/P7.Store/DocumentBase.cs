@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using Newtonsoft.Json;
 
-namespace P7.BlogStore.Core
+namespace P7.Store
 {
     public class DocumentBase : IDocumentBase
     {
@@ -10,7 +10,7 @@ namespace P7.BlogStore.Core
         {
             get
             {
-                if(string.IsNullOrEmpty(Id))
+                if (string.IsNullOrEmpty(Id))
                     return Guid.Empty;
 
                 return Guid.Parse(Id);
@@ -18,11 +18,5 @@ namespace P7.BlogStore.Core
         }
 
         public virtual string Id { get; set; }
-    }
-
-    public interface IDocumentBase
-    {
-        Guid Id_G { get;  }
-        string Id { get; }
     }
 }

@@ -1,4 +1,4 @@
-﻿{
+{
   "dependencies": {
     "Autofac": "4.3.0",
     "Autofac.Configuration": "4.0.1",
@@ -19,10 +19,7 @@
     "Microsoft.Extensions.Configuration.Abstractions": "1.1.0",
     "MSTest.TestFramework": "1.0.8-rc2",
     "Newtonsoft.Json": "9.0.1",
-    "P7.BlogStore.Core": "1.0.0-*",
-    "P7.BlogStore.Hugo": "1.0.0-*",
     "P7.Core": "1.0.0-*",
-    "P7.Globalization": "1.0.0-*",
     "P7.GraphQLCore": "1.0.0-*",
     "P7.HugoStore.Core": "1.0.0-*",
     "P7.IdentityServer4.BiggyStore": "1.0.0-*",

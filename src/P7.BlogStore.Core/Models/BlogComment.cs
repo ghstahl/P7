@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
+using P7.Store;
 
 namespace P7.BlogStore.Core
 {

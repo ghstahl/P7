@@ -164,24 +164,7 @@ namespace Test.P7.IdentityServer4.BiggyStore
             }
         }
 
-        [TestMethod]
-        public async Task add_read_delete_consent()
-        {
-            var theStore = AutofacStoreFactory.Resolve<IUserConsentStore>();
-            var consent = MakeNewConsent();
-
-            await theStore.StoreUserConsentAsync(consent);
-            var result = await theStore.GetUserConsentAsync(consent.SubjectId,consent.ClientId);
-            Assert.IsNotNull(result);
-            Assert.IsTrue(result.ClientId == consent.ClientId);
-            Assert.IsTrue(result.SubjectId == consent.SubjectId);
-
-            await theStore.RemoveUserConsentAsync(consent.SubjectId, consent.ClientId);
-
-            result = await theStore.GetUserConsentAsync(consent.SubjectId, consent.ClientId);
-            Assert.IsNull(result);
-        }
-
+ 
         [TestMethod]
         public async Task add_read_delete_persisted_grant()
         {
