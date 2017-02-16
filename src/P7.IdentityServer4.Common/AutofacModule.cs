@@ -9,6 +9,7 @@ namespace P7.IdentityServer4.Common
         {
             builder.AddDefaultResourceStore();
             builder.AddAdminResourceStore();
+            builder.AddCorsPolicyService();
         }
     }
 }

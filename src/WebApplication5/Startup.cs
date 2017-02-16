@@ -111,6 +111,8 @@ namespace WebApplication5
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddIdentityServer()
+            .AddTemporarySigningCredential();
 
             services.TryAddSingleton(typeof(IStringLocalizerFactory), typeof(ResourceManagerStringLocalizerFactory));
             services.AddLocalization();
@@ -227,6 +229,8 @@ namespace WebApplication5
                 LogoutPath = new PathString("/Identity/Account/LogOff")
             };
             app.UseCookieAuthentication(cookieAuthenticationOptions);
+
+            app.UseIdentityServer();
 
             if (env.IsDevelopment())
             {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
@@ -9,6 +8,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using P7.IdentityServer4.Common.Stores;
+using DefaultCorsPolicyService = P7.IdentityServer4.Common.Stores.DefaultCorsPolicyService;
 
 namespace P7.IdentityServer4.Common.Extensions
 {
@@ -24,6 +24,7 @@ namespace P7.IdentityServer4.Common.Extensions
             builder.RegisterType<DefaultResourcesStore>().As<IResourceStore>();
             return builder;
         }
+
         /// <summary>
         /// Adds the in Admin Resource Store.
         /// </summary>
@@ -34,5 +35,18 @@ namespace P7.IdentityServer4.Common.Extensions
             builder.RegisterType<AdminResourceStore>().As<IAdminResourceStore>();
             return builder;
         }
+
+        /// <summary>
+        /// Adds the in Admin Resource Store.
+        /// </summary>
+        /// <param name="builder">The builder.</param>
+        /// <returns></returns>
+        public static ContainerBuilder AddCorsPolicyService(this ContainerBuilder builder)
+        {
+            builder.RegisterType<DefaultCorsPolicyService>().As<ICorsPolicyService>();
+            return builder;
+        }
+
     }
 }
+
