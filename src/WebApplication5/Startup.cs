@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Autofac;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
+using IdentityServer4.Validation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -117,7 +118,9 @@ namespace WebApplication5
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddIdentityServer()
-                .AddTemporarySigningCredential();
+                .AddTemporarySigningCredential()
+                .AddSecretParser<ClientAssertionSecretParser>()
+                .AddSecretValidator<PrivateKeyJwtSecretValidator>();
 
             services.TryAddSingleton(typeof(IStringLocalizerFactory), typeof(ResourceManagerStringLocalizerFactory));
             services.AddLocalization();
@@ -130,10 +133,13 @@ namespace WebApplication5
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddMvc().AddJsonOptions(options =>
-            {
-                options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            });
+            services.AddMvc()
+                .AddJsonOptions(options =>
+                {
+                    options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                });
+
+            services.AddAuthorization();
 
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
@@ -264,12 +270,21 @@ namespace WebApplication5
 
             // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
             app.UseSession();
+            app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
+            {
+                Authority = "http://localhost:7791",
+                RequireHttpsMetadata = false,
+                EnableCaching = false,
+                ApiName = "api1"
+            });
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{area=Main}/{controller=Home}/{action=Index}/{id?}");
             });
+
+           
         }
 
         private async Task LoadIdentityServer4Data()
