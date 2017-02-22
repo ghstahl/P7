@@ -1,5 +1,7 @@
 ﻿using Autofac;
 using P7.IdentityServer4.Common.Extensions;
+using P7.IdentityServer4.Common.Services;
+using P7.IdentityServer4.Common.Stores;
 
 namespace P7.IdentityServer4.Common
 {
@@ -7,9 +9,10 @@ namespace P7.IdentityServer4.Common
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.AddDefaultResourceStore();
-            builder.AddAdminResourceStore();
-            builder.AddCorsPolicyService();
+            builder.AddResourceService<DefaultResourcesStore>();
+            builder.AddAdminResourceService<AdminResourceStore>();
+            builder.AddCorsPolicyService<DefaultCorsPolicyService>();
+            builder.AddProfileService<ArbritraryUserProfileService>();
         }
     }
 }

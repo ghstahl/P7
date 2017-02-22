@@ -180,7 +180,9 @@ namespace WebApplication5
             LoadIdentityServer4Data();
             var dd = P7.Core.Global.ServiceProvider.GetServices<IQueryFieldRecordRegistration>();
             var vv = P7.Core.Global.ServiceProvider.GetService<IQueryFieldRecordRegistrationStore>();
+            var v2 = P7.Core.Global.ServiceProvider.GetService<IPersistedGrantStore>();
 
+ 
 
             var supportedCultures = new List<CultureInfo>
             {
