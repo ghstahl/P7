@@ -18,6 +18,18 @@ namespace P7.IdentityServer4.Common.Extensions
             return builder;
         }
         /// <summary>
+        /// Adds the in default claims service.
+        /// </summary>
+        /// <param name="builder">The builder.</param>
+        /// <returns></returns>
+        public static ContainerBuilder AddClaimsService<T>(this ContainerBuilder builder)
+             where T : class, IClaimsService
+        {
+            builder.RegisterType<T>().As<IClaimsService>();
+            return builder;
+        }
+
+        /// <summary>
         /// Adds the profile service.
         /// </summary>
         /// <typeparam name="T"></typeparam>

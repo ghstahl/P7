@@ -13,6 +13,9 @@ namespace P7.IdentityServer4.Common
             builder.AddAdminResourceService<AdminResourceStore>();
             builder.AddCorsPolicyService<DefaultCorsPolicyService>();
             builder.AddProfileService<ArbritraryUserProfileService>();
+            builder.AddClaimsService<CustomClaimsServiceHub>();
+
+
         }
     }
 }
