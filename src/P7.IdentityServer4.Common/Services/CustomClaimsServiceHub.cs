@@ -10,25 +10,6 @@ using Microsoft.Extensions.Logging;
 
 namespace P7.IdentityServer4.Common.Services
 {
-    public interface ICustomClaimsService : IClaimsService
-    {
-        string Name { get; }
-    }
-    public class CustomArbitraryClaimsService : DefaultClaimsService, ICustomClaimsService
-    {
-        public CustomArbitraryClaimsService(IProfileService profile, ILogger<DefaultClaimsService> logger) : base(profile, logger)
-        {
-        }
-
-        public string Name => "arbitrary-claims";
-    }
-    public class CustomOpenIdClaimsService : DefaultClaimsService, ICustomClaimsService
-    {
-        public CustomOpenIdClaimsService(IProfileService profile, ILogger<DefaultClaimsService> logger) : base(profile, logger)
-        {
-        }
-        public string Name => "arbitrary-openid-claims";
-    }
     public class CustomClaimsServiceHub : DefaultClaimsService
     {
         private List<ICustomClaimsService> _customClaimsServices;
@@ -59,4 +40,5 @@ namespace P7.IdentityServer4.Common.Services
             }
         }
     }
+
 }
