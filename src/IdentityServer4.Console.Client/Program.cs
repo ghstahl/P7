@@ -19,7 +19,13 @@ namespace IdentityServer4.ConsoleApp.Client
 
             // request token
             var tokenClient = new TokenClient(disco.TokenEndpoint, "client", "secret");
-            var tokenResponse = await tokenClient.RequestClientCredentialsAsync("api1");
+            var customParams = new Dictionary<string, string>
+            {
+                { "handler", "openid-provider" },
+                { "openid-connect-token", "myOpenId" }
+            };
+
+            var tokenResponse = await tokenClient.RequestClientCredentialsAsync("api1", customParams);
 
             if (tokenResponse.IsError)
             {

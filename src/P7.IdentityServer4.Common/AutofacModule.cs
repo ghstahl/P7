@@ -14,7 +14,8 @@ namespace P7.IdentityServer4.Common
             builder.AddCorsPolicyService<DefaultCorsPolicyService>();
             builder.AddProfileService<ArbritraryUserProfileService>();
             builder.AddClaimsService<CustomClaimsServiceHub>();
-
+            builder.AddCustomClaimsService<CustomArbitraryClaimsService>();
+            builder.AddCustomClaimsService<CustomOpenIdClaimsService>();
 
         }
     }

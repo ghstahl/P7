@@ -1,11 +1,24 @@
 ﻿using Autofac;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
+using P7.IdentityServer4.Common.Services;
 
 namespace P7.IdentityServer4.Common.Extensions
 {
     public static class IdentityServer4Extensions
     {
+        /// <summary>
+        /// Adds the in default Resource Store.
+        /// </summary>
+        /// <param name="builder">The builder.</param>
+        /// <returns></returns>
+        public static ContainerBuilder AddCustomClaimsService<T>(this ContainerBuilder builder)
+             where T : class, ICustomClaimsService
+        {
+            builder.RegisterType<T>().As<ICustomClaimsService>();
+            return builder;
+        }
+
         /// <summary>
         /// Adds the in default Resource Store.
         /// </summary>
