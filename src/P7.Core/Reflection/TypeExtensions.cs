@@ -29,7 +29,36 @@ namespace P7.Core.Reflection
             var oType = obj.GetType();
             return (oType.GetTypeInfo().IsGenericType && (oType.GetGenericTypeDefinition() == typeof(List<>)));
         }
+        public static IEnumerable<FieldInfo> GetConstants(this Type type)
+        {
+            var fieldInfos = type.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 
+            return fieldInfos.Where(fi => fi.IsLiteral && !fi.IsInitOnly);
+        }
+        public static IEnumerable<FieldInfo> GetConstants<T>(this Type type)
+        {
+            var fieldInfos = type.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+            var query = from fi in fieldInfos
+                        where fi.FieldType == typeof(T) && fi.IsLiteral && !fi.IsInitOnly
+                        select fi;
+
+            return query;
+        }
+        public static IEnumerable<T> GetConstantsValues<T>(this IEnumerable<FieldInfo> fieldInfos) where T : class
+        {
+            var query = from fi in fieldInfos
+                        where fi.FieldType == typeof(T)
+                        select fi.GetRawConstantValue() as T;
+
+            return query;
+        }
+
+        public static IEnumerable<T> GetConstantsValues<T>(this Type type) where T : class
+        {
+            var fieldInfos = GetConstants(type);
+
+            return fieldInfos.Select(fi => fi.GetRawConstantValue() as T);
+        }
         /*
         public static RouteConstraintAttribute GetRouteConstraintAttribute<TAttributeType>(this Type type)
         {
