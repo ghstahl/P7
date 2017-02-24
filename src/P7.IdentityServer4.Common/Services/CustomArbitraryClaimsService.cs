@@ -22,7 +22,7 @@ namespace P7.IdentityServer4.Common.Services
             public const int REQUIRED_ITEMS_MISSING = 1000;
         }
 
-        public string Name => "arbitrary-claims";
+        public string Name => "arbitrary-claims-service";
 
         private readonly ILogger<CustomArbitraryClaimsService> _logger;
         private static List<string> _requiredArbitraryClaimsArguments;
@@ -60,7 +60,7 @@ namespace P7.IdentityServer4.Common.Services
             _logger = logger;
         }
 
-        public override Task<IEnumerable<Claim>> GetAccessTokenClaimsAsync(ClaimsPrincipal subject, 
+        public override Task<IEnumerable<Claim>> GetAccessTokenClaimsAsync(ClaimsPrincipal subject,
             Client client, Resources resources, ValidatedRequest request)
         {
             var arbitraryClaimsCheck = request.Raw.ContainsAny(RequiredArbitraryClaimsArgument);

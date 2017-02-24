@@ -182,7 +182,7 @@ namespace WebApplication5
             var vv = P7.Core.Global.ServiceProvider.GetService<IQueryFieldRecordRegistrationStore>();
             var v2 = P7.Core.Global.ServiceProvider.GetService<IPersistedGrantStore>();
 
- 
+
 
             var supportedCultures = new List<CultureInfo>
             {
@@ -272,13 +272,15 @@ namespace WebApplication5
 
             // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
             app.UseSession();
+
             app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
             {
                 Authority = "http://localhost:7791",
                 RequireHttpsMetadata = false,
                 EnableCaching = false,
-                ApiName = "api1"
+                AllowedScopes = { "api1", "arbitrary" }
             });
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -286,7 +288,7 @@ namespace WebApplication5
                     template: "{area=Main}/{controller=Home}/{action=Index}/{id?}");
             });
 
-           
+
         }
 
         private async Task LoadIdentityServer4Data()
@@ -302,13 +304,14 @@ namespace WebApplication5
                 {
                     new Secret("secret".Sha256())
                 },
-                AllowedScopes = {"api1"}
+                AllowedScopes = { "arbitrary", "api1" }
             };
             await fullClientStore.InsertClientAsync(client);
             var result = await fullClientStore.FindClientByIdAsync(client.ClientId);
             var apiResourceList = new List<ApiResource>
             {
-                new ApiResource("api1", "My API")
+                new ApiResource("api1", "My API"),
+                new ApiResource("arbitrary", "Arbitrary Scope")
             };
 
             var resourceStore = P7.Core.Global.ServiceProvider.GetServices<IResourceStore>().FirstOrDefault();
@@ -318,7 +321,7 @@ namespace WebApplication5
             {
                 await adminResourceStore.ApiResourceStore.InsertApiResourceAsync(apiResource);
             }
-            
+
             var dd = await adminResourceStore.ApiResourceStore.PageAsync(10, null);
         }
     }
