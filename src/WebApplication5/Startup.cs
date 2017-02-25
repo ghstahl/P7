@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Autofac;
+using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
 using IdentityServer4.Validation;
@@ -278,7 +279,7 @@ namespace WebApplication5
                 Authority = "http://localhost:7791",
                 RequireHttpsMetadata = false,
                 EnableCaching = false,
-                AllowedScopes = { "api1", "arbitrary" }
+                AllowedScopes = {"arbitrary"}
             });
 
             app.UseMvc(routes =>
@@ -287,8 +288,6 @@ namespace WebApplication5
                     name: "default",
                     template: "{area=Main}/{controller=Home}/{action=Index}/{id?}");
             });
-
-
         }
 
         private async Task LoadIdentityServer4Data()
@@ -304,13 +303,26 @@ namespace WebApplication5
                 {
                     new Secret("secret".Sha256())
                 },
-                AllowedScopes = { "arbitrary", "api1" }
+                AllowedScopes = { "arbitrary" }
             };
             await fullClientStore.InsertClientAsync(client);
+
+            var resourceOwnerClient = new Client
+            {
+                ClientId = "resource-owner-client",
+                AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                AllowOfflineAccess = true,
+                ClientSecrets =
+                {
+                    new Secret("secret".Sha256())
+                },
+                AllowedScopes = { "arbitrary"}
+            };
+            await fullClientStore.InsertClientAsync(resourceOwnerClient);
+
             var result = await fullClientStore.FindClientByIdAsync(client.ClientId);
             var apiResourceList = new List<ApiResource>
             {
-                new ApiResource("api1", "My API"),
                 new ApiResource("arbitrary", "Arbitrary Scope")
             };
 

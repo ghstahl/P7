@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
+using IdentityServer4.Validation;
 using P7.IdentityServer4.Common.Services;
 
 namespace P7.IdentityServer4.Common.Extensions
@@ -54,6 +55,19 @@ namespace P7.IdentityServer4.Common.Extensions
             builder.RegisterType<T>().As<IProfileService>();
             return builder;
         }
+        /// <summary>
+        /// Adds the profile service.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="builder">The builder.</param>
+        /// <returns></returns>
+        public static ContainerBuilder AddResourceOwnerPasswordValidator<T>(this ContainerBuilder builder)
+             where T : class, IResourceOwnerPasswordValidator
+        {
+            builder.RegisterType<T>().As<IResourceOwnerPasswordValidator>();
+            return builder;
+        }
+
         /// <summary>
         /// Adds the in Admin Resource Service.
         /// </summary>
