@@ -8,6 +8,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Autofac;
 using IdentityServer4;
+using IdentityServer4.Hosting;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
 using IdentityServer4.Validation;
@@ -37,6 +38,8 @@ using P7.GraphQLCore;
 using P7.HugoStore.Core;
 using P7.IdentityServer4.BiggyStore;
 using P7.IdentityServer4.Common;
+using P7.IdentityServer4.Common.Endpoints;
+using P7.IdentityServer4.Common.ExtensionGrantValidator;
 using Module = Autofac.Module;
 
 namespace WebApplication5
@@ -118,10 +121,12 @@ namespace WebApplication5
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddIdentityServer()
+            var identityServerBuilder = services.AddIdentityServer()
                 .AddTemporarySigningCredential()
                 .AddSecretParser<ClientAssertionSecretParser>()
-                .AddSecretValidator<PrivateKeyJwtSecretValidator>();
+                .AddSecretValidator<PrivateKeyJwtSecretValidator>()
+                .AddExtensionGrantValidator<PublicRefreshTokenExtensionGrantValidator>();
+
 
             services.TryAddSingleton(typeof(IStringLocalizerFactory), typeof(ResourceManagerStringLocalizerFactory));
             services.AddLocalization();
@@ -294,7 +299,7 @@ namespace WebApplication5
         {
             var fullClientStore = P7.Core.Global.ServiceProvider.GetServices<IFullClientStore>().FirstOrDefault();
 
-            var client = new Client
+            await fullClientStore.InsertClientAsync(new Client
             {
                 ClientId = "client",
                 AllowedGrantTypes = GrantTypes.ClientCredentials,
@@ -304,23 +309,38 @@ namespace WebApplication5
                     new Secret("secret".Sha256())
                 },
                 AllowedScopes = { "arbitrary" }
-            };
-            await fullClientStore.InsertClientAsync(client);
+            });
 
-            var resourceOwnerClient = new Client
+            await fullClientStore.InsertClientAsync(new Client
             {
                 ClientId = "resource-owner-client",
                 AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                 AllowOfflineAccess = true,
+                RefreshTokenUsage = TokenUsage.OneTimeOnly,
                 ClientSecrets =
                 {
                     new Secret("secret".Sha256())
                 },
-                AllowedScopes = { "arbitrary"}
-            };
-            await fullClientStore.InsertClientAsync(resourceOwnerClient);
+                AllowedScopes = { "arbitrary" }
+            });
 
-            var result = await fullClientStore.FindClientByIdAsync(client.ClientId);
+
+
+            await fullClientStore.InsertClientAsync(new Client
+            {
+                ClientId = "public-resource-owner-client",
+                AllowedGrantTypes = GrantTypes.List("public_refresh_token"),
+                RequireClientSecret = false,
+                AllowOfflineAccess = true,
+                RefreshTokenUsage = TokenUsage.OneTimeOnly,
+                ClientSecrets =
+                {
+                    new Secret("secret".Sha256())
+                },
+                AllowedScopes = { "arbitrary" }
+            });
+
+
             var apiResourceList = new List<ApiResource>
             {
                 new ApiResource("arbitrary", "Arbitrary Scope")

@@ -63,7 +63,7 @@
     "P7.GraphQLViewer": "1.0.0-*",
     "GraphQL": "0.14.6.657",
     "Microsoft.AspNetCore.Mvc.Abstractions": "1.1.1",
-    "IdentityServer4": "1.1.1",
+    "IdentityServer4": "1.2.0",
     "IdentityServer4.AccessTokenValidation": "1.0.5",
     "Microsoft.AspNetCore.Mvc": "1.1.1",
     "Microsoft.AspNetCore.Mvc.Core": "1.1.1",
