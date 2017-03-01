@@ -1,11 +1,11 @@
 {
   "dependencies": {
-    "Autofac": "4.3.0",
+    "Autofac": "4.4.0",
     "Autofac.Configuration": "4.0.1",
     "Autofac.Extensions.DependencyInjection": "4.0.0",
     "dotnet-test-mstest": "1.1.2-preview",
-    "FakeItEasy": "3.0.0-beta002-build000066",
-    "GraphQL": "0.14.6.657",
+    "FakeItEasy": "3.0.0",
+    "GraphQL": "0.15.0.671",
     "GraphQL-Parser": "2.0.0",
     "Microsoft.AspNetCore": "1.1.0",
     "Microsoft.AspNetCore.Mvc": "1.1.1",
@@ -17,7 +17,7 @@
     "Microsoft.EntityFrameworkCore": "1.1.0",
     "Microsoft.Extensions.Caching.Abstractions": "1.1.0",
     "Microsoft.Extensions.Configuration.Abstractions": "1.1.0",
-    "MSTest.TestFramework": "1.0.8-rc2",
+    "MSTest.TestFramework": "1.1.11",
     "Newtonsoft.Json": "9.0.1",
     "P7.Core": "1.0.0-*",
     "P7.GraphQLCore": "1.0.0-*",
