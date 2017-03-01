@@ -18,6 +18,14 @@ namespace P7.IdentityServer4.Common.ExtensionGrantValidator
 {
     public class PublicRefreshTokenExtensionGrantValidator : IExtensionGrantValidator
     {
+        internal class ResultDto
+        { 
+            public string access_token { get; set; }
+            public int expires_in { get; set; }
+            public string token_type { get; set; }
+            public string refresh_token { get; set; }
+        }
+
         private readonly ILogger<PublicRefreshTokenExtensionGrantValidator> _logger;
         private readonly IEventService _events;
         private readonly IdentityServerOptions _options;
@@ -46,81 +54,88 @@ namespace P7.IdentityServer4.Common.ExtensionGrantValidator
             _clientStore = clientStore;
             _tokenResponseGenerator = tokenResponseGenerator;
         }
-        public async  Task ValidateAsync(ExtensionGrantValidationContext context)
+
+        public async Task ValidateAsync(ExtensionGrantValidationContext context)
         {
-            try
+            var refreshToken = context.Request.Raw.Get("refresh_token");
+            var clientId = context.Request.Raw.Get("client_id");
+
+            if (string.IsNullOrEmpty(refreshToken))
             {
-
-                var refreshToken = context.Request.Raw.Get("refresh_token");
-                var clientId = context.Request.Raw.Get("client_id");
-
-                if (string.IsNullOrEmpty(refreshToken))
-                {
-                    context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant);
-                    return;
-                }
-                if (string.IsNullOrEmpty(clientId))
-                {
-                    context.Result = new GrantValidationResult(TokenRequestErrors.InvalidClient);
-                    return;
-                }
-                var index = clientId.IndexOf(PrependPublic);
-                if (index != 0)
-                {
-                    context.Result = new GrantValidationResult(TokenRequestErrors.InvalidClient);
-                    return;
-                }
-
-                var client = await _clientStore.FindClientByIdAsync(clientId);
-                if (client == null)
-                {
-                    context.Result = new GrantValidationResult(TokenRequestErrors.InvalidClient);
-                    return;
-                }
-
-                var originalClientId = clientId.Substring(PrependPublicIndex);
-                if (string.IsNullOrEmpty(originalClientId))
-                {
-                    context.Result = new GrantValidationResult(TokenRequestErrors.InvalidClient);
-                    return;
-                }
-                var originalClient = await _clientStore.FindClientByIdAsync(originalClientId);
-                if (originalClient == null)
-                {
-                    context.Result = new GrantValidationResult(TokenRequestErrors.InvalidClient);
-                    return;
-                }
-
-
-                NameValueCollection nvc = new NameValueCollection
-                {
-                    {OidcConstants.TokenRequest.GrantType, OidcConstants.GrantTypes.RefreshToken},
-                    {OidcConstants.TokenRequest.RefreshToken, refreshToken}
-                };
-                _validatedRequest = new ValidatedTokenRequest
-                {
-                    Raw = nvc,
-                    Client = originalClient,
-                    Options = _options
-                };
-                var result = await ValidateRefreshTokenRequestAsync(nvc);
-                if (result.IsError)
-                {
-                    context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant);
-                    return;
-                }
-
-                var dd = await _tokenResponseGenerator.ProcessAsync(result);
                 context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant);
-
-                // context.Result = result.ValidatedRequest.
+                return;
             }
-            catch (Exception ex)
+            if (string.IsNullOrEmpty(clientId))
             {
-                
+                context.Result = new GrantValidationResult(TokenRequestErrors.InvalidClient);
+                return;
+            }
+            var index = clientId.IndexOf(PrependPublic);
+            if (index != 0)
+            {
+                context.Result = new GrantValidationResult(TokenRequestErrors.InvalidClient);
+                return;
             }
 
+            var client = await _clientStore.FindClientByIdAsync(clientId);
+            if (client == null)
+            {
+                context.Result = new GrantValidationResult(TokenRequestErrors.InvalidClient);
+                return;
+            }
+
+            var originalClientId = clientId.Substring(PrependPublicIndex);
+            if (string.IsNullOrEmpty(originalClientId))
+            {
+                context.Result = new GrantValidationResult(TokenRequestErrors.InvalidClient);
+                return;
+            }
+            var originalClient = await _clientStore.FindClientByIdAsync(originalClientId);
+            if (originalClient == null)
+            {
+                context.Result = new GrantValidationResult(TokenRequestErrors.InvalidClient);
+                return;
+            }
+
+
+            NameValueCollection nvc = new NameValueCollection
+            {
+                {OidcConstants.TokenRequest.GrantType, OidcConstants.GrantTypes.RefreshToken},
+                {OidcConstants.TokenRequest.RefreshToken, refreshToken}
+            };
+            _validatedRequest = new ValidatedTokenRequest
+            {
+                Raw = nvc,
+                Client = originalClient,
+                Options = _options
+            };
+            var result = await ValidateRefreshTokenRequestAsync(nvc);
+            if (result.IsError)
+            {
+                context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant);
+                return;
+            }
+
+            result.ValidatedRequest.GrantType = OidcConstants.GrantTypes.RefreshToken;
+            result.ValidatedRequest.AccessTokenLifetime = result.ValidatedRequest.Client.AccessTokenLifetime;
+            var refreshResponse = await _tokenResponseGenerator.ProcessAsync(result);
+
+            var dto = new ResultDto
+            {
+
+                access_token = refreshResponse.AccessToken,
+                refresh_token = refreshResponse.RefreshToken,
+                expires_in = refreshResponse.AccessTokenLifetime,
+                token_type = OidcConstants.TokenResponse.BearerTokenType
+            };
+            var response = new Dictionary<string, object>
+            {
+                {"inner_response", dto}
+            };
+
+            context.Result = new GrantValidationResult(customResponse: response);
         }
+
         public string GrantType => "public_refresh_token";
 
         private async Task<TokenRequestValidationResult> ValidateRefreshTokenRequestAsync(NameValueCollection parameters)

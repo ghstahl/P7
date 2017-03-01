@@ -331,12 +331,6 @@ namespace WebApplication5
                 ClientId = "public-resource-owner-client",
                 AllowedGrantTypes = GrantTypes.List("public_refresh_token"),
                 RequireClientSecret = false,
-                AllowOfflineAccess = true,
-                RefreshTokenUsage = TokenUsage.OneTimeOnly,
-                ClientSecrets =
-                {
-                    new Secret("secret".Sha256())
-                },
                 AllowedScopes = { "arbitrary" }
             });
 
