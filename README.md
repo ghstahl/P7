@@ -17,6 +17,8 @@ Your nugets will be versioned and contain your assemblies and static content.
 ## Build
 This is a Visual Studio 2015+ project
 
+## [GraphQL Support](docs/graphQL.md)
+
 ## GraphQL Viewer
 1. Browser to /GraphQLView
 
