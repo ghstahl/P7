@@ -1,5 +1,5 @@
 # P7
-An opinionated way to build Asp.Net core applications
+An opinionated way to build Asp.Net Core applications
 
 ## Development
 
