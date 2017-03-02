@@ -14,9 +14,10 @@ P7 provides a stock graphQL implementation for fetching strings out of the ASP.N
 
 **Query**
 
+### Query for browser culture
 ```graphql
-query q($id: String!,$treatment: String!,$culture: String!){
-  resource(input: { id: $id, treatment: $treatment,culture: $culture  })
+query q($id: String!,$treatment: String! ){
+  resource(input: { id: $id, treatment: $treatment })
 }
 ```
 **Query Variables**
@@ -28,11 +29,9 @@ query q($id: String!,$treatment: String!,$culture: String!){
 or
 {
     "id": "p7.main.Resources.Main,p7.main",
-  	"treatment":"kva",
-  	"culture":"fr-FR"
+    "treatment":"kvo" 
 }
 ```  
-
 **Result**
 ```graphql
 {
@@ -48,19 +47,53 @@ or
 or
 {
   "data": {
-    "resource": [
-      {
-        "key": "Hello",
-        "value": "Bonjour"
-      }
-    ]
+    "resource": {
+      "Hello": "Hello"
+    }
   }
 }
 ```  
 
-or just a query with inputs:
+### Query for any culture
+
 ```graphql
-{
-   resource(input:{id:"p7.main.Resources.Main,p7.main",treatment:"kvo",culture:"fr-FR"})
+query q($id: String!,$treatment: String!,$culture: String!){
+  resource(input: { id: $id, treatment: $treatment,culture: $culture  })
 }
 ```
+**Query Variables**
+```graphql
+{
+    "id": "p7.main.Resources.Main,p7.main",
+  	"treatment":"kva",
+  	"culture":"fr-FR"
+}
+or
+{
+    "id": "p7.main.Resources.Main,p7.main",
+  	"treatment":"kvo",
+  	"culture":"fr-FR"
+}
+```  
+
+**Result**
+```graphql
+{
+  "data": {
+    "resource": [
+      {
+        "Key": "Hello",
+        "Value": "Bonjour"
+      }
+    ]
+  }
+}
+or
+{
+  "data": {
+    "resource": {
+      "Hello": "Bonjour"
+    }
+  }
+}
+```  
