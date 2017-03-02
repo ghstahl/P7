@@ -19,7 +19,6 @@
       "version": "1.0.0-preview2-final",
       "type": "build"
     },
-    "BundlerMinifier.Core": "2.2.306",
     "Microsoft.AspNetCore.Diagnostics": "1.1.0",
     "Microsoft.AspNetCore.Routing": "1.1.0",
     "Microsoft.AspNetCore.Server.IISIntegration": "1.1.0",
@@ -38,7 +37,8 @@
     "P7.Core": "1.0.0-*",
     "GraphQL-Parser": "2.0.0",
     "P7.GraphQLCore": "1.0.0-*",
-    "GraphQL": "0.14.6.657",
-    "Serilog": "2.4.0"
+    "Serilog": "2.4.0",
+    "BundlerMinifier.Core": "2.4.337",
+    "GraphQL": "0.15.0.671"
   }
 }

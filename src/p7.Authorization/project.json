@@ -10,7 +10,6 @@
       "version": "1.0.0-preview2-final",
       "type": "build"
     },
-    "BundlerMinifier.Core": "2.2.306",
     "Microsoft.AspNetCore.Diagnostics": "1.1.0",
     "Microsoft.AspNetCore.Routing": "1.1.0",
     "Microsoft.AspNetCore.Server.IISIntegration": "1.1.0",
@@ -29,7 +28,8 @@
     "Microsoft.EntityFrameworkCore.SqlServer": "1.1.0",
     "p7.Services": "1.0.0-*",
     "Microsoft.AspNetCore.Mvc": "1.1.1",
-    "Serilog": "2.4.0"
+    "Serilog": "2.4.0",
+    "BundlerMinifier.Core": "2.4.337"
   },
 
   "frameworks": {

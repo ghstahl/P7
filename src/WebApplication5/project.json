@@ -58,12 +58,9 @@
     "Loc.HelloServices": "1.0.0-*",
     "P7.SimpleRedirect.Core": "1.0.0-*",
     "GraphQL-Parser": "2.0.0",
-    "Autofac": "4.3.0",
     "P7.GraphQLCore": "1.0.0-*",
     "P7.GraphQLViewer": "1.0.0-*",
-    "GraphQL": "0.14.6.657",
     "Microsoft.AspNetCore.Mvc.Abstractions": "1.1.1",
-    "IdentityServer4": "1.2.0",
     "IdentityServer4.AccessTokenValidation": "1.0.5",
     "Microsoft.AspNetCore.Mvc": "1.1.1",
     "Microsoft.AspNetCore.Mvc.Core": "1.1.1",
@@ -74,7 +71,10 @@
     "P7.IdentityServer4.BiggyStore": "1.0.0-*",
     "CassandraCSharpDriver": "3.2.1",
     "Serilog.Extensions.Logging": "1.4.0",
-    "Serilog.Sinks.Literate": "2.1.0"
+    "Serilog.Sinks.Literate": "2.1.0",
+    "IdentityServer4": "1.2.0",
+    "Autofac": "4.4.0",
+    "GraphQL": "0.15.0.671"
   },
 
   "tools": {
