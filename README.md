@@ -17,7 +17,8 @@ Your nugets will be versioned and contain your assemblies and static content.
 ## Build
 This is a Visual Studio 2015+ project
 
-## [GraphQL Support](docs/graphQL.md)
+### [GraphQL Support](docs/graphQL.md)  
+### [Decentralized Token Management Support](docs/decentralized-token-management-support.md)
 
 
 ## Credits
