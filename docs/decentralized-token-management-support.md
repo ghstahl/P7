@@ -20,6 +20,20 @@ Services that use P7 should have their own system of record for users, claims, a
 
 ### Use Cases
 
+#### The ability to create a Client_Credentials Flow type token
+I need to be able to create a Client_Credentials token, where I can pass in an arbitrary user, with arbitrary scopes, and abitrary claims.  I need the service to then manage that token whilst in flight.
+```
+http://localhost:7791/connect/token POST
+grant_type=client_credentials&scope=arbitrary&client_id=client&client_secret=secret&handler=arbitrary-claims-service&arbitrary-claims={"naguid":"1234abcd","In":"Flames"}&arbitrary-scopes=A quick brown fox
+```
+produces
+```
+{
+    "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjMzNzRmYjYxYWI2NWM3OTczMzViMWEyNzFiNjExNjE2IiwidHlwIjoiSldUIn0.eyJuYmYiOjE0ODg1NTkzMTAsImV4cCI6MTQ4ODU2MjkxMCwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo3NzkxIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6Nzc5MS9yZXNvdXJjZXMiLCJhcmJpdHJhcnkiXSwiY2xpZW50X2lkIjoiY2xpZW50IiwibmFndWlkIjoiMTIzNGFiY2QiLCJJbiI6IkZsYW1lcyIsInNjb3BlIjpbImFyYml0cmFyeSIsIkEiLCJxdWljayIsImJyb3duIiwiZm94Il19.C0C8qD1vO9hzbmLKqvjhQ5p4b-uhAC5iEyTeBefh6MK9ba7tfq9s4Xa2sn-_3VhhEzwP4KVRxmyyUDI1rBj8qXPQ4AILuyVMyPnuLEH2k38eOk1ATuoLvTpQe4i2MiAlifymvxW2nbJhjH35928U5khL_7Pp7sG4mGyRD4ldFe544z7DLChhaCfWo6eVEjZfP02DnOsrWTx5o40E_EF9T8U1SOixdIkkSsCofnroNGjBpYh4CS4Ja_8c8UZKznDQ5KSQuaskgrqLn5840dzboo0Cyv-AKptR-KWsy_5gncFLGjIrdLsWCRhf3PvzxLow_tt4RdLaJT6x1iOP1FmzZg",
+    "expires_in": 3600,
+    "token_type": "Bearer"
+}
+```
 #### The ability to create a Resource_Owner Flow type token
 I need to be able to create a Resource_Owner token, where I can pass in an arbitrary user, with arbitrary scopes, and abitrary claims.  I need the service to then manage that token whilst in flight.
 
