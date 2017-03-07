@@ -74,7 +74,8 @@
     "Serilog.Sinks.Literate": "2.1.0",
     "IdentityServer4": "1.2.0",
     "Autofac": "4.4.0",
-    "GraphQL": "0.15.0.671"
+    "GraphQL": "0.15.0.671",
+    "P7.BlogStore.Hugo": "1.0.0-*"
   },
 
   "tools": {

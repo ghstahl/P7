@@ -28,6 +28,7 @@ using Newtonsoft.Json.Serialization;
 using p7.Authorization.Data;
 using p7.Authorization.Models;
 using p7.Services;
+using P7.BlogStore.Hugo.Extensions;
 using P7.Core;
 using P7.Core.FileProviders;
 using Serilog;
@@ -37,6 +38,7 @@ using P7.Core.TagHelpers;
 using P7.GraphQLCore;
 using P7.HugoStore.Core;
 using P7.IdentityServer4.BiggyStore;
+using P7.IdentityServer4.BiggyStore.Extensions;
 using P7.IdentityServer4.Common;
 using P7.IdentityServer4.Common.Endpoints;
 using P7.IdentityServer4.Common.ExtensionGrantValidator;
@@ -55,21 +57,13 @@ namespace WebApplication5
         protected override void Load(ContainerBuilder builder)
         {
             var env = P7.Core.Global.HostingEnvironment;
-            var identityserver4Path = Path.Combine(env.ContentRootPath, "App_Data/identityserver4");
-            Directory.CreateDirectory(identityserver4Path);
-            var globalTenantDatabaseBiggyConfig = new TenantDatabaseBiggyConfig();
-            globalTenantDatabaseBiggyConfig.UsingFolder(identityserver4Path);
-            globalTenantDatabaseBiggyConfig.UsingTenantId(TenantDatabaseBiggyConfig.GlobalTenantId);
-            IIdentityServer4BiggyConfiguration biggyConfiguration = new MyBiggyConfiguration()
-            {
-                FolderStorage = globalTenantDatabaseBiggyConfig.Folder,
-                DatabaseName = globalTenantDatabaseBiggyConfig.Database
-            };
+            var dbPath = Path.Combine(env.ContentRootPath, "App_Data/identityserver4");
+            Directory.CreateDirectory(dbPath);
+            builder.AddIdentityServer4BiggyConfiguration(dbPath);
 
-            builder.Register(c => biggyConfiguration)
-                .As<IIdentityServer4BiggyConfiguration>()
-                .SingleInstance();
-
+            dbPath = Path.Combine(env.ContentRootPath, "App_Data/blogstore");
+            Directory.CreateDirectory(dbPath);
+            builder.AddBlogStoreBiggyConfiguration(dbPath);
         }
     }
 
