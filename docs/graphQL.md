@@ -134,10 +134,21 @@ mutation q($input: BlogMutationInput! ){
 ```
 
 #### Query an individual Blog Entry
-NOTE: This will change.  I wanted to document at least what I have so far.  Will look more like the StarWars example
 ```graphql
 query q($input: BlogQueryInput! ){
-  blog(input:   $input )
+  blog(input:   $input ) {
+    id
+    title
+    summary
+    categories
+    tags
+    metaData {
+      category
+      version
+    }
+    timeStamp
+    data
+  } 
 }
 ```
 **Query Variables**
@@ -153,10 +164,9 @@ query q($input: BlogQueryInput! ){
 {
   "data": {
     "blog": {
-      "metaData": {
-        "category": "c0",
-        "version": "1.0.0.0"
-      },
+      "id": "7f5ebe45-47dd-424a-a871-88e3b38f5e33",
+      "title": "My Title",
+      "summary": "My Summary",
       "categories": [
         "c10",
         "c20"
@@ -165,11 +175,12 @@ query q($input: BlogQueryInput! ){
         "t10",
         "t20"
       ],
-      "data": "This is my blog",
-      "timeStamp": "2027-03-07T14:55:03Z",
-      "title": "My Title",
-      "summary": "My Summary",
-      "id": "7f5ebe45-47dd-424a-a871-88e3b38f5e33"
+      "metaData": {
+        "category": "c0",
+        "version": "1.0.0.0"
+      },
+      "timeStamp": "2027-03-07T22:55:03Z",
+      "data": "This is my blog"
     }
   }
 }
