@@ -68,7 +68,7 @@ namespace P7.GraphQLCore
             builder.RegisterType<GraphQLDocumentWriter>().As<IDocumentWriter>().SingleInstance();
             builder.RegisterType<QueryCore>().AsSelf();
             builder.RegisterType<MutationCore>().AsSelf();
-            builder.RegisterType<SchemaCore>().As<ISchema>();
+            builder.RegisterType<SchemaCore>().As<ISchema>().SingleInstance();
 
             builder.Register<Func<Type, GraphType>>(c =>
             {
