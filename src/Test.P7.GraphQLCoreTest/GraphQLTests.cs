@@ -31,7 +31,7 @@ using P7.Store;
 using Shouldly;
 namespace Test.P7.GraphQLCoreTest
 {
-    class MyBiggyConfiguration : IBiggyConfiguration
+    class MyBlogStoreBiggyConfiguration : IBlogStoreBiggyConfiguration
     {
         public string DatabaseName { get; set; }
         public string FolderStorage { get; set; }
@@ -76,7 +76,7 @@ namespace Test.P7.GraphQLCoreTest
             GlobalTenantDatabaseBiggyConfig = new TenantDatabaseBiggyConfig();
             GlobalTenantDatabaseBiggyConfig.UsingFolder(TargetFolder);
             GlobalTenantDatabaseBiggyConfig.UsingTenantId(TenantDatabaseBiggyConfig.GlobalTenantId);
-            IBiggyConfiguration biggyConfiguration = new MyBiggyConfiguration()
+            IBlogStoreBiggyConfiguration biggyConfiguration = new MyBlogStoreBiggyConfiguration()
             {
                 FolderStorage = GlobalTenantDatabaseBiggyConfig.Folder,
                 DatabaseName = GlobalTenantDatabaseBiggyConfig.Database
@@ -89,7 +89,7 @@ namespace Test.P7.GraphQLCoreTest
 
             hostingEnvironment.ApplicationName = hostName;
             Global.HostingEnvironment = hostingEnvironment;
-            AutofacStoreFactory = new MyAutofacFactory() {BiggyConfiguration = biggyConfiguration };
+            AutofacStoreFactory = new MyAutofacFactory() { BlogStoreBiggyConfiguration = biggyConfiguration };
 
             Executer = AutofacStoreFactory.Resolve<IDocumentExecuter>();
             Writer = AutofacStoreFactory.Resolve<IDocumentWriter>();

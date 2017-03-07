@@ -9,7 +9,7 @@ namespace P7.BlogStore.Hugo
 {
     public class HugoBlogCommentStore : HugoStoreBase<BlogCommentRecord>, IBlogCommentStore
     {
-        public HugoBlogCommentStore(IBiggyConfiguration biggyConfiguration) :
+        public HugoBlogCommentStore(IBlogStoreBiggyConfiguration biggyConfiguration) :
             base(biggyConfiguration, "blog-comment")
         {
         }

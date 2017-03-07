@@ -5,6 +5,12 @@ using Newtonsoft.Json.Serialization;
 
 namespace P7.Core.Writers
 {
+    public interface IJsonDocumentWriterOptions
+    {
+        Formatting Formatting { get; }
+        JsonSerializerSettings JsonSerializerSettings { get; }
+    }
+
     public class JsonDocumentWriter
     {
         private readonly Formatting _formatting;
@@ -12,6 +18,11 @@ namespace P7.Core.Writers
         public JsonSerializerSettings JsonSerializerSettings { get { return _settings;} }
         public JsonDocumentWriter()
             : this(indent: false)
+        {
+        }
+
+        public JsonDocumentWriter(IJsonDocumentWriterOptions options)
+            : this(options.Formatting,options.JsonSerializerSettings)
         {
         }
 

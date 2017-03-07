@@ -6,11 +6,19 @@ using GraphQL.Http;
 using GraphQL.Types;
 using GraphQL.Validation;
 using GraphQL.Validation.Complexity;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using P7.Core.Reflection;
 using P7.GraphQLCore.Validators;
 
 namespace P7.GraphQLCore
 {
+    internal class GraphQLJsonDocumentWriterOptions : IGraphQLJsonDocumentWriterOptions
+    {
+        public Formatting Formatting { get; set; }
+        public JsonSerializerSettings JsonSerializerSettings { get; set; }
+    }
+
     public class AutofacModule : Module
     {
         protected override void Load(ContainerBuilder builder)
@@ -40,15 +48,24 @@ namespace P7.GraphQLCore
                 .As<IMutationFieldRecordRegistrationStore>()
                 .SingleInstance();
 
-
-
-
-
             builder.RegisterType<GraphQLDocumentBuilder>().As<IDocumentBuilder>();
             builder.RegisterType<DocumentValidator>().As<IDocumentValidator>();
             builder.RegisterType<ComplexityAnalyzer>().As<IComplexityAnalyzer>();
             builder.RegisterType<DocumentExecuter>().As<IDocumentExecuter>().SingleInstance();
-            builder.RegisterInstance(new DocumentWriter(indent: true)).As<IDocumentWriter>();
+
+            builder.RegisterInstance(new GraphQLJsonDocumentWriterOptions
+            {
+                Formatting = Formatting.None,
+                JsonSerializerSettings = new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                    DateFormatHandling = DateFormatHandling.IsoDateFormat,
+                    DateFormatString = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'",
+                    DateTimeZoneHandling = DateTimeZoneHandling.Utc
+                }
+            }).As<IGraphQLJsonDocumentWriterOptions>();
+
+            builder.RegisterType<GraphQLDocumentWriter>().As<IDocumentWriter>().SingleInstance();
             builder.RegisterType<QueryCore>().AsSelf();
             builder.RegisterType<MutationCore>().AsSelf();
             builder.RegisterType<SchemaCore>().As<ISchema>();

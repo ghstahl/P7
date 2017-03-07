@@ -31,7 +31,7 @@ namespace Test.P7.GraphQLCoreTest
 {
     public class MyAutofacFactory
     {
-        public IBiggyConfiguration BiggyConfiguration { get; set; }
+        public IBlogStoreBiggyConfiguration BlogStoreBiggyConfiguration { get; set; }
 
         private IContainer _autofacContainer;
 
@@ -52,7 +52,7 @@ namespace Test.P7.GraphQLCoreTest
                     };
                     builder.RegisterAssemblyModules(assemblies.ToArray());
 
-                    builder.RegisterInstance(BiggyConfiguration).As<IBiggyConfiguration>();
+                    builder.RegisterInstance(BlogStoreBiggyConfiguration).As<IBlogStoreBiggyConfiguration>();
 
                     builder.RegisterInstance(Global.HostingEnvironment).As<IHostingEnvironment>();
                     var httpContextAccessor = A.Fake<IHttpContextAccessor>();
