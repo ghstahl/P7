@@ -7,6 +7,7 @@ namespace P7.BlogStore.Core.GraphQL
     {
         public BlogType()
         {
+            Name = "Blog";
             Field(x => x.Id).Description("The Id of the Blog.");
             Field(x => x.Title).Description("The Title of the Blog.");
             Field(x => x.Summary).Description("The Summary of the Blog.");

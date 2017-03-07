@@ -85,9 +85,9 @@ namespace P7.BlogStore.Core.GraphQL
                     //                    return await Task.Run(() => { return ""; });
                 },
                 deprecationReason: null);
-            queryCore.FieldAsync<StringGraphType>(name: "blog",
+            queryCore.FieldAsync<BlogType>(name: "blog",
                 description: null,
-                arguments: new QueryArguments(new QueryArgument<BlogQueryInput> {Name = "input"}),
+                arguments: new QueryArguments(new QueryArgument<NonNullGraphType<BlogQueryInput>> {Name = "input"}),
                 resolve: async context =>
                 {
                     try
