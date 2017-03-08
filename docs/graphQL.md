@@ -185,3 +185,68 @@ query q($input: BlogQueryInput! ){
   }
 }
 ```
+
+#### Paging Blogs
+#### Query an individual Blog Entry
+```graphql
+query q($input: BlogsQueryInput! ){
+  blogs(input:   $input ) {
+    pagingState
+    currentPagingState
+    blogs {
+      id
+      title
+      summary
+      categories
+      tags
+      metaData {
+        category
+        version
+      }
+      timeStamp
+      data
+    }
+  }
+}
+```
+**Query Variables**
+```graphql
+{
+   "input": {
+     "pageSize": 3,
+    "pagingState": ""
+   }
+}
+```  
+**Result**
+```graphql
+{
+  "data": {
+    "blogs": {
+      "pagingState": "",
+      "currentPagingState": "",
+      "blogs": [
+        {
+          "id": "7f5ebe45-47dd-424a-a871-88e3b38f5e33",
+          "title": "My Title",
+          "summary": "My Summary",
+          "categories": [
+            "c10",
+            "c20"
+          ],
+          "tags": [
+            "t10",
+            "t20"
+          ],
+          "metaData": {
+            "category": "c0",
+            "version": "1.0.0.0"
+          },
+          "timeStamp": "2027-03-07T22:55:03Z",
+          "data": "This is my blog"
+        }
+      ]
+    }
+  }
+}
+```
