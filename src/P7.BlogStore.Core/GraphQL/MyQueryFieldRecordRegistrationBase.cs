@@ -105,7 +105,7 @@ namespace P7.BlogStore.Core.GraphQL
                     //                    return await Task.Run(() => { return ""; });
                 },
                 deprecationReason: null);
-            queryCore.FieldAsync<StringGraphType>(name: "blogs",
+            queryCore.FieldAsync<BlogPageType>(name: "blogs",
                 description: null,
                 arguments: new QueryArguments(new QueryArgument<BlogsQueryInput> {Name = "input"}),
                 resolve: async context =>
@@ -133,8 +133,14 @@ namespace P7.BlogStore.Core.GraphQL
                             timeStampUpperBoundary,
                             categories,
                             tags);
-
-                        return result;
+                      
+                        var blogPage = new BlogPage
+                        {
+                            CurrentPagingState = result.CurrentPagingState.SafeConvertToBase64String() ?? "",
+                            PagingState = result.PagingState.SafeConvertToBase64String()??"",
+                            Blogs = result.ToList()
+                        };
+                        return blogPage;
                     }
                     catch (Exception e)
                     {
