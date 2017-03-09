@@ -15,7 +15,7 @@ This is only done during developement, as the goal is to have your plugin projec
 Your nugets will be versioned and contain your assemblies and static content.
 
 ## Build
-This is a Visual Studio 2015+ project
+This is a Visual Studio 2017+ project
 
 ### [GraphQL Support](docs/graphQL.md)  
 ### [Decentralized Token Management Support](docs/decentralized-token-management-support.md)
