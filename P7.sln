@@ -1,80 +1,80 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "P7.Core", "src\P7.Core\P7.Core.xproj", "{69CCD39D-DD7B-4519-A046-3CA3E9598BA5}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "P7.Filters", "src\P7.Filters\P7.Filters.xproj", "{4D509477-4E36-4641-8986-2DD5BD73A1D2}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "P7.Globalization", "src\P7.Globalization\P7.Globalization.xproj", "{C1308158-390F-418E-A68D-B4E0A1406A13}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "P7.SimpleRedirector", "src\P7.SimpleRedirector\P7.SimpleRedirector.xproj", "{E3205686-ABE7-49DC-A122-9E1808C97F93}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "P7", "P7", "{C5FC6187-D205-4201-BF0C-64881BCEB3B0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TheApp", "TheApp", "{005C0CCC-FF11-48F1-BCC6-D07950675B14}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "DevAuth", "src\DevAuth\DevAuth.xproj", "{AECAD73A-25FA-4C9C-85F0-BA84B3014FFA}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "asp.net Identity", "asp.net Identity", "{7DF223F9-DA89-4F88-A58A-AE606FE5B34B}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "TwitterAuth", "src\TwitterAuth\TwitterAuth.xproj", "{4DC1C029-D7F0-4CFE-99DD-F39FA40F64BA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Biggy", "Biggy", "{2564996B-926A-4C19-BC8F-88E1274FD0C9}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Hugo.Core", "src\Hugo.Biggy\Hugo.Core\Hugo.Core.xproj", "{D6E6FDCC-FCD0-4441-8CD9-99CB7981A9C3}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Hugo.Data.Json", "src\Hugo.Biggy\Hugo.Data.Json\Hugo.Data.Json.xproj", "{6A031DFB-8713-4A3E-823E-B433F5633BCE}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WebApplication5", "src\WebApplication5\WebApplication5.xproj", "{EA7C69A0-5C1B-48AD-B57E-9ADFE32EC83E}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "p7.Authorization", "src\p7.Authorization\p7.Authorization.xproj", "{6399A040-C9C9-4D4E-B0D5-60334C35FDF2}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "p7.main", "src\p7.main\p7.main.xproj", "{659669E3-70AD-4AA7-B526-DBB46C38DA49}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "p7.Services", "src\p7.Services\p7.Services.xproj", "{95B6A1E9-835B-48EB-8835-AA5C8F67E29A}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Loc.HelloServices", "src\Loc.HelloServices\Loc.HelloServices.xproj", "{6B92931D-1E03-49D5-8AF0-270B33872EAD}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "P7.SimpleRedirect.Core", "src\P7.SimpleRedirect.Core\P7.SimpleRedirect.Core.xproj", "{DFB7D077-FBF0-4485-90BA-58785EC7D0B2}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{69A0C3AF-BBE3-47DF-A604-5213347D455E}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "P7.GraphQLCore", "src\P7.GraphQLCore\P7.GraphQLCore.xproj", "{4680B961-E24E-4646-8596-C9CDA49C435A}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Test.P7.GraphQLCoreTest", "src\Test.P7.GraphQLCoreTest\Test.P7.GraphQLCoreTest.xproj", "{2303315D-1C5C-474A-876B-5F1294778EFF}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "P7.GraphQLViewer", "src\P7.GraphQLViewer\P7.GraphQLViewer.xproj", "{B717FE5F-6AB8-4EDD-AE71-8E421B259105}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Stores", "Stores", "{C07E3070-8CEB-4D3C-867B-CD091826C516}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "P7.BlogStore.Core", "src\P7.BlogStore.Core\P7.BlogStore.Core.xproj", "{7D73432C-DDB8-4571-AEC7-268C4EE3598F}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "P7.BlogStore.Hugo", "src\P7.BlogStore.Hugo\P7.BlogStore.Hugo.xproj", "{8E5738CC-4A2F-490E-96CC-5D621EB9E7FA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1BACBE22-78C9-4912-8692-653A5C9CD345}"
 	ProjectSection(SolutionItems) = preProject
 		global.json = global.json
 	EndProjectSection
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "P7.Store", "src\P7.Store\P7.Store.xproj", "{C093F641-24A1-4918-9AF0-49C0370EE65C}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IdentityServer4", "IdentityServer4", "{AE3182A7-DDCE-403E-AC2C-00D158E3180B}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "P7.IdentityServer4.BiggyStore", "src\P7.IdentityServer4.BiggyStore\P7.IdentityServer4.BiggyStore.xproj", "{8F3EBDD7-137A-41D0-978E-E7ACEAB63866}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "P7.HugoStore.Core", "src\P7.HugoStore.Core\P7.HugoStore.Core.xproj", "{964DFF57-4AA1-4BF4-8C8B-A0D61A39A253}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "P7.IdentityServer4.Common", "src\P7.IdentityServer4.Common\P7.IdentityServer4.Common.xproj", "{1599EFDB-C3C4-40CC-81FC-A551DBDE10B6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IdentityServer4", "IdentityServer4", "{CC854C3C-39AA-4A1D-A0C1-0E952B9CB7EF}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Test.P7.IdentityServer4.BiggyStore", "src\Test.P7.IdentityServer4.BiggyStore\Test.P7.IdentityServer4.BiggyStore.xproj", "{F749C9B9-E9F9-4B82-8104-4FA71FD6A7B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "P7.Core", "src\P7.Core\P7.Core.csproj", "{69CCD39D-DD7B-4519-A046-3CA3E9598BA5}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "P7.Biggy.Store", "src\P7.Biggy.Store\P7.Biggy.Store.xproj", "{5DE833FD-A623-4EE5-A923-F5F7A4AC495B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "P7.Filters", "src\P7.Filters\P7.Filters.csproj", "{4D509477-4E36-4641-8986-2DD5BD73A1D2}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "IdentityServer4.ConsoleApp.Client", "src\IdentityServer4.Console.Client\IdentityServer4.ConsoleApp.Client.xproj", "{DB1B9B1F-5A19-4576-BE76-5C377B1C279C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "P7.Globalization", "src\P7.Globalization\P7.Globalization.csproj", "{C1308158-390F-418E-A68D-B4E0A1406A13}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "P7.SimpleRedirector", "src\P7.SimpleRedirector\P7.SimpleRedirector.csproj", "{E3205686-ABE7-49DC-A122-9E1808C97F93}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevAuth", "src\DevAuth\DevAuth.csproj", "{AECAD73A-25FA-4C9C-85F0-BA84B3014FFA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TwitterAuth", "src\TwitterAuth\TwitterAuth.csproj", "{4DC1C029-D7F0-4CFE-99DD-F39FA40F64BA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hugo.Core", "src\Hugo.Biggy\Hugo.Core\Hugo.Core.csproj", "{D6E6FDCC-FCD0-4441-8CD9-99CB7981A9C3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hugo.Data.Json", "src\Hugo.Biggy\Hugo.Data.Json\Hugo.Data.Json.csproj", "{6A031DFB-8713-4A3E-823E-B433F5633BCE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication5", "src\WebApplication5\WebApplication5.csproj", "{EA7C69A0-5C1B-48AD-B57E-9ADFE32EC83E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "p7.Authorization", "src\p7.Authorization\p7.Authorization.csproj", "{6399A040-C9C9-4D4E-B0D5-60334C35FDF2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "p7.main", "src\p7.main\p7.main.csproj", "{659669E3-70AD-4AA7-B526-DBB46C38DA49}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "p7.Services", "src\p7.Services\p7.Services.csproj", "{95B6A1E9-835B-48EB-8835-AA5C8F67E29A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Loc.HelloServices", "src\Loc.HelloServices\Loc.HelloServices.csproj", "{6B92931D-1E03-49D5-8AF0-270B33872EAD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "P7.SimpleRedirect.Core", "src\P7.SimpleRedirect.Core\P7.SimpleRedirect.Core.csproj", "{DFB7D077-FBF0-4485-90BA-58785EC7D0B2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "P7.GraphQLCore", "src\P7.GraphQLCore\P7.GraphQLCore.csproj", "{4680B961-E24E-4646-8596-C9CDA49C435A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.P7.GraphQLCoreTest", "src\Test.P7.GraphQLCoreTest\Test.P7.GraphQLCoreTest.csproj", "{2303315D-1C5C-474A-876B-5F1294778EFF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "P7.GraphQLViewer", "src\P7.GraphQLViewer\P7.GraphQLViewer.csproj", "{B717FE5F-6AB8-4EDD-AE71-8E421B259105}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "P7.BlogStore.Core", "src\P7.BlogStore.Core\P7.BlogStore.Core.csproj", "{7D73432C-DDB8-4571-AEC7-268C4EE3598F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "P7.BlogStore.Hugo", "src\P7.BlogStore.Hugo\P7.BlogStore.Hugo.csproj", "{8E5738CC-4A2F-490E-96CC-5D621EB9E7FA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "P7.Store", "src\P7.Store\P7.Store.csproj", "{C093F641-24A1-4918-9AF0-49C0370EE65C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "P7.IdentityServer4.BiggyStore", "src\P7.IdentityServer4.BiggyStore\P7.IdentityServer4.BiggyStore.csproj", "{8F3EBDD7-137A-41D0-978E-E7ACEAB63866}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "P7.HugoStore.Core", "src\P7.HugoStore.Core\P7.HugoStore.Core.csproj", "{964DFF57-4AA1-4BF4-8C8B-A0D61A39A253}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "P7.IdentityServer4.Common", "src\P7.IdentityServer4.Common\P7.IdentityServer4.Common.csproj", "{1599EFDB-C3C4-40CC-81FC-A551DBDE10B6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.P7.IdentityServer4.BiggyStore", "src\Test.P7.IdentityServer4.BiggyStore\Test.P7.IdentityServer4.BiggyStore.csproj", "{F749C9B9-E9F9-4B82-8104-4FA71FD6A7B3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "P7.Biggy.Store", "src\P7.Biggy.Store\P7.Biggy.Store.csproj", "{5DE833FD-A623-4EE5-A923-F5F7A4AC495B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4.Console.Client", "src\IdentityServer4.Console.Client\IdentityServer4.Console.Client.csproj", "{DB1B9B1F-5A19-4576-BE76-5C377B1C279C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -191,6 +191,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{CC854C3C-39AA-4A1D-A0C1-0E952B9CB7EF} = {69A0C3AF-BBE3-47DF-A604-5213347D455E}
 		{69CCD39D-DD7B-4519-A046-3CA3E9598BA5} = {C5FC6187-D205-4201-BF0C-64881BCEB3B0}
 		{4D509477-4E36-4641-8986-2DD5BD73A1D2} = {C5FC6187-D205-4201-BF0C-64881BCEB3B0}
 		{C1308158-390F-418E-A68D-B4E0A1406A13} = {C5FC6187-D205-4201-BF0C-64881BCEB3B0}
@@ -214,7 +215,6 @@ Global
 		{8F3EBDD7-137A-41D0-978E-E7ACEAB63866} = {AE3182A7-DDCE-403E-AC2C-00D158E3180B}
 		{964DFF57-4AA1-4BF4-8C8B-A0D61A39A253} = {C07E3070-8CEB-4D3C-867B-CD091826C516}
 		{1599EFDB-C3C4-40CC-81FC-A551DBDE10B6} = {AE3182A7-DDCE-403E-AC2C-00D158E3180B}
-		{CC854C3C-39AA-4A1D-A0C1-0E952B9CB7EF} = {69A0C3AF-BBE3-47DF-A604-5213347D455E}
 		{F749C9B9-E9F9-4B82-8104-4FA71FD6A7B3} = {CC854C3C-39AA-4A1D-A0C1-0E952B9CB7EF}
 		{5DE833FD-A623-4EE5-A923-F5F7A4AC495B} = {2564996B-926A-4C19-BC8F-88E1274FD0C9}
 		{DB1B9B1F-5A19-4576-BE76-5C377B1C279C} = {005C0CCC-FF11-48F1-BCC6-D07950675B14}
