@@ -34,7 +34,7 @@ namespace P7.IdentityServer4.Common.Middleware
 
         public async Task Invoke(HttpContext context)
         {
-            bool doCustomRefreshToken = false;
+            
             if (string.Compare(context.Request.Path, "/connect/token", StringComparison.OrdinalIgnoreCase) == 0)
             {
                 var body = await context.Request.ReadFormAsync();
@@ -60,30 +60,20 @@ namespace P7.IdentityServer4.Common.Middleware
 
                             var fc = new FormCollection(dictValues);
                             context.Request.Form = fc;
-                            doCustomRefreshToken = true;
-                            await LogResponseAndInvokeNext(context);
+                           
+                            await PublicRefreshTokenInvokeNext(context);
+                            return;
+                            
                         }
                     }
                 }
             }
 
-            if (!doCustomRefreshToken)
-            {
-                await _next.Invoke(context);
-            }
-           
+             await _next.Invoke(context);
+  
         }
-        private async Task LogRequest(HttpRequest request)
-        {
-            using (var bodyReader = new StreamReader(request.Body))
-            {
-                string body = await bodyReader.ReadToEndAsync();
-
-                request.Body = new MemoryStream(Encoding.UTF8.GetBytes(body));
-                _logger.LogInformation($"Request: {body}");
-            }
-        }
-        private async Task LogResponseAndInvokeNext(HttpContext context)
+       
+        private async Task PublicRefreshTokenInvokeNext(HttpContext context)
         {
             using (var buffer = new MemoryStream())
             {
@@ -125,7 +115,6 @@ namespace P7.IdentityServer4.Common.Middleware
                 }
             }
         }
-
 
         internal class ResultDto
         {
