@@ -45,10 +45,10 @@ grant_type=password&scope=arbitrary offline_access&client_id=resource-owner-clie
 produces
 ```
 {
-    "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImI5ODQyMzIyYWFiNmRhMWY4OGI2ZDdkYmVhMmY4MTdmIiwidHlwIjoiSldUIn0.eyJuYmYiOjE0ODg0MDUzMjUsImV4cCI6MTQ4ODQwODkyNSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo3NzkxIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6Nzc5MS9yZXNvdXJjZXMiLCJhcmJpdHJhcnkiXSwiY2xpZW50X2lkIjoicmVzb3VyY2Utb3duZXItY2xpZW50Iiwic3ViIjoicmF0IiwiYXV0aF90aW1lIjoxNDg4NDA1MzI1LCJpZHAiOiJsb2NhbCIsIm5hZ3VpZCI6IjEyMzRhYmNkIiwiSW4iOiJGbGFtZXMiLCJzY29wZSI6WyJhcmJpdHJhcnkiLCJvZmZsaW5lX2FjY2VzcyIsIkEiLCJxdWljayIsImJyb3duIiwiZm94Il0sImFtciI6WyJwd2QiXX0.AV9xo_a0YC2vSoAgV5sqlSUea2De7iYhwCIneBz_4m2Z1dnuf_XMMJrlZyUj2fg8zvUAtoRl9_epb-jSrYvzeQRqX6c-0jq_gs8emhWscU2X9UCr-KwZJG23WFLu_yHzPpfeoYDwUl8E7P1hdRZC4hol6c6cJrFChA9go5hAcy5pGyeNXTM3iyR3TRDfGT3abqeV1mxrgBA6RxA3i0oPS9_LYpuXbxR7bl-mmMI49hwOpjDJRhmR9EUThBUw51hW0xfMUK9-_Qv2nojjPJUSy7FFOuu2FL1-qsHSZjiIB3JT3dTxWx9RK6PeF75dwMKN0neoKHiAWbFf-eZ2sqTPoQ",
+    "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImUzZWJiZTk5MzViNjI1NzkzNTE1MjZmMTYwYmQ2YmE2IiwidHlwIjoiSldUIn0.eyJuYmYiOjE0ODkxNzE3NjcsImV4cCI6MTQ4OTE3NTM2NywiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo3NzkxIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6Nzc5MS9yZXNvdXJjZXMiLCJhcmJpdHJhcnkiXSwiY2xpZW50X2lkIjoicmVzb3VyY2Utb3duZXItY2xpZW50Iiwic3ViIjoicmF0IiwiYXV0aF90aW1lIjoxNDg5MTcxNzY3LCJpZHAiOiJsb2NhbCIsIm5hZ3VpZCI6IjEyMzRhYmNkIiwiSW4iOiJGbGFtZXMiLCJzY29wZSI6WyJhcmJpdHJhcnkiLCJvZmZsaW5lX2FjY2VzcyIsIkEiLCJxdWljayIsImJyb3duIiwiZm94Il0sImFtciI6WyJwd2QiXX0.qqFwGOb36pxgcoxuxQ_91mU7a4nu_95krUu21AkdXBoeKFSyKVsvEV_vf3CHtpBV_0pxSocHZD-iipjujfI5BYegmtE-J3fdNUdoN5F9f3h9enUYWoTC1eo0gj1DDN1IAiT4oZcL05Mze49nSZ46S7bjN3xJpHo_-bOqJ94hggsgaTcjJw-r0ocGpwcd2u7pH8TiCrbZTLDqb6EOivsjUGJUgUwymaaoLxG6BxQTZ0JQs81uP_Psxesnwdolp6kj4PUc4OCx3FN8XOqAYQi2o_BHVsUvy_4Jq3teVxUrbWp2s-3vSQ0_R_EFm_s2dNdEyD7G12dJf2bgCWeVAaT5dA",
     "expires_in": 3600,
     "token_type": "Bearer",
-    "refresh_token": "5ed1395bedc0af8d4faa2e11a9b301e6c6387826c7d1ea35d78f06a908455a48"
+    "refresh_token": "37c43e936af65423bbc62a28dcd9505a008203eeddc75d1043a33be0547ad075"
 }
 ```
 #### The ability to refresh a Resource_Owner Flow type token
@@ -56,22 +56,68 @@ produces
 taking the refresh_token from above;
 ```
 http://localhost:7791/connect/token POST
-grant_type=public_refresh_token&refresh_token=5ed1395bedc0af8d4faa2e11a9b301e6c6387826c7d1ea35d78f06a908455a48&client_id=public-resource-owner-client
+refresh_token=37c43e936af65423bbc62a28dcd9505a008203eeddc75d1043a33be0547ad075&client_id=resource-owner-client
 ```
 produces the following;
 ```
 {
-    "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImI5ODQyMzIyYWFiNmRhMWY4OGI2ZDdkYmVhMmY4MTdmIiwidHlwIjoiSldUIn0.eyJuYmYiOjE0ODg0MDU0NzMsImV4cCI6MTQ4ODQwOTA3MywiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo3NzkxIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6Nzc5MS9yZXNvdXJjZXMiLCJhcmJpdHJhcnkiXSwiY2xpZW50X2lkIjoicHVibGljLXJlc291cmNlLW93bmVyLWNsaWVudCIsInNjb3BlIjpbImFyYml0cmFyeSJdfQ.pdiEnPT_V5I1I9E5q5fg9k_FPbiwWbQMzhVrhXJEJO5Kkx88GBekpSHq0DkkWP3DKn8gIAHmIduuHO3Pyuu6q379A4axh639ix4Dkmi6gvL0wFlrrt9GvtdmyeQkLchQFIXxTEtzRXHEuGStpSzkxjEDjbP56pEWWbeBTAHvBb52Zb1WuA31uRL1NV1Xb3YFc6gIrql7t88lX0jnr26A0M34VQhBjBkx2zfo67M_r-Wi2YhXRip2UZKPh1mdlgSQ9KzHi_Ah_YeFvDJbffAHCf-zgxF4f6ZkXPFN9bcKERBR3WbspmZhU3RdquzndMvW9kg7T4-vUfoXzDHvL7r0bA",
+    "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImUzZWJiZTk5MzViNjI1NzkzNTE1MjZmMTYwYmQ2YmE2IiwidHlwIjoiSldUIn0.eyJuYmYiOjE0ODkxNzE4NTUsImV4cCI6MTQ4OTE3NTQ1NSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo3NzkxIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6Nzc5MS9yZXNvdXJjZXMiLCJhcmJpdHJhcnkiXSwiY2xpZW50X2lkIjoicmVzb3VyY2Utb3duZXItY2xpZW50Iiwic3ViIjoicmF0IiwiYXV0aF90aW1lIjoxNDg5MTcxNzY3LCJpZHAiOiJsb2NhbCIsIm5hZ3VpZCI6IjEyMzRhYmNkIiwiSW4iOiJGbGFtZXMiLCJzY29wZSI6WyJhcmJpdHJhcnkiLCJvZmZsaW5lX2FjY2VzcyIsIkEiLCJxdWljayIsImJyb3duIiwiZm94Il0sImFtciI6WyJwd2QiXX0.UiL89PR35QiB-eX2KMDjtMLV80yL1IWR0XZMf9CkAsdIZEmptvy5w4uwqmpQBldYwT4q_Vtp5wRYWfer1_zhf3YCY5lQ21S-JLidz3Dkrd5pMrEaoiO3Ur0MyQMkFnVtj7uwuvKTxFJen3rAgbHC5b5VXGRspT0Kr0g0IgNh7EQWLdA_p6MAa5r4S9yXlkNHwz1rmTPBOB1a0zOZumMZYNZ5JmTI26dwGtUC0n5IlJB7NqD4O_4LZSlCOFJZwm2AqAJoCjylqKkOLvlv8YaQyL6-tRdH6q9x0VnFgn0m9pZqdMR9_CqCnRe7qbQrBuroBSs2i7cdiRmvcgIpAzvIMA",
     "expires_in": 3600,
     "token_type": "Bearer",
-    "inner_response": {
-        "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImI5ODQyMzIyYWFiNmRhMWY4OGI2ZDdkYmVhMmY4MTdmIiwidHlwIjoiSldUIn0.eyJuYmYiOjE0ODg0MDU0NzIsImV4cCI6MTQ4ODQwOTA3MiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo3NzkxIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6Nzc5MS9yZXNvdXJjZXMiLCJhcmJpdHJhcnkiXSwiY2xpZW50X2lkIjoicmVzb3VyY2Utb3duZXItY2xpZW50Iiwic3ViIjoicmF0IiwiYXV0aF90aW1lIjoxNDg4NDA1MzI1LCJpZHAiOiJsb2NhbCIsIm5hZ3VpZCI6IjEyMzRhYmNkIiwiSW4iOiJGbGFtZXMiLCJzY29wZSI6WyJhcmJpdHJhcnkiLCJvZmZsaW5lX2FjY2VzcyIsIkEiLCJxdWljayIsImJyb3duIiwiZm94Il0sImFtciI6WyJwd2QiXX0.ZORVofGs00YvWUWU_dUrNGxVOO2pQebEVkUom8zB2ibpW8Hy6a2dgNnQKZet4op1X7-8LiiW3wXuiQKd5pVgKBjTgGbyAJBoVnzHl2Js1xgxOkm5lKimQNKeVHQ9dW747TxHBHuS-9q7L-CMltfYfUKvsNb1bKHdRpEu1lJ4senKK6fiFLLdklabqIQ7QTopFi3koFpILO4gw9WAVDTnLiIyynl4vY6vdlvHMuGBfwkipjPeu7MTGKdAL5Wu-IJeeEXN1a1NZSO1gXPFed_L3pyRMrZn-ygloL1M-CN_i09ThJVBTpSOsam2sLlO9snd4cOSZ1d7F0FmijA4IbTbyg",
-        "expires_in": 3600,
-        "token_type": "Bearer",
-        "refresh_token": "50dcb1ef15113115a9b1d1ebf3873fabbab4d1a67790e547f765a6559c0f36e6"
-    }
+    "refresh_token": "dfe6d6451f2879aa2bed087ae3b04f0a70134be4fc70a51970eb1e0de626b7a7"
 }
 ```
 
+## How is this accomplished.
 
+There are 2 clients in play;
 
+The resource_owner client requires that you must use a client_id, client_secret, username, and password to get the initial response.
+The fact that it is configured to require a password, is what makes it not usable to use the refresh_token in the response in a public way.
+```
+    new Client
+    {
+        ClientId = "resource-owner-client",
+        AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+        AllowOfflineAccess = true,
+        RefreshTokenUsage = TokenUsage.OneTimeOnly,
+        ClientSecrets =
+        {
+            new Secret("secret".Sha256())
+        },
+        AllowedScopes = { "arbitrary" }
+    };
+
+```
+```
+http://localhost:7791/connect/token POST
+grant_type=client_credentials&scope=arbitrary&client_id=client&client_secret=secret&handler=arbitrary-claims-service&arbitrary-claims={"naguid":"1234abcd","In":"Flames"}&arbitrary-scopes=A quick brown fox
+```
+
+The next problem is how do we get to use the refresh_token that came back from that above request without passing a client_secret?
+Enter a new client, but by convention its name and settings must be exact.
+```
+    new Client
+    {
+        ClientId = "public-resource-owner-client",
+        AllowedGrantTypes = GrantTypes.List("public_refresh_token"),
+        RequireClientSecret = false,
+        AllowedScopes = { "arbitrary" }
+    };
+
+```
+The ClientId must be "public-" + the clientId of the client whom you would like the refresh_token to be public.
+RequireClientSecret must be set to false, and we now have an extension_grant that will help use refresh the token called "public_refresh_token".  
+```
+http://localhost:7791/connect/token POST
+refresh_token=37c43e936af65423bbc62a28dcd9505a008203eeddc75d1043a33be0547ad075&client_id=resource-owner-client
+```
+There is nothing in this request that gives a user a hint as to the backend things in play.
+
+### Under the Hood
+1. [PublicRefreshTokenMiddleware](../src/P7.IdentityServer4.Common/Middleware/PublicRefreshTokenMiddleware.cs)  
+This intercepts all Requests and is looking for /connect/token, with a client_id and refresh_token in the form.   It then sees if there is a public-{client_id} variant, and if there is we fixup the form data which routes the request to our public_refresh_token extension_grant implementation.  
+2. [PublicRefreshTokenExtensionGrantValidator](../src/P7.IdentityServer4.Common/ExtensionGrantValidator/PublicRefreshTokenExtensionGrantValidator.cs)    
+This extension understands the naming convention scheme and final result we are going for.  It bascially strips away the public- part of the client name and refreshes the token of the original client, but this time without requireing a client_secret.
+
+3. The actual response back from IdentitySever4 is not exactly as we like it, so we read the resonse body and correct that to look nice.  This is handled in the [PublicRefreshTokenMiddleware](../src/P7.IdentityServer4.Common/Middleware/PublicRefreshTokenMiddleware.cs) middleware as well.
