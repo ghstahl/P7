@@ -71,8 +71,8 @@ produces the following;
 ## How is this accomplished.
 
 There are 2 clients in play;
-### Resource Onwer Client
-This client requires that you must use a client_id, client_secret, username, and password to get the initial response.
+
+The resource_owner client requires that you must use a client_id, client_secret, username, and password to get the initial response.
 The fact that it is configured to require a password, is what makes it not usable to use the refresh_token in the response in a public way.
 ```
     new Client
@@ -106,7 +106,7 @@ Enter a new client, but by convention its name and settings must be exact.
     };
 
 ```
-The ClientId must be "public-" + the clientId of client whom you would like the refresh_token to be public.
+The ClientId must be "public-" + the clientId of the client whom you would like the refresh_token to be public.
 RequireClientSecret must be set to false, and we now have an extension_grant that will help use refresh the token called "public_refresh_token".  
 ```
 http://localhost:7791/connect/token POST
@@ -117,4 +117,7 @@ There is nothing in this request that gives a user a hint as to the backend thin
 ### Under the Hood
 1. PublicRefreshTokenMiddleware  
 This intercepts all Requests and is looking for /connect/token, with a client_id and refresh_token in the form.   It then sees if there is a public-{client_id} variant, and if there is we fixup the form data which routes the request to our public_refresh_token extension_grant implementation.  
+2. PublicRefreshTokenExtensionGrantValidator   
+This extension understands the naming convention scheme and final result we are going for.  It bascially strips away the public- part of the client name and refreshes the token of the original client, but this time without requireing a client_secret.
+
 2. The actual response back from IdentitySever4 is not exactly as we like it, so we read the resonse body and correct that to look nice.
