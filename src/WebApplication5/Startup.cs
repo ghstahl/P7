@@ -40,8 +40,9 @@ using P7.HugoStore.Core;
 using P7.IdentityServer4.BiggyStore;
 using P7.IdentityServer4.BiggyStore.Extensions;
 using P7.IdentityServer4.Common;
-using P7.IdentityServer4.Common.Endpoints;
+
 using P7.IdentityServer4.Common.ExtensionGrantValidator;
+using P7.IdentityServer4.Common.Middleware;
 using Module = Autofac.Module;
 
 namespace WebApplication5
@@ -120,6 +121,7 @@ namespace WebApplication5
                 .AddSecretParser<ClientAssertionSecretParser>()
                 .AddSecretValidator<PrivateKeyJwtSecretValidator>()
                 .AddExtensionGrantValidator<PublicRefreshTokenExtensionGrantValidator>();
+//                .AddEndpoint<CustomTokenEndpoint>(EndpointName.Token);
 
 
             services.TryAddSingleton(typeof(IStringLocalizerFactory), typeof(ResourceManagerStringLocalizerFactory));
@@ -244,6 +246,7 @@ namespace WebApplication5
             };
             app.UseCookieAuthentication(cookieAuthenticationOptions);
 
+            app.UsePublicRefreshToken();
             app.UseIdentityServer();
 
             if (env.IsDevelopment())
@@ -287,6 +290,7 @@ namespace WebApplication5
                     name: "default",
                     template: "{area=Main}/{controller=Home}/{action=Index}/{id?}");
             });
+           
         }
 
         private async Task LoadIdentityServer4Data()
