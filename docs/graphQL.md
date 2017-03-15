@@ -10,7 +10,7 @@ P7 provides a stock graphQL implementation for fetching strings out of the ASP.N
 
 
 ## GraphQL Viewer
-1. Browser to /GraphQLView
+1. Browse to http://localhost:7791/GraphQLView
 
 **Query**
 
