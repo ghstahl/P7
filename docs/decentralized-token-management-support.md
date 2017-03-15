@@ -20,6 +20,8 @@ Services that use P7 should have their own system of record for users, claims, a
 
 ### Use Cases
 
+Please visit [JWT.IO](https://jwt.io/) to interigate what is inside the access_tokens I am creating below.
+
 #### The ability to create a Client_Credentials Flow type token
 I need to be able to create a Client_Credentials token, where I can pass in an arbitrary user, with arbitrary scopes, and abitrary claims.  I need the service to then manage that token whilst in flight.
 ```
