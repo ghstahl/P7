@@ -8,7 +8,7 @@ using P7.Store;
 
 namespace P7.HugoStore.Core
 {
-    public class HugoStoreBase<T> where T : class, IDocumentBase, new()
+    public class HugoStoreBase<T> where T : class, IDocumentBaseWithTenant, new()
     {
         public delegate bool ContainsAnyInList<T>(List<T> a, List<T> b);
 
@@ -42,17 +42,17 @@ namespace P7.HugoStore.Core
             get { return ConcurrencyLock.TheLock; }
         }
 
-        protected JsonStore<T> _theStore = null;
+        protected P7JsonStore<T> _theStore = null;
         private string _collection;
 
-        protected JsonStore<T> Store
+        protected P7JsonStore<T> Store
         {
             get
             {
                 if (_theStore == null)
                 {
                     _theStore =
-                        new JsonStore<T>(_biggyConfiguration.FolderStorage,
+                        new P7JsonStore<T>(_biggyConfiguration.FolderStorage,
                             _biggyConfiguration.DatabaseName, _collection);
     //                _theStore.Sorter = _sorter;
                 }
@@ -76,7 +76,7 @@ namespace P7.HugoStore.Core
 
         public async Task InsertAsync(T doc)
         {
-            var existing = await FetchAsync(doc.Id_G);
+            var existing = await FetchAsync(doc.TenantId_G,doc.Id_G);
             await GoAsync(() =>
             {
                 lock (TheLock)
@@ -94,7 +94,7 @@ namespace P7.HugoStore.Core
             });
         }
 
-        public async Task<T> FetchAsync(Guid id)
+        public async Task<T> FetchAsync(Guid tenantId,Guid id)
         {
             var result = await GoAsync(() =>
                 {
@@ -103,8 +103,8 @@ namespace P7.HugoStore.Core
                     {
                         var collection = this.Store.TryLoadData();
                         var query = from item in collection
-                            where item.Id_G == id
-                            select item;
+                            where item.TenantId_G == tenantId && item.Id_G == id
+                                    select item;
                         if (!query.Any())
                             return null;
                         var record = query.SingleOrDefault();
@@ -122,7 +122,7 @@ namespace P7.HugoStore.Core
             await InsertAsync(doc);
         }
 
-        public async Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(Guid tenantId, Guid id)
         {
             await GoAsync(() =>
             {
@@ -130,7 +130,7 @@ namespace P7.HugoStore.Core
                 {
                     var collection = this.Store.TryLoadData();
                     var query = from item in collection
-                        where item.Id_G == id
+                        where item.TenantId_G == tenantId && item.Id_G == id
                         select item;
                     foreach (var item in query)
                     {
@@ -140,7 +140,7 @@ namespace P7.HugoStore.Core
             });
         }
 
-        public async Task<List<T>> RetrieveAsync()
+        private async Task<List<T>> RetrieveAllAsync()
         {
 
             var result = await GoAsync(() =>
@@ -159,14 +159,39 @@ namespace P7.HugoStore.Core
             );
             return result;
         }
+        public async Task<List<T>> RetrieveAsync(Guid? tenantId = null)
+        {
 
-        public async Task<IPage<T>> PagedAsync(
+            if (tenantId == null)
+                return await RetrieveAllAsync();
+            var result = await GoAsync(() =>
+            {
+                List<T> r2 = null;
+                lock (TheLock)
+                {
+                    var collection = this.Store.TryLoadData();
+                    var query = from item in collection
+                                where item.TenantId_G == tenantId
+                                select item;
+
+                    if (query.Any())
+                    {
+                        r2 = query.ToList();
+                    }
+                }
+                return r2 ?? new List<T>();
+            }
+            );
+            return result;
+        }
+        public async Task<IPage<T>> PageAsync(
             int pageSize,
-            byte[] pagingState)
+            byte[] pagingState,
+            Guid? tenantId = null)
         {
             byte[] currentPagingState = pagingState;
             PagingState ps = pagingState.Deserialize();
-            var records = await RetrieveAsync();
+            var records = await RetrieveAsync(tenantId);
 
             var slice = records.Skip(ps.CurrentIndex).Take(pageSize).ToList();
             if (slice.Count < pageSize)

@@ -1,4 +1,8 @@
-﻿namespace P7.BlogStore.Core
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace P7.Core.Utils
 {
     public static class CompareExtensions
     {

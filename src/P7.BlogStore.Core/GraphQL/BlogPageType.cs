@@ -10,7 +10,7 @@ namespace P7.BlogStore.Core.GraphQL
             Name = "BlogPage";
             Field(x => x.CurrentPagingState).Description("The current paging state of the this request for blog entries.");
             Field(x => x.PagingState).Description("The next paging state of the subsequent request for blog entries.");
-            Field<ListGraphType<BlogType>>("blogs", "The blogs.");
+            Field<ListGraphType<BlogDocumentType>>("blogs", "The blogs.");
  
         }
     }

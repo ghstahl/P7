@@ -2,16 +2,16 @@ using Newtonsoft.Json;
 
 namespace P7.IdentityServer4.Common
 {
-    public class SimpleDocument<T> : ISimpleDocument where T : class
+    public class SimpleJsonJsonDocument<T> : ISimpleJsonDocument where T : class
     {
         private readonly T _document;
 
-        public SimpleDocument(T document)
+        public SimpleJsonJsonDocument(T document)
         {
             _document = document;
         }
 
-        public SimpleDocument(string documentJson)
+        public SimpleJsonJsonDocument(string documentJson)
         {
             _document = JsonConvert.DeserializeObject<T>(documentJson);
         }

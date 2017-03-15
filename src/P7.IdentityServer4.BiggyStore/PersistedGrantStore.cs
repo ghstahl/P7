@@ -28,7 +28,7 @@ namespace P7.IdentityServer4.BiggyStore
                 Key = key
             };
             var doc = new PersistedGrantDocument(grant);
-            var result = await FetchAsync(doc.Id_G);
+            var result = await FetchAsync(doc.TenantId_G, doc.Id_G);
             if (result == null)
                 return null;
             return await result.ToPersistedGrantAsync();
@@ -49,7 +49,7 @@ namespace P7.IdentityServer4.BiggyStore
             {
                 Key = key
             });
-            await DeleteAsync(doc.Id_G);
+            await DeleteAsync(doc.TenantId_G, doc.Id_G);
         }
 
         public async Task RemoveAllAsync(string subjectId, string clientId)
@@ -61,7 +61,7 @@ namespace P7.IdentityServer4.BiggyStore
             var final = query.ToList();
             foreach (var doc in final)
             {
-                await DeleteAsync(doc.Id_G);
+                await DeleteAsync(doc.TenantId_G, doc.Id_G);
             }
         }
 
@@ -74,7 +74,7 @@ namespace P7.IdentityServer4.BiggyStore
             var final = query.ToList();
             foreach (var doc in final)
             {
-                await DeleteAsync(doc.Id_G);
+                await DeleteAsync(doc.TenantId_G, doc.Id_G);
             }
         }
     }

@@ -22,7 +22,7 @@ namespace P7.IdentityServer4.Common
         {
             if (identityResources == null)
                 return "[]";
-            var simpleDocument = new SimpleDocument<List<IdentityResourceModel>>(identityResources.ToList()).DocumentJson;
+            var simpleDocument = new SimpleJsonJsonDocument<List<IdentityResourceModel>>(identityResources.ToList()).DocumentJson;
             return simpleDocument;
         }
 
@@ -30,14 +30,14 @@ namespace P7.IdentityServer4.Common
         {
             if (apiResources == null)
                 return "[]";
-            var simpleDocument = new SimpleDocument<List<ApiResourceModel>>(apiResources.ToList()).DocumentJson;
+            var simpleDocument = new SimpleJsonJsonDocument<List<ApiResourceModel>>(apiResources.ToList()).DocumentJson;
             return simpleDocument;
         }
 
         protected override async Task<List<IdentityResourceModel>> DeserializeIdentityResourcesAsync(string obj)
         {
             obj = string.IsNullOrEmpty(obj) ? "[]" : obj;
-            var simpleDocument = new SimpleDocument<List<IdentityResourceModel>>(obj);
+            var simpleDocument = new SimpleJsonJsonDocument<List<IdentityResourceModel>>(obj);
             var document = (List<IdentityResourceModel>)simpleDocument.Document;
             return document;
         }
@@ -45,7 +45,7 @@ namespace P7.IdentityServer4.Common
         protected override async Task<List<ApiResourceModel>> DeserializeApiResourcesAsync(string obj)
         {
             obj = string.IsNullOrEmpty(obj) ? "[]" : obj;
-            var simpleDocument = new SimpleDocument<List<ApiResourceModel>>(obj);
+            var simpleDocument = new SimpleJsonJsonDocument<List<ApiResourceModel>>(obj);
             var document = (List<ApiResourceModel>)simpleDocument.Document;
             return document;
         }

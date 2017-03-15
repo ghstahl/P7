@@ -15,6 +15,7 @@ namespace Hugo.Data.Json
 {
 	public class JsonStore<T> : IDataStore<T> where T : class, new()
 	{
+        public JsonSerializerSettings JsonSerializerSettings { get; set; }
         public bool KeyIsAutoIncrementing { get; set; }
 		public string TableName { get; set; }
 		public string DbDirectory { get { return this.Database.DbDirectory; } set { this.DbDirectory = value; } }
@@ -508,8 +509,10 @@ namespace Hugo.Data.Json
 					using (var outstream = new StreamWriter(stream))
 					{
 						var writer     = new JsonTextWriter(outstream);
-						var serializer = JsonSerializer.CreateDefault(); 
-						serializer.Serialize(writer, _items);
+                        var serializer = JsonSerializerSettings == null ?
+                            JsonSerializer.CreateDefault() :
+                            JsonSerializer.CreateDefault(JsonSerializerSettings);
+                        serializer.Serialize(writer, _items);
 						// outstream.Close();
 						completed = true;
 					}

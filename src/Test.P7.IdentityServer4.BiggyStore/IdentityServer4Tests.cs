@@ -30,6 +30,7 @@ namespace Test.P7.IdentityServer4.BiggyStore
     {
         public string DatabaseName { get; set; }
         public string FolderStorage { get; set; }
+        public string TenantId { get; set; }
     }
 
     [TestClass]

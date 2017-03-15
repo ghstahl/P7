@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -34,7 +35,13 @@ namespace P7.Core.Writers
                     ContractResolver = new CamelCasePropertyNamesContractResolver(),
                     DateFormatHandling = DateFormatHandling.IsoDateFormat,
                     DateFormatString = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'",
-                    DateTimeZoneHandling = DateTimeZoneHandling.Utc
+                    DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+                    DefaultValueHandling = DefaultValueHandling.Ignore,
+                    NullValueHandling = NullValueHandling.Ignore,
+                    Converters = new List<JsonConverter>()
+                    {
+                        new Newtonsoft.Json.Converters.IsoDateTimeConverter()
+                    }
                 })
         {
         }
@@ -68,6 +75,8 @@ namespace P7.Core.Writers
                     DateFormatHandling = _settings.DateFormatHandling,
                     DateFormatString = _settings.DateFormatString,
                     Formatting = _formatting,
+                    DefaultValueHandling = _settings.DefaultValueHandling,
+                    NullValueHandling = _settings.NullValueHandling
                 };
 
                 ser.Serialize(writer, obj);

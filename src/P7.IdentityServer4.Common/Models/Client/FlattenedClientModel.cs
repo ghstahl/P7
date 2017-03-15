@@ -25,14 +25,14 @@ namespace P7.IdentityServer4.Common
         {
             if (stringList == null)
                 return "[]";
-            var simpleDocument = new SimpleDocument<List<string>>(stringList).DocumentJson;
+            var simpleDocument = new SimpleJsonJsonDocument<List<string>>(stringList).DocumentJson;
             return simpleDocument;
         }
 
         public override async Task<List<string>> DeserializeStringsAsync(string obj)
         {
             obj = string.IsNullOrEmpty(obj) ? "[]" : obj;
-            var simpleDocument = new SimpleDocument<List<string>>(obj);
+            var simpleDocument = new SimpleJsonJsonDocument<List<string>>(obj);
             var document = (List<string>) simpleDocument.Document;
             return await Task.FromResult(document);
         }
@@ -42,14 +42,14 @@ namespace P7.IdentityServer4.Common
             var normalized = claims == null ? null : claims.ToClaimTypeRecords();
             if (normalized == null)
                 return "[]";
-            var simpleDocument = new SimpleDocument<List<ClaimModel>>(normalized).DocumentJson;
+            var simpleDocument = new SimpleJsonJsonDocument<List<ClaimModel>>(normalized).DocumentJson;
             return simpleDocument;
         }
 
         public override async Task<List<Claim>> DeserializeClaimsAsync(string obj)
         {
             obj = string.IsNullOrEmpty(obj) ? "[]" : obj;
-            var simpleDocument = new SimpleDocument<List<ClaimModel>>(obj);
+            var simpleDocument = new SimpleJsonJsonDocument<List<ClaimModel>>(obj);
             var document = (List<ClaimModel>) simpleDocument.Document;
             var result = document.ToClaims();
             return await Task.FromResult(result);
@@ -59,14 +59,14 @@ namespace P7.IdentityServer4.Common
         {
             if (secrets == null)
                 return "[]";
-            var simpleDocument = new SimpleDocument<List<Secret>>(secrets).DocumentJson;
+            var simpleDocument = new SimpleJsonJsonDocument<List<Secret>>(secrets).DocumentJson;
             return simpleDocument;
         }
 
         public override async Task<List<Secret>> DeserializeSecretsAsync(string obj)
         {
             obj = string.IsNullOrEmpty(obj) ? "[]" : obj;
-            var simpleDocument = new SimpleDocument<List<Secret>>(obj);
+            var simpleDocument = new SimpleJsonJsonDocument<List<Secret>>(obj);
             var document = (List<Secret>) simpleDocument.Document;
             return await Task.FromResult(document);
         }

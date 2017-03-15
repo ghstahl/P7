@@ -16,7 +16,6 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Localization;
 using P7.GraphQLCore;
 using Microsoft.Extensions.DependencyModel;
-using Microsoft.DotNet.InternalAbstractions;
 using Microsoft.DotNet.PlatformAbstractions;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Localization;

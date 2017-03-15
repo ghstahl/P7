@@ -18,14 +18,14 @@ namespace P7.IdentityServer4.Common
         {
             if (scopes == null)
                 return "[]";
-            var simpleDocument = new SimpleDocument<List<string>>(scopes).DocumentJson;
+            var simpleDocument = new SimpleJsonJsonDocument<List<string>>(scopes).DocumentJson;
             return simpleDocument;
         }
 
         public override List<string> DeserializeScopes(string obj)
         {
             obj = string.IsNullOrEmpty(obj) ? "[]" : obj;
-            var simpleDocument = new SimpleDocument<List<string>>(obj);
+            var simpleDocument = new SimpleJsonJsonDocument<List<string>>(obj);
             var document = (List<string>)simpleDocument.Document;
             return document;
         }

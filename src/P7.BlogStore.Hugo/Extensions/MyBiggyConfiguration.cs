@@ -9,5 +9,6 @@ namespace P7.BlogStore.Hugo.Extensions
     {
         public string DatabaseName { get; set; }
         public string FolderStorage { get; set; }
+        public string TenantId { get; set; }
     }
 }

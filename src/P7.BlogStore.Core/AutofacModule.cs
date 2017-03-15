@@ -11,13 +11,16 @@ namespace P7.BlogStore.Core
             builder.RegisterType<BlogQueryInput>();
             builder.RegisterType<BlogsQueryInput>();
             builder.RegisterType<BlogMutationInput>();
-            builder.RegisterType<BlogMetaDataType>();
+            builder.RegisterType<MetaDataType>();
             builder.RegisterType<Blog>();
             builder.RegisterType<BlogComment>();
             builder.RegisterType<BlogType>();
             builder.RegisterType<BlogPage>();
             builder.RegisterType<BlogPageType>();
-            builder.RegisterType<BlogMetaDataInput>();
+            builder.RegisterType<MetaDataInput>();
+            builder.RegisterType<BlogInput>();
+            builder.RegisterType<BlogDocumentType>();
+            builder.RegisterType<BlogsPageQueryInput>();
         }
     }
 }

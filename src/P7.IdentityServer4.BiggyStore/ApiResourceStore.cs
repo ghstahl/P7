@@ -30,7 +30,7 @@ namespace P7.IdentityServer4.BiggyStore
             {
                 Name = name
             });
-            await DeleteAsync(doc.Id_G);
+            await DeleteAsync(doc.TenantId_G,doc.Id_G);
         }
 
         public async Task<IPage<ApiResource>> PageAsync(int pageSize, byte[] pagingState)

@@ -18,7 +18,7 @@ namespace P7.IdentityServer4.Common
         {
             if (userClaims == null)
                 return "[]";
-            var simpleDocument = new SimpleDocument<List<string>>(userClaims.ToList()).DocumentJson;
+            var simpleDocument = new SimpleJsonJsonDocument<List<string>>(userClaims.ToList()).DocumentJson;
             return simpleDocument;
         }
 
@@ -26,7 +26,7 @@ namespace P7.IdentityServer4.Common
         {
             if (scopes == null)
                 return "[]";
-            var simpleDocument = new SimpleDocument<List<Scope>>(scopes.ToList()).DocumentJson;
+            var simpleDocument = new SimpleJsonJsonDocument<List<Scope>>(scopes.ToList()).DocumentJson;
             return simpleDocument;
         }
 
@@ -34,14 +34,14 @@ namespace P7.IdentityServer4.Common
         {
             if (apiSecrets == null)
                 return "[]";
-            var simpleDocument = new SimpleDocument<List<Secret>>(apiSecrets.ToList()).DocumentJson;
+            var simpleDocument = new SimpleJsonJsonDocument<List<Secret>>(apiSecrets.ToList()).DocumentJson;
             return simpleDocument;
         }
 
         protected override async Task<List<string>> DeserializeUserClaimsAsync(string obj)
         {
             obj = string.IsNullOrEmpty(obj) ? "[]" : obj;
-            var simpleDocument = new SimpleDocument<List<string>>(obj);
+            var simpleDocument = new SimpleJsonJsonDocument<List<string>>(obj);
             var document = (List<string>) simpleDocument.Document;
             return document;
         }
@@ -49,7 +49,7 @@ namespace P7.IdentityServer4.Common
         protected override async Task<List<ScopeModel>> DeserializeScopesAsync(string obj)
         {
             obj = string.IsNullOrEmpty(obj) ? "[]" : obj;
-            var simpleDocument = new SimpleDocument<List<ScopeModel>>(obj);
+            var simpleDocument = new SimpleJsonJsonDocument<List<ScopeModel>>(obj);
             var document = (List<ScopeModel>) simpleDocument.Document;
             return document;
         }
@@ -57,7 +57,7 @@ namespace P7.IdentityServer4.Common
         protected override async Task<List<Secret>> DeserializeApiSecretsAsync(string obj)
         {
             obj = string.IsNullOrEmpty(obj) ? "[]" : obj;
-            var simpleDocument = new SimpleDocument<List<Secret>>(obj);
+            var simpleDocument = new SimpleJsonJsonDocument<List<Secret>>(obj);
             var document = (List<Secret>) simpleDocument.Document;
             return document;
         }

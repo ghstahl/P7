@@ -4,5 +4,6 @@
     {
         string DatabaseName { get;  }
         string FolderStorage { get; }
+        string TenantId { get; }
     }
 }

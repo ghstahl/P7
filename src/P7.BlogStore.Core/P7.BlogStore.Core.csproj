@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\P7.GraphQLCore\P7.GraphQLCore.csproj" />
+    <ProjectReference Include="..\P7.SimpleDocument.Store\P7.SimpleDocument.Store.csproj" />
     <ProjectReference Include="..\P7.Store\P7.Store.csproj" />
   </ItemGroup>
 
@@ -19,7 +20,6 @@
     <PackageReference Include="Autofac" Version="4.4.0" />
     <PackageReference Include="Autofac.Configuration" Version="4.0.1" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.0.0" />
-    <PackageReference Include="GraphQL" Version="0.15.0.671" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="1.1.2" />

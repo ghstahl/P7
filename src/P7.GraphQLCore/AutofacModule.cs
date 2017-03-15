@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Autofac;
 using GraphQL;
 using GraphQL.Execution;
@@ -61,7 +62,11 @@ namespace P7.GraphQLCore
                     ContractResolver = new CamelCasePropertyNamesContractResolver(),
                     DateFormatHandling = DateFormatHandling.IsoDateFormat,
                     DateFormatString = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'",
-                    DateTimeZoneHandling = DateTimeZoneHandling.Utc
+                    DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+                    Converters = new List<JsonConverter>()
+                    {
+                        new Newtonsoft.Json.Converters.IsoDateTimeConverter()
+                    }
                 }
             }).As<IGraphQLJsonDocumentWriterOptions>();
 

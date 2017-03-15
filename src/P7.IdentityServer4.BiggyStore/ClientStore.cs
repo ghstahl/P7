@@ -19,7 +19,7 @@ namespace P7.IdentityServer4.BiggyStore
         public async Task<Client> FindClientByIdAsync(string clientId)
         {
             var doc = new ClientDocument(new Client() {ClientId = clientId});
-            var result = await FetchAsync(doc.Id_G);
+            var result = await FetchAsync(doc.TenantId_G,doc.Id_G);
             if (result == null)
                 return null;
             return await result.ToClientAsync();
@@ -34,7 +34,7 @@ namespace P7.IdentityServer4.BiggyStore
         public async Task DeleteClientByIdAsync(string clientId)
         {
             var doc = new ClientDocument(new Client() { ClientId = clientId });
-            await DeleteAsync(doc.Id_G);
+            await DeleteAsync(doc.TenantId_G, doc.Id_G);
         }
 
         public async Task<IPage<Client>> PageAsync(int pageSize, byte[] pagingState)

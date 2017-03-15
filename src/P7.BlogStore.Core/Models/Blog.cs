@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using P7.Core.Utils;
+using P7.SimpleDocument.Store;
 using P7.Store;
 
 namespace P7.BlogStore.Core
 {
-    public class Blog: DocumentBase
+
+ 
+    public class Blog : IComparable
     {
         [JsonIgnore]
         public bool EnableDeepCompare { get; set; }
 
-        public BlogMetaData MetaData { get; set; }
         public List<string> Categories { get; set; }
         public List<string> Tags { get; set; }
         public string Data { get; set; }
@@ -25,10 +28,9 @@ namespace P7.BlogStore.Core
 
         public Blog(Blog doc)
         {
-            this.Id = doc.Id;
+            
             this.Categories = doc.Categories;
             this.Data = doc.Data;
-            this.MetaData = doc.MetaData;
             this.Tags = doc.Tags;
             this.TimeStamp = doc.TimeStamp;
             this.Summary = doc.Summary;
@@ -47,10 +49,6 @@ namespace P7.BlogStore.Core
                 return false;
             }
 
-            if (!Id.IsEqual(other.Id))
-            {
-                return false;
-            }
             return true;
         }
         public bool DeepEquals(object obj)
@@ -85,16 +83,8 @@ namespace P7.BlogStore.Core
             {
                 return false;
             }
-
-            if (!Id.IsEqual(other.Id))
-            {
-                return false;
-            }
+            
             if (!Data.IsEqual(other.Data))
-            {
-                return false;
-            }
-            if (!MetaData.IsEqual(other.MetaData))
             {
                 return false;
             }
@@ -113,9 +103,12 @@ namespace P7.BlogStore.Core
             return true;
 
         }
-        public override int GetHashCode()
+
+        public int CompareTo(object obj)
         {
-            return Id.GetHashCode();
+            if (Equals(obj))
+                return 0;
+            return -1;
         }
     }
 }

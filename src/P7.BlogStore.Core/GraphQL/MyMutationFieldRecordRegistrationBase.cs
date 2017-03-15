@@ -2,6 +2,7 @@ using System;
 using GraphQL;
 using GraphQL.Types;
 using P7.GraphQLCore;
+using P7.SimpleDocument.Store;
 
 namespace P7.BlogStore.Core.GraphQL
 {
@@ -25,7 +26,9 @@ namespace P7.BlogStore.Core.GraphQL
                     try
                     {
                         var userContext = context.UserContext.As<GraphQLUserContext>();
-                        var blog = context.GetArgument<Blog>("input");
+                        var blog = context.GetArgument<SimpleDocument<Blog>>("input");
+                        
+                        blog.TenantId = await _blogStore.GetTenantIdAsync();
                         await _blogStore.InsertAsync(blog);
                         return true;
                     }

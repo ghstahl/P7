@@ -11,14 +11,14 @@ namespace P7.IdentityServer4.Common
         {
             if (userClaims == null)
                 return "[]";
-            var simpleDocument = new SimpleDocument<List<string>>(userClaims.ToList()).DocumentJson;
+            var simpleDocument = new SimpleJsonJsonDocument<List<string>>(userClaims.ToList()).DocumentJson;
             return simpleDocument;
         }
 
         protected override async Task<List<string>> DeserializeUserClaimsAsync(string obj)
         {
             obj = string.IsNullOrEmpty(obj) ? "[]" : obj;
-            var simpleDocument = new SimpleDocument<List<string>>(obj);
+            var simpleDocument = new SimpleJsonJsonDocument<List<string>>(obj);
             var document = (List<string>)simpleDocument.Document;
             return document;
         }

@@ -8,8 +8,16 @@ namespace P7.BlogStore.Core.GraphQL
         {
             Name = "BlogMutationInput";
             Field<NonNullGraphType<StringGraphType>>("id");
+            Field<NonNullGraphType<MetaDataInput>>("metaData");
+            Field<NonNullGraphType<BlogInput>>("document");
+        }
+    }
+    public class BlogInput : InputObjectGraphType
+    {
+        public BlogInput()
+        {
+            Name = "BlogInput";
             Field<NonNullGraphType<StringGraphType>>("data");
-            Field<NonNullGraphType<BlogMetaDataInput>>("metaData");
             Field<NonNullGraphType<DateGraphType>>("timeStamp");
             Field<NonNullGraphType<StringGraphType>>("title");
             Field<NonNullGraphType<StringGraphType>>("summary");

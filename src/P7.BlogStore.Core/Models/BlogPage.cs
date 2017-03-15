@@ -1,3 +1,4 @@
+using P7.SimpleDocument.Store;
 using System.Collections.Generic;
 
 namespace P7.BlogStore.Core.Models
@@ -6,6 +7,6 @@ namespace P7.BlogStore.Core.Models
     {
         public string CurrentPagingState { get; set; }
         public string PagingState { get; set; }
-        public List<Blog> Blogs { get; set; }
+        public List<SimpleDocument<Blog>> Blogs { get; set; }
     }
 }
