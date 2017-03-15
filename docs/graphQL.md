@@ -109,19 +109,21 @@ mutation q($input: BlogMutationInput! ){
 **Mutation Variables**
 ```graphql
 {
-   "input":   {
-		"metaData": {
-			"category": "c0",
-			"version": "1.0.0.0"
-		},
+    "input": {
+	"metaData": {
+		"category": "c0",
+		"version": "1.0.0.0"
+	},
+	"document": {
 		"categories": ["c10", "c20"],
 		"tags": ["t10", "t20"],
 		"data": "This is my blog",
-		"timeStamp": "2027-03-07T14:55:03Z",
+		"timeStamp": "2027-03-15T20:01:11Z",
 		"title": "My Title",
-		"summary": "My Summary",
-		"id": "7f5ebe45-47dd-424a-a871-88e3b38f5e33"
-	}
+		"summary": "My Summary"
+	},
+	"id": "5c6b2b4c-f1c7-4f8d-a97b-1755c7d1fa62"
+    }
 }
 ```  
 **Result**
@@ -136,26 +138,29 @@ mutation q($input: BlogMutationInput! ){
 #### Query an individual Blog Entry
 ```graphql
 query q($input: BlogQueryInput! ){
-  blog(input:   $input ) {
-    id
-    title
-    summary
-    categories
-    tags
-    metaData {
-      category
-      version
-    }
-    timeStamp
-    data
-  } 
+   blog(input: $input){
+      tenantId
+      id
+      metaData {
+          category
+          version
+      }
+      document{
+          title
+          summary
+          categories
+          tags
+          timeStamp
+          data
+      }
+  }
 }
 ```
 **Query Variables**
 ```graphql
 {
    "input": {
-	"id": "7f5ebe45-47dd-424a-a871-88e3b38f5e33"
+	"id": "5c6b2b4c-f1c7-4f8d-a97b-1755c7d1fa62"
    }
 }
 ```  
@@ -164,23 +169,26 @@ query q($input: BlogQueryInput! ){
 {
   "data": {
     "blog": {
-      "id": "7f5ebe45-47dd-424a-a871-88e3b38f5e33",
-      "title": "My Title",
-      "summary": "My Summary",
-      "categories": [
-        "c10",
-        "c20"
-      ],
-      "tags": [
-        "t10",
-        "t20"
-      ],
+      "tenantId": "02a6f1a2-e183-486d-be92-658cd48d6d94",
+      "id": "5c6b2b4c-f1c7-4f8d-a97b-1755c7d1fa62",
       "metaData": {
         "category": "c0",
         "version": "1.0.0.0"
       },
-      "timeStamp": "2027-03-07T22:55:03Z",
-      "data": "This is my blog"
+      "document": {
+        "title": "My Title",
+        "summary": "My Summary",
+        "categories": [
+          "c10",
+          "c20"
+        ],
+        "tags": [
+          "t10",
+          "t20"
+        ],
+        "timeStamp": "2027-03-15T20:01:11Z",
+        "data": "This is my blog"
+      }
     }
   }
 }
