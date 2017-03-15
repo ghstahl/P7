@@ -47,14 +47,12 @@ using Module = Autofac.Module;
 
 namespace WebApplication5
 {
-    class MyBiggyConfiguration : IIdentityServer4BiggyConfiguration
-    {
-        public string DatabaseName { get; set; }
-        public string FolderStorage { get; set; }
-    }
+   
 
     public class MyIdentityServer4BiggyAutofacModule : Module
     {
+        private static string TenantId = "02a6f1a2-e183-486d-be92-658cd48d6d94";
+      
         protected override void Load(ContainerBuilder builder)
         {
             var env = P7.Core.Global.HostingEnvironment;
@@ -64,7 +62,7 @@ namespace WebApplication5
 
             dbPath = Path.Combine(env.ContentRootPath, "App_Data/blogstore");
             Directory.CreateDirectory(dbPath);
-            builder.AddBlogStoreBiggyConfiguration(dbPath);
+            builder.AddBlogStoreBiggyConfiguration(dbPath, TenantId);
         }
     }
 

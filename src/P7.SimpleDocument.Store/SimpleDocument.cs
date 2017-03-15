@@ -1,4 +1,5 @@
 ﻿using System;
+using P7.Core.Utils;
 using P7.Store;
 
 namespace P7.SimpleDocument.Store
@@ -29,11 +30,11 @@ namespace P7.SimpleDocument.Store
             {
                 return false;
             }
-            if (!MetaData.Equals(other.MetaData))
+            if (!MetaData.SafeEquals(other.MetaData))
             {
                 return false;
             }
-            if (Document.CompareTo(other.Document) != 0)
+            if (!Document.SafeEquals(other.Document))
             {
                 return false;
             }

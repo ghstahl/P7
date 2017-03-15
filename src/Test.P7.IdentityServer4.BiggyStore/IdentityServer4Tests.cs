@@ -53,7 +53,8 @@ namespace Test.P7.IdentityServer4.BiggyStore
             IIdentityServer4BiggyConfiguration biggyConfiguration = new MyBiggyConfiguration()
             {
                 FolderStorage = GlobalTenantDatabaseBiggyConfig.Folder,
-                DatabaseName = GlobalTenantDatabaseBiggyConfig.Database
+                DatabaseName = GlobalTenantDatabaseBiggyConfig.Database,
+                TenantId = GlobalTenantDatabaseBiggyConfig.TenantId.ToString()
             };
 
             var hostName = typeof(MyAutofacFactory).GetTypeInfo().Assembly.GetName().Name;

@@ -10,8 +10,9 @@ namespace P7.BlogStore.Hugo.Extensions
         /// </summary>
         /// <param name="builder">The builder.</param>
         /// <param name="dbPath">The full path to where biggy store the data.</param>
+        /// <param name="tentantId">The tenantId of this store.</param>
         /// <returns></returns>
-        public static ContainerBuilder AddBlogStoreBiggyConfiguration(this ContainerBuilder builder, string dbPath)
+        public static ContainerBuilder AddBlogStoreBiggyConfiguration(this ContainerBuilder builder, string dbPath,string tentantId)
         {
             var globalTenantDatabaseBiggyConfig = new TenantDatabaseBiggyConfig();
             globalTenantDatabaseBiggyConfig.UsingFolder(dbPath);
@@ -19,7 +20,8 @@ namespace P7.BlogStore.Hugo.Extensions
             IBlogStoreBiggyConfiguration biggyConfiguration = new MyBiggyConfiguration()
             {
                 FolderStorage = globalTenantDatabaseBiggyConfig.Folder,
-                DatabaseName = globalTenantDatabaseBiggyConfig.Database
+                DatabaseName = globalTenantDatabaseBiggyConfig.Database,
+                TenantId = tentantId
             };
 
             builder.Register(c => biggyConfiguration)

@@ -19,6 +19,7 @@
     <ProjectReference Include="..\P7.Globalization\P7.Globalization.csproj" />
     <ProjectReference Include="..\P7.GraphQLCore\P7.GraphQLCore.csproj" />
     <ProjectReference Include="..\P7.HugoStore.Core\P7.HugoStore.Core.csproj" />
+    <ProjectReference Include="..\P7.SimpleDocument.Store\P7.SimpleDocument.Store.csproj" />
   </ItemGroup>
 
   <ItemGroup>
