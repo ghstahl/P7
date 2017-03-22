@@ -9,7 +9,7 @@ namespace P7.BlogStore.Core.GraphQL
     {
         public BlogDocumentType()
         {
-            Name = "Blog Document";
+            Name = "blogDocument";
             Field(x => x.TenantId).Description("The TenantId of the Blog.");
             Field(x => x.Id).Description("The Id of the Blog.");
             Field<MetaDataType>("metaData", "The MetaData of the Blog.");
@@ -20,7 +20,7 @@ namespace P7.BlogStore.Core.GraphQL
     {
         public BlogType()
         {
-            Name = "Blog";
+            Name = "blog";
             Field(x => x.Title).Description("The Title of the Blog.");
             Field(x => x.Summary).Description("The Summary of the Blog.");
             Field<ListGraphType<StringGraphType>>("categories", "The Categories of the Blog.");

@@ -11,7 +11,7 @@ namespace P7.BlogStore.Core.GraphQL
     {
         public MetaDataType()
         {
-            Name = "metadata";
+            Name = "metaData";
             Field(x => x.Category).Description("The Category of the blog.");
             Field(x => x.Version).Description("The Version of the blog.");
         }

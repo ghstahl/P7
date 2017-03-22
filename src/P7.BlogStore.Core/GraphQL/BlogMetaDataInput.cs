@@ -6,7 +6,7 @@ namespace P7.BlogStore.Core.GraphQL
     {
         public MetaDataInput()
         {
-            Name = "MetaDataInput";
+            Name = "metaDataInput";
             Field<NonNullGraphType<StringGraphType>>("category");
             Field<NonNullGraphType<StringGraphType>>("version");
         }

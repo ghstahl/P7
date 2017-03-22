@@ -6,7 +6,7 @@ namespace P7.GraphQLCore
     {
         public MutationCore(IMutationFieldRecordRegistrationStore fieldStore)
         {
-            Name = "Mutation";
+            Name = "mutation";
             fieldStore.AddGraphTypeFields(this);
         }
     }

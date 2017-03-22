@@ -6,7 +6,7 @@ namespace P7.BlogStore.Core.GraphQL
     {
         public BlogMutationInput()
         {
-            Name = "BlogMutationInput";
+            Name = "blogMutationInput";
             Field<NonNullGraphType<StringGraphType>>("id");
             Field<NonNullGraphType<MetaDataInput>>("metaData");
             Field<NonNullGraphType<BlogInput>>("document");
@@ -16,7 +16,7 @@ namespace P7.BlogStore.Core.GraphQL
     {
         public BlogInput()
         {
-            Name = "BlogInput";
+            Name = "blogInput";
             Field<NonNullGraphType<StringGraphType>>("data");
             Field<NonNullGraphType<DateGraphType>>("timeStamp");
             Field<NonNullGraphType<StringGraphType>>("title");

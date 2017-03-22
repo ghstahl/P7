@@ -86,7 +86,7 @@ namespace P7.GraphQLCore
 
             
             builder.RegisterType<TestValidationRule>()
-                .As<IValidationRule>()
+                .As<IPluginValidationRule>()
                 .SingleInstance();
 
             builder.RegisterType<OptOutGraphQLAuthorizationCheck>()

@@ -6,7 +6,7 @@ namespace P7.BlogStore.Core.GraphQL
     {
         public BlogQueryInput()
         {
-            Name = "BlogQueryInput";
+            Name = "blogQueryInput";
             Field<NonNullGraphType<StringGraphType>>("id");
         }
     }

@@ -9,12 +9,14 @@ using GraphQL;
 using GraphQL.Http;
 using GraphQL.Instrumentation;
 using GraphQL.Types;
+using GraphQL.Validation;
 using GraphQL.Validation.Complexity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using P7.Core.Localization;
 using P7.GraphQLCore;
+using P7.GraphQLCore.Validators;
 
 namespace P7.GraphQLViewer.Areas.GraphQLView.Controllers
 {
@@ -37,12 +39,14 @@ namespace P7.GraphQLViewer.Areas.GraphQLView.Controllers
         private IDocumentWriter _writer { get; set; }
         private ISchema _schema { get; set; }
         private readonly IDictionary<string, string> _namedQueries;
+        private List<IPluginValidationRule> _pluginValidationRules;
         public GraphQLController(
             IHttpContextAccessor httpContextAccessor,
             ILogger<GraphQLController> logger,
             IDocumentExecuter executer,
             IDocumentWriter writer,
-            ISchema schema)
+            ISchema schema,
+            IEnumerable<IPluginValidationRule> pluginValidationRules )
         {
             _httpContextAccessor = httpContextAccessor;
             Logger = logger;
@@ -53,6 +57,7 @@ namespace P7.GraphQLViewer.Areas.GraphQLView.Controllers
             {
                 ["a-query"] = @"query foo { hero { name } }"
             };
+            _pluginValidationRules = pluginValidationRules.ToList();
         }
 
         [HttpPost]
@@ -73,9 +78,9 @@ namespace P7.GraphQLViewer.Areas.GraphQLView.Controllers
                 _.Query = queryToExecute;
                 _.OperationName = query.OperationName;
                 _.Inputs = inputs;
-
                 _.ComplexityConfiguration = new ComplexityConfiguration { MaxDepth = 15 };
                 _.FieldMiddleware.Use<InstrumentFieldsMiddleware>();
+                _.ValidationRules = _pluginValidationRules.Concat(DocumentValidator.CoreRules());
 
             }).ConfigureAwait(false);
 

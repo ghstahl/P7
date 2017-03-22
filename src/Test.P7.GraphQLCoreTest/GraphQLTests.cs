@@ -198,6 +198,8 @@ namespace Test.P7.GraphQLCoreTest
             if (!Inserted)
             {
                 CreateBlogEntries(count);
+                var pluginValidationRules = AutofacStoreFactory.Resolve<IEnumerable<IPluginValidationRule>>();
+
                 foreach (var blogEntry in BlogEntries)
                 {
                     var jsonBlog = JsonDocumentWriter.SerializeObjectSingleQuote(blogEntry);
@@ -205,15 +207,15 @@ namespace Test.P7.GraphQLCoreTest
                         JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonBlog);
                     var rawInput = $"{{'input': {jsonBlog} }}";
                     var gqlInputs = rawInput.ToInputs();
-                    var mutation = @"  mutation Q($input: BlogMutationInput!) {
+                    var mutation = @"  mutation Q($input: blogMutationInput!) {
                       blog(input: $input)
                     }";
 
                     var expected = @"{'blog':true}";
-                    AssertQuerySuccess(mutation, expected, gqlInputs, root: null, userContext: GraphQLUserContext);
+                    AssertQuerySuccess(mutation, expected, gqlInputs, root: null, userContext: GraphQLUserContext, rules: pluginValidationRules);
                     rawInput = $"{{'input': {{ 'id':'{blogEntry.Id}' }} }}";
                     gqlInputs = rawInput.ToInputs();
-                    var query = @"query Q($input: BlogQueryInput!) {
+                    var query = @"query Q($input: blogQueryInput!) {
                       blog(input: $input){
                             tenantId
                             id
@@ -231,7 +233,9 @@ namespace Test.P7.GraphQLCoreTest
                             }
                         }
                     }";
-                    var runResult = ExecuteQuery(query, gqlInputs, root: null, userContext: GraphQLUserContext);
+                  
+
+                    var runResult = ExecuteQuery(query, gqlInputs, root: null, userContext: GraphQLUserContext,rules: pluginValidationRules);
                     bool bErrors = runResult.Errors?.Any() == true;
                     Assert.IsFalse(bErrors);
 
@@ -927,7 +931,7 @@ namespace Test.P7.GraphQLCoreTest
 
             var gqlInputs = rawInput.ToInputs();
             var mutation = @"
-                mutation Q($input: BlogMutationInput!) {
+                mutation Q($input: blogMutationInput!) {
                   blog(input: $input)
                 }";
 
@@ -937,7 +941,7 @@ namespace Test.P7.GraphQLCoreTest
             rawInput =
                $"{{'input': {{'id':'{blogEntry.Id.ToString()}' }} }}";
             gqlInputs = rawInput.ToInputs();
-            var query = @"query Q($input: BlogQueryInput!) {
+            var query = @"query Q($input: blogQueryInput!) {
                       blog(input: $input){
                             tenantId
                             id
@@ -1082,8 +1086,10 @@ namespace Test.P7.GraphQLCoreTest
          object root,
          object userContext = null,
          CancellationToken cancellationToken = default(CancellationToken),
-         IEnumerable<IValidationRule> rules = null)
+         IEnumerable<IPluginValidationRule> rules = null)
         {
+            var fixedRules = rules != null ? rules.ToList() : new List<IPluginValidationRule>();
+            var newRules = fixedRules.Concat(DocumentValidator.CoreRules());
             var runResult = Executer.ExecuteAsync(
                 Schema,
                 root,
@@ -1092,7 +1098,7 @@ namespace Test.P7.GraphQLCoreTest
                 inputs,
                 userContext,
                 cancellationToken,
-                rules
+                newRules
             ).Result;
 
             var writtenResult = Writer.Write(runResult);

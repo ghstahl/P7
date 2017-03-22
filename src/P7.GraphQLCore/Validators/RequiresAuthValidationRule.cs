@@ -5,15 +5,33 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using GraphQL;
 using GraphQL.Language.AST;
+using GraphQL.Types;
 using GraphQL.Validation;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace P7.GraphQLCore.Validators
 {
-    public class TestValidationRule : IValidationRule
+    interface ICurrentEnterLeaveListenerState
     {
+        EnterLeaveListenerState EnterLeaveListenerState { get; }
+    }
+
+    public interface IPluginValidationRule: IValidationRule { }
+    public class TestValidationRule : IPluginValidationRule
+    {
+        class MyEnterLeaveListenerSink : IEnterLeaveListenerEventSink, ICurrentEnterLeaveListenerState
+        {
+            public EnterLeaveListenerState EnterLeaveListenerState { get; private set; }
+
+            public void OnEvent(EnterLeaveListenerState enterLeaveListenerState)
+            {
+                EnterLeaveListenerState = enterLeaveListenerState;
+            }
+        }
+
         private List<IGraphQLAuthorizationCheck> _graphQLAuthorizationChecks;
         private List<IGraphQLClaimsAuthorizationCheck> _graphQLClaimsAuthorizationChecks;
 
@@ -25,7 +43,7 @@ namespace P7.GraphQLCore.Validators
             _graphQLAuthorizationChecks = graphQLAuthorizationChecks.ToList();
             _graphQLClaimsAuthorizationChecks = graphQLClaimsAuthorizationChecks.ToList();
         }
-
+        
         public INodeVisitor Validate(ValidationContext context)
         {
             var userContext = context.UserContext.As<GraphQLUserContext>();
@@ -33,9 +51,11 @@ namespace P7.GraphQLCore.Validators
 
 
             var authenticated = user?.Identity.IsAuthenticated ?? false;
-
-            return new EnterLeaveListener(_ =>
+            var myEnterLeaveListenerSink = new MyEnterLeaveListenerSink();
+            var currentEnterLeaveListenerState = (ICurrentEnterLeaveListenerState) myEnterLeaveListenerSink;
+            var myEnterLeaveListener = new MyEnterLeaveListener(_ =>
             {
+                
                 _.Match<Operation>(op =>
                 {
                     var opType = op.OperationType;
@@ -81,9 +101,13 @@ namespace P7.GraphQLCore.Validators
 
 
                 });
+
                 _.Match<Field>(fieldAst =>
                 {
+                    var currentPath = currentEnterLeaveListenerState.EnterLeaveListenerState.CurrentFieldPath;
                     var fieldDef = context.TypeInfo.GetFieldDef();
+                    var lastType = context.TypeInfo.GetLastType() as IGraphType;
+                    var parentType = context.TypeInfo.GetParentType();
                     var name = fieldAst.Name;
                 });
                 /*
@@ -106,6 +130,8 @@ namespace P7.GraphQLCore.Validators
                 });
                 */
             });
+            myEnterLeaveListener.RegisterEventSink(myEnterLeaveListenerSink);
+            return myEnterLeaveListener;
         }
     }
 

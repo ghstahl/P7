@@ -6,7 +6,7 @@ namespace P7.BlogStore.Core.GraphQL
     {
         public BlogsQueryInput()
         {
-            Name = "BlogsQueryInput";
+            Name = "blogsQueryInput";
             Field<NonNullGraphType<IntGraphType>>("pageSize");
             Field<StringGraphType>("pagingState");
             Field<DateGraphType>("timestampLowerBoundary");
@@ -20,7 +20,7 @@ namespace P7.BlogStore.Core.GraphQL
     {
         public BlogsPageQueryInput()
         {
-            Name = "BlogsPageQueryInput";
+            Name = "blogsPageQueryInput";
             Field<NonNullGraphType<IntGraphType>>("pageSize");
             Field<NonNullGraphType<IntGraphType>>("page");
             Field<DateGraphType>("timestampLowerBoundary");
