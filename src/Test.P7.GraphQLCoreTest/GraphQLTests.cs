@@ -274,7 +274,7 @@ namespace Test.P7.GraphQLCoreTest
             var pageSize = BlogEntries.Count;
             var rawInput2 = $"{{'input': {{'pageSize':'{pageSize}','page':1,'timestampLowerBoundary':'{tsLowerAsString}','timestampUpperBoundary':'{tsUpperAsString}' }} }}";
             var gqlInputs2 = rawInput2.ToInputs();
-            var query2 = @"query Q($input: BlogsPageQueryInput!) {
+            var query2 = @"query Q($input: blogsPageQueryInput!) {
                   blogsPageByNumber(input: $input){
                     tenantId
                     id
@@ -323,7 +323,7 @@ namespace Test.P7.GraphQLCoreTest
             var pageSize = BlogEntries.Count;
             var rawInput2 = $"{{'input': {{'pageSize':'{pageSize}','timestampLowerBoundary':'{tsLowerAsString}','timestampUpperBoundary':'{tsUpperAsString}' }} }}";
             var gqlInputs2 = rawInput2.ToInputs();
-            var query2 = @"query Q($input: BlogsQueryInput!) {
+            var query2 = @"query Q($input: blogsQueryInput!) {
                   blogsPage(input: $input){
                     currentPagingState
                     pagingState
@@ -378,7 +378,7 @@ namespace Test.P7.GraphQLCoreTest
             var pageSize = BlogEntries.Count;
             var rawInput2 = $"{{'input': {{'pageSize':'{pageSize}','page':1,'timestampLowerBoundary':'{tsLowerAsString}','timestampUpperBoundary':'{tsUpperAsString}','categories':{jsonCategories} }} }}";
             var gqlInputs2 = rawInput2.ToInputs();
-            var query2 = @"query Q($input: BlogsPageQueryInput!) {
+            var query2 = @"query Q($input: blogsPageQueryInput!) {
                   blogsPageByNumber(input: $input){
                     tenantId
                     id
@@ -428,7 +428,7 @@ namespace Test.P7.GraphQLCoreTest
             var pageSize = BlogEntries.Count;
             var rawInput2 = $"{{'input': {{'pageSize':'{pageSize}','timestampLowerBoundary':'{tsLowerAsString}','timestampUpperBoundary':'{tsUpperAsString}','categories':{jsonCategories} }} }}";
             var gqlInputs2 = rawInput2.ToInputs();
-            var query2 = @"query Q($input: BlogsQueryInput!) {
+            var query2 = @"query Q($input: blogsQueryInput!) {
                   blogsPage(input: $input){
                     currentPagingState
                     pagingState
@@ -482,7 +482,7 @@ namespace Test.P7.GraphQLCoreTest
             var pageSize = BlogEntries.Count;
             var rawInput2 = $"{{'input': {{'pageSize':'{pageSize}','page':1,'timestampLowerBoundary':'{tsLowerAsString}','timestampUpperBoundary':'{tsUpperAsString}','tags':{jsonTags} }} }}";
             var gqlInputs2 = rawInput2.ToInputs();
-            var query2 = @"query Q($input: BlogsPageQueryInput!) {
+            var query2 = @"query Q($input: blogsPageQueryInput!) {
                   blogsPageByNumber(input: $input){
                     tenantId
                     id
@@ -532,7 +532,7 @@ namespace Test.P7.GraphQLCoreTest
             var pageSize = BlogEntries.Count;
             var rawInput2 = $"{{'input': {{'pageSize':'{pageSize}','timestampLowerBoundary':'{tsLowerAsString}','timestampUpperBoundary':'{tsUpperAsString}','tags':{jsonTags} }} }}";
             var gqlInputs2 = rawInput2.ToInputs();
-            var query2 = @"query Q($input: BlogsQueryInput!) {
+            var query2 = @"query Q($input: blogsQueryInput!) {
                   blogsPage(input: $input){
                     currentPagingState
                     pagingState
@@ -582,7 +582,7 @@ namespace Test.P7.GraphQLCoreTest
             var pageSize = BlogEntries.Count;
             var rawInput2 = $"{{'input': {{'pageSize':'{pageSize}','page':1,'timestampLowerBoundary':'{tsAsString}' }} }}";
             var gqlInputs2 = rawInput2.ToInputs();
-            var query2 = @"query Q($input: BlogsPageQueryInput!) {
+            var query2 = @"query Q($input: blogsPageQueryInput!) {
                   blogsPageByNumber(input: $input){
                     tenantId
                     id
@@ -629,7 +629,7 @@ namespace Test.P7.GraphQLCoreTest
             var pageSize = BlogEntries.Count;
             var rawInput2 = $"{{'input': {{'pageSize':'{pageSize}','timestampLowerBoundary':'{tsAsString}' }} }}";
             var gqlInputs2 = rawInput2.ToInputs();
-            var query2 = @"query Q($input: BlogsQueryInput!) {
+            var query2 = @"query Q($input: blogsQueryInput!) {
                   blogsPage(input: $input){
                     currentPagingState
                     pagingState
@@ -681,7 +681,7 @@ namespace Test.P7.GraphQLCoreTest
             var pageSize = BlogEntries.Count;
             var rawInput2 = $"{{'input': {{'pageSize':'{pageSize}','page':1,'timestampUpperBoundary':'{tsAsString}' }} }}";
             var gqlInputs2 = rawInput2.ToInputs();
-            var query2 = @"query Q($input: BlogsPageQueryInput!) {
+            var query2 = @"query Q($input: blogsPageQueryInput!) {
                   blogsPageByNumber(input: $input){
                     tenantId
                     id
@@ -728,7 +728,7 @@ namespace Test.P7.GraphQLCoreTest
             var pageSize = BlogEntries.Count;
             var rawInput2 = $"{{'input': {{'pageSize':'{pageSize}','timestampUpperBoundary':'{tsAsString}' }} }}";
             var gqlInputs2 = rawInput2.ToInputs();
-            var query2 = @"query Q($input: BlogsQueryInput!) {
+            var query2 = @"query Q($input: blogsQueryInput!) {
                   blogsPage(input: $input){
                     currentPagingState
                     pagingState
@@ -784,7 +784,7 @@ namespace Test.P7.GraphQLCoreTest
             {
                 var rawInput2 = $"{{'input': {{'pageSize':'{pageSize}','page':{page} }} }}";
                 var gqlInputs2 = rawInput2.ToInputs();
-                var query2 = @"query Q($input: BlogsPageQueryInput!) {
+                var query2 = @"query Q($input: blogsPageQueryInput!) {
                   blogsPageByNumber(input: $input){
                     tenantId
                     id
@@ -847,7 +847,7 @@ namespace Test.P7.GraphQLCoreTest
             {
                 var rawInput2 = $"{{'input': {{'pageSize':'{pageSize}','pagingState':'{pagingState.SafeConvertToBase64String()}' }} }}";
                 var gqlInputs2 = rawInput2.ToInputs();
-                var query2 = @"query Q($input: BlogsQueryInput!) {
+                var query2 = @"query Q($input: blogsQueryInput!) {
                   blogsPage(input: $input){
                     currentPagingState
                     pagingState
