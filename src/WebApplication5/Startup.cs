@@ -334,6 +334,12 @@ namespace WebApplication5
             var apiResourceList = new List<ApiResource>
             {
                 new ApiResource("arbitrary", "Arbitrary Scope")
+                {
+                    ApiSecrets =
+                    {
+                        new Secret("secret".Sha256())
+                    }
+                }
             };
 
             var resourceStore = P7.Core.Global.ServiceProvider.GetServices<IResourceStore>().FirstOrDefault();
