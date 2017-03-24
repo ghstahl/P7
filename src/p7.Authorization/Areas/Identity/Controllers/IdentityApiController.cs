@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace p7.Authorization.Areas.Identity.Controllers
 {
+    [Area("Api")]
     [Route("api/[controller]")]
-    [Authorize]
+ 
     public class IdentityApiController : ControllerBase
     {
         [HttpGet]

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using IdentityServer4.Hosting;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
 using IdentityServer4.Validation;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -155,12 +157,15 @@ namespace WebApplication5
             services.AddTransient<ClaimsPrincipal>(
                 s => s.GetService<IHttpContextAccessor>().HttpContext.User);
 
+            // AutomaticChallenge = false, we own the logic via our filters what happens with the redirect
+            // this is neccesary for the api work where we simply want to return a 401 and not get redirected to login
             services.Configure<IdentityOptions>(options =>
             {
                 options.Cookies.ApplicationCookie.LoginPath =
                     new Microsoft.AspNetCore.Http.PathString("/Identity/Account/Login");
                 options.Cookies.ApplicationCookie.LogoutPath =
                     new Microsoft.AspNetCore.Http.PathString("/Identity/Account/LogOff");
+                options.Cookies.ApplicationCookie.AutomaticChallenge = false;
             });
             services.AddAllConfigureServicesRegistrants(Configuration);
             services.AddDependenciesUsingAutofacModules();
@@ -237,13 +242,30 @@ namespace WebApplication5
                         ConsumerSecret = "2kyg9WdUiJuU2HeWYJEuvwzaJWoweLadTgG3i0oHI5FeNjD5Iv"
                     });
             app.AddAllConfigureRegistrants();
+            /*
             CookieAuthenticationOptions cookieAuthenticationOptions = new CookieAuthenticationOptions
             {
+                AccessDeniedPath = new PathString("/Account/Forbidden/"),
                 LoginPath = new PathString("/Identity/Account/Login"),
-                LogoutPath = new PathString("/Identity/Account/LogOff")
+                LogoutPath = new PathString("/Identity/Account/LogOff"),
+                AuthenticationScheme = "Cookies",
+                AutomaticAuthenticate = true,
+                AutomaticChallenge = false,
+                Events = new CookieAuthenticationEvents()
+                {
+                    OnRedirectToLogin = ctx =>
+                    {
+                        if (!ctx.Request.Path.StartsWithSegments("/api"))
+                        {
+                            ctx.Response.Redirect(ctx.RedirectUri);
+                        }
+
+                        return Task.FromResult(0);
+                    }
+                }
             };
             app.UseCookieAuthentication(cookieAuthenticationOptions);
-
+*/
             app.UsePublicRefreshToken();
             app.UseIdentityServer();
 
@@ -274,16 +296,20 @@ namespace WebApplication5
             // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
             app.UseSession();
 
+            // this gates any bearer token that comes in that does not have the 'abitrary'
             app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
             {
                 Authority = "http://localhost:7791",
                 RequireHttpsMetadata = false,
                 EnableCaching = false,
-                AllowedScopes = {"arbitrary"}
+                AllowedScopes = {"arbitrary"},
+                
             });
 
             app.UseMvc(routes =>
             {
+                routes.MapRoute("areaRoute", "{area:exists}/{controller=Admin}/{action=Index}/{id?}");
+
                 routes.MapRoute(
                     name: "default",
                     template: "{area=Main}/{controller=Home}/{action=Index}/{id?}");
