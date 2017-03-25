@@ -70,6 +70,7 @@
 
 	function graphQLFetcher(graphQLParams) {
 	  return (0, _isomorphicFetch2['default'])(window.location.origin + '/api/graphql', {
+        credentials: 'include', //pass cookies, for authentication
 	    method: 'post',
 	    headers: { 'Content-Type': 'application/json' },
 	    body: JSON.stringify(graphQLParams)
