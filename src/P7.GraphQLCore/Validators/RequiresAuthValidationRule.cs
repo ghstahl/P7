@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Caching.Memory;
+using P7.GraphQLCore.Stores;
 
 namespace P7.GraphQLCore.Validators
 {
@@ -34,14 +35,11 @@ namespace P7.GraphQLCore.Validators
 
         private List<IGraphQLAuthorizationCheck> _graphQLAuthorizationChecks;
         private List<IGraphQLClaimsAuthorizationCheck> _graphQLClaimsAuthorizationChecks;
+        private IGraphQLFieldAuthority _graphQLFieldAuthority;
 
-
-        public TestValidationRule(
-            IEnumerable<IGraphQLAuthorizationCheck> graphQLAuthorizationChecks,
-            IEnumerable<IGraphQLClaimsAuthorizationCheck> graphQLClaimsAuthorizationChecks)
+        public TestValidationRule(IGraphQLFieldAuthority graphQLFieldAuthority)
         {
-            _graphQLAuthorizationChecks = graphQLAuthorizationChecks.ToList();
-            _graphQLClaimsAuthorizationChecks = graphQLClaimsAuthorizationChecks.ToList();
+            _graphQLFieldAuthority = graphQLFieldAuthority;
         }
         
         public INodeVisitor Validate(ValidationContext context)
@@ -62,42 +60,7 @@ namespace P7.GraphQLCore.Validators
                     var query = from item in op.SelectionSet.Selections
                         select ((GraphQL.Language.AST.Field) item).Name;
 
-                    List<string> fieldNames = query.ToList();
-                    foreach (var fieldName in fieldNames)
-                    {
-                        bool doAuthCheck = true;
-
-                        bool AllUsersCheck = false;
-                        foreach (var authCheck in _graphQLAuthorizationChecks)
-                        {
-                            AllUsersCheck = authCheck.ShouldDoAuthorizationCheck(opType, fieldName);
-                            if (AllUsersCheck == true)
-                                break;
-
-                        }
-
-                        bool justThisUserCheck = true;
-                        foreach (var authCheck in _graphQLClaimsAuthorizationChecks)
-                        {
-                            justThisUserCheck = authCheck.ShouldDoAuthorizationCheck(user, opType, fieldName);
-                            if (justThisUserCheck == false)
-                                break;
-                        }
-
-                        // Any no is a no
-                        doAuthCheck = AllUsersCheck && justThisUserCheck;
-
-
-                        if (doAuthCheck && !authenticated)
-                        {
-                            context.ReportError(new ValidationError(
-                                context.OriginalQuery,
-                                "auth-required",
-                                $"Authorization is required to access {op.Name} and field {fieldName}.",
-                                op));
-                            break;
-                        }
-                    }
+                     
 
 
                 });

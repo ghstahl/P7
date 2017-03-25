@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Autofac;
+using GraphQL.Language.AST;
 using IdentityServer4;
 using IdentityServer4.Hosting;
 using IdentityServer4.Models;
@@ -38,6 +39,7 @@ using P7.Core.Startup;
 using P7.Core.IoC;
 using P7.Core.TagHelpers;
 using P7.GraphQLCore;
+using P7.GraphQLCore.Stores;
 using P7.HugoStore.Core;
 using P7.IdentityServer4.BiggyStore;
 using P7.IdentityServer4.BiggyStore.Extensions;
@@ -65,6 +67,10 @@ namespace WebApplication5
             dbPath = Path.Combine(env.ContentRootPath, "App_Data/blogstore");
             Directory.CreateDirectory(dbPath);
             builder.AddBlogStoreBiggyConfiguration(dbPath, TenantId);
+
+            builder.RegisterType<InMemoryGraphQLFieldAuthority>()
+                .As<IGraphQLFieldAuthority>()
+                .SingleInstance();
         }
     }
 
@@ -183,6 +189,7 @@ namespace WebApplication5
             IApplicationLifetime appLifetime)
         {
             LoadIdentityServer4Data();
+            LoadGraphQLAuthority();
             var dd = P7.Core.Global.ServiceProvider.GetServices<IQueryFieldRecordRegistration>();
             var vv = P7.Core.Global.ServiceProvider.GetService<IQueryFieldRecordRegistrationStore>();
             var v2 = P7.Core.Global.ServiceProvider.GetService<IPersistedGrantStore>();
@@ -316,7 +323,16 @@ namespace WebApplication5
             });
            
         }
+        private async Task LoadGraphQLAuthority()
+        {
+            var graphQLFieldAuthority = P7.Core.Global.ServiceProvider.GetServices<IGraphQLFieldAuthority>().FirstOrDefault();
 
+            await graphQLFieldAuthority.AddClaimsAsync(OperationType.Mutation, "/blog", new List<Claim>()
+            {
+                new Claim(ClaimTypes.NameIdentifier,""),
+                new Claim("client_id","resource-owner-client"),
+            });
+        }
         private async Task LoadIdentityServer4Data()
         {
             var fullClientStore = P7.Core.Global.ServiceProvider.GetServices<IFullClientStore>().FirstOrDefault();

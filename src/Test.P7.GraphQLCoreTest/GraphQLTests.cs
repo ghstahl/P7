@@ -5,12 +5,14 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Castle.Components.DictionaryAdapter;
 using FakeItEasy;
 using GraphQL;
 using GraphQL.Http;
+using GraphQL.Language.AST;
 using GraphQL.Types;
 using GraphQL.Validation;
 using GraphQLParser.Exceptions;
@@ -27,6 +29,7 @@ using P7.Core;
 using P7.Core.Utils;
 using P7.Core.Writers;
 using P7.GraphQLCore;
+using P7.GraphQLCore.Stores;
 using P7.GraphQLCore.Validators;
 using P7.HugoStore.Core;
 using P7.SimpleDocument.Store;
@@ -72,7 +75,7 @@ namespace Test.P7.GraphQLCoreTest
         }
         private MyAutofacFactory AutofacStoreFactory { get; set; }
         [TestInitialize]
-        public void Initialize()
+        public async Task Initialize()
         {
             _targetFolder = Path.Combine(UnitTestHelpers.BaseDir, @"source",
                 DateTime.Now.ToString("yyyy-dd-M__HH-mm-ss")+"_"+ Guid.NewGuid().ToString() );
@@ -99,7 +102,12 @@ namespace Test.P7.GraphQLCoreTest
             Executer = AutofacStoreFactory.Resolve<IDocumentExecuter>();
             Writer = AutofacStoreFactory.Resolve<IDocumentWriter>();
             GraphQLUserContext = AutofacStoreFactory.Resolve<GraphQLUserContext>();
-
+                       
+            var graphQLFieldAuthority = AutofacStoreFactory.Resolve<IGraphQLFieldAuthority>();
+            await graphQLFieldAuthority.AddClaimsAsync(OperationType.Mutation, "/blog", new List<Claim>()
+            {
+                new Claim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name","blog")
+            });
             InsertBlogEntriesIntoStore(10);
         }
 
@@ -782,7 +790,7 @@ namespace Test.P7.GraphQLCoreTest
             bool keepGoing = true;
             do
             {
-                var rawInput2 = $"{{'input': {{'pageSize':'{pageSize}','page':{page} }} }}";
+                var rawInput2 = $"{{'input': {{'pageSize':{pageSize},'page':{page} }} }}";
                 var gqlInputs2 = rawInput2.ToInputs();
                 var query2 = @"query Q($input: blogsPageQueryInput!) {
                   blogsPageByNumber(input: $input){
