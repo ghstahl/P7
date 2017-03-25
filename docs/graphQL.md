@@ -197,21 +197,21 @@ query q($input: blogQueryInput!) {
 #### Paging Blogs
 #### Query a page of Blog Entries
 ```graphql
-query q($input: BlogsPageQueryInput! ){
-  blogsPageByNumber(input: $input){
+query Q($input: blogsPageQueryInput!) {
+  blogsPageByNumber(input: $input) {
     tenantId
     id
     metaData {
-        category
-        version
+      category
+      version
     }
-    document{
-        title
-        summary
-        categories
-        tags
-        timeStamp
-        data
+    document {
+      title
+      summary
+      categories
+      tags
+      timeStamp
+      data
     }
   }
 }
@@ -219,10 +219,7 @@ query q($input: BlogsPageQueryInput! ){
 **Query Variables**
 ```graphql
 {
-    "input": {
-      "page": "1",
-      "pageSize": "2"
-    }
+  "input": {"page": 1,"pageSize": 3}
 }
 ```  
 **Result**
@@ -232,13 +229,35 @@ query q($input: BlogsPageQueryInput! ){
     "blogsPageByNumber": [
       {
         "tenantId": "02a6f1a2-e183-486d-be92-658cd48d6d94",
+        "id": "6c6b2b4c-f1c7-4f8d-a97b-1755c7d1fa62",
+        "metaData": {
+          "category": "c0",
+          "version": "1.0.0.0"
+        },
+        "document": {
+          "title": "My Title 2020",
+          "summary": "My Summary",
+          "categories": [
+            "c10",
+            "c20"
+          ],
+          "tags": [
+            "t10",
+            "t20"
+          ],
+          "timeStamp": "2020-03-15T20:01:11Z",
+          "data": "This is my blog"
+        }
+      },
+      {
+        "tenantId": "02a6f1a2-e183-486d-be92-658cd48d6d94",
         "id": "1c6b2b4c-f1c7-4f8d-a97b-1755c7d1fa62",
         "metaData": {
           "category": "c0",
           "version": "1.0.0.0"
         },
         "document": {
-          "title": "My Title 1",
+          "title": "My Title 2021",
           "summary": "My Summary",
           "categories": [
             "c10",
@@ -254,13 +273,13 @@ query q($input: BlogsPageQueryInput! ){
       },
       {
         "tenantId": "02a6f1a2-e183-486d-be92-658cd48d6d94",
-        "id": "2c6b2b4c-f1c7-4f8d-a97b-1755c7d1fa62",
+        "id": "5c6b2b4c-f1c7-4f8d-a97b-1755c7d1fa62",
         "metaData": {
           "category": "c0",
           "version": "1.0.0.0"
         },
         "document": {
-          "title": "My Title 2",
+          "title": "My Title",
           "summary": "My Summary",
           "categories": [
             "c10",
@@ -270,7 +289,7 @@ query q($input: BlogsPageQueryInput! ){
             "t10",
             "t20"
           ],
-          "timeStamp": "2022-03-15T20:01:11Z",
+          "timeStamp": "2027-03-15T20:01:11Z",
           "data": "This is my blog"
         }
       }
