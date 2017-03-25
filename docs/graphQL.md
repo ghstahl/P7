@@ -102,8 +102,8 @@ or
 #### Insert via Mutation
 
 ```graphql
-mutation q($input: BlogMutationInput! ){
-  blog(input:   $input )
+mutation Q($input: blogMutationInput!) {
+  blog(input: $input)
 }
 ```
 **Mutation Variables**
@@ -137,22 +137,22 @@ mutation q($input: BlogMutationInput! ){
 
 #### Query an individual Blog Entry
 ```graphql
-query q($input: BlogQueryInput! ){
-   blog(input: $input){
-      tenantId
-      id
-      metaData {
-          category
-          version
-      }
-      document{
-          title
-          summary
-          categories
-          tags
-          timeStamp
-          data
-      }
+query q($input: blogQueryInput!) {
+  blog(input: $input) {
+    tenantId
+    id
+    metaData {
+      category
+      version
+    }
+    document {
+      title
+      summary
+      categories
+      tags
+      timeStamp
+      data
+    }
   }
 }
 ```
