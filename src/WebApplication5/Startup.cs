@@ -14,6 +14,7 @@ using IdentityServer4.Hosting;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
 using IdentityServer4.Validation;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -28,12 +29,14 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
+using p7.Authorization.Areas.Identity.Controllers;
 using p7.Authorization.Data;
 using p7.Authorization.Models;
 using p7.Services;
 using P7.BlogStore.Hugo.Extensions;
 using P7.Core;
 using P7.Core.FileProviders;
+using P7.Core.Identity;
 using Serilog;
 using P7.Core.Startup;
 using P7.Core.IoC;
@@ -51,7 +54,14 @@ using Module = Autofac.Module;
 
 namespace WebApplication5
 {
-   
+    class MyPostAuthClaimsProvider : IPostAuthClaimsProvider
+    {
+        public async Task<List<Claim>> FetchClaims(ClaimsTransformationContext context)
+        {
+            var claims = new List<Claim> {new Claim("client_id", "local")};
+            return claims;
+        }
+    }
 
     public class MyIdentityServer4BiggyAutofacModule : Module
     {
@@ -71,6 +81,8 @@ namespace WebApplication5
             builder.RegisterType<InMemoryGraphQLFieldAuthority>()
                 .As<IGraphQLFieldAuthority>()
                 .SingleInstance();
+
+            builder.RegisterType<MyPostAuthClaimsProvider>().As<IPostAuthClaimsProvider>().SingleInstance();
         }
     }
 
@@ -188,12 +200,19 @@ namespace WebApplication5
             ILoggerFactory loggerFactory,
             IApplicationLifetime appLifetime)
         {
+            var postAuthClaimsTransformer = P7.Core.Global.ServiceProvider.GetServices<IPostAuthClaimsTransformer>()
+                .FirstOrDefault();
+
+            app.UseClaimsTransformation(new ClaimsTransformationOptions
+            {
+                Transformer = (IClaimsTransformer)postAuthClaimsTransformer
+            });
+
             LoadIdentityServer4Data();
             LoadGraphQLAuthority();
             var dd = P7.Core.Global.ServiceProvider.GetServices<IQueryFieldRecordRegistration>();
             var vv = P7.Core.Global.ServiceProvider.GetService<IQueryFieldRecordRegistrationStore>();
             var v2 = P7.Core.Global.ServiceProvider.GetService<IPersistedGrantStore>();
-
 
 
             var supportedCultures = new List<CultureInfo>
@@ -309,8 +328,7 @@ namespace WebApplication5
                 Authority = "http://localhost:7791",
                 RequireHttpsMetadata = false,
                 EnableCaching = false,
-                AllowedScopes = {"arbitrary"},
-                
+                AllowedScopes = {"arbitrary"} 
             });
 
             app.UseMvc(routes =>
@@ -322,6 +340,7 @@ namespace WebApplication5
                     template: "{area=Main}/{controller=Home}/{action=Index}/{id?}");
             });
            
+
         }
         private async Task LoadGraphQLAuthority()
         {

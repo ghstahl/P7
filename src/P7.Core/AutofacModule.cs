@@ -4,6 +4,7 @@ using P7.Core.Reflection;
 using Serilog;
 using System.Reflection;
 using System.Linq;
+using P7.Core.Identity;
 using P7.Core.Localization;
 using P7.Core.Localization.Treatment;
 using Module = Autofac.Module;
@@ -37,6 +38,7 @@ namespace P7.Core
                 builder.RegisterType(type).As<ILocalizedStringResultTreatment>();
             }
             builder.RegisterType<ResourceFetcher>().As<IResourceFetcher>();
+            builder.RegisterType<ClaimsTransformer>().As<IPostAuthClaimsTransformer>();
         }
     }
 }
