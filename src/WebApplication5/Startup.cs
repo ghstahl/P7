@@ -41,6 +41,7 @@ using Serilog;
 using P7.Core.Startup;
 using P7.Core.IoC;
 using P7.Core.TagHelpers;
+using P7.Filters;
 using P7.GraphQLCore;
 using P7.GraphQLCore.Stores;
 using P7.HugoStore.Core;
@@ -54,11 +55,27 @@ using Module = Autofac.Module;
 
 namespace WebApplication5
 {
+
+    class MyAuthApiClaimsProvider : IAuthApiClaimsProvider
+    {
+        public static string LocalClientIdValue => "local";
+        public async Task<List<Claim>> FetchClaimsAsync()
+        {
+            var claims = new List<Claim>
+            {
+                new Claim("client_id", MyAuthApiClaimsProvider.LocalClientIdValue),
+                new Claim("client_id", "resource-owner-client")
+            };
+            return claims;
+        }
+    }
+
+
     class MyPostAuthClaimsProvider : IPostAuthClaimsProvider
     {
         public async Task<List<Claim>> FetchClaims(ClaimsTransformationContext context)
         {
-            var claims = new List<Claim> {new Claim("client_id", "local")};
+            var claims = new List<Claim> {new Claim("client_id", MyAuthApiClaimsProvider.LocalClientIdValue) };
             return claims;
         }
     }
@@ -83,6 +100,8 @@ namespace WebApplication5
                 .SingleInstance();
 
             builder.RegisterType<MyPostAuthClaimsProvider>().As<IPostAuthClaimsProvider>().SingleInstance();
+            builder.RegisterType<MyAuthApiClaimsProvider>().As<IAuthApiClaimsProvider>().SingleInstance();
+            
         }
     }
 
