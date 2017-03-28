@@ -60,7 +60,7 @@ namespace P7.IdentityServer4.Common.Services
             _logger = logger;
         }
 
-        public override Task<IEnumerable<Claim>> GetAccessTokenClaimsAsync(ClaimsPrincipal subject,
+        public override async Task<IEnumerable<Claim>> GetAccessTokenClaimsAsync(ClaimsPrincipal subject,
             Client client, Resources resources, ValidatedRequest request)
         {
             var arbitraryClaimsCheck = request.Raw.ContainsAny(RequiredArbitraryClaimsArgument);
@@ -92,7 +92,13 @@ namespace P7.IdentityServer4.Common.Services
             {
                 values =
                     JsonConvert.DeserializeObject<Dictionary<string, string>>(rr["arbitrary-claims"]);
-                finalClaims.AddRange(values.Select(value => new Claim(value.Key, value.Value)));
+                // paranoia check.  In no way can we allow creation which tries to spoof someone elses client_id.
+
+                var query = from value in values
+                    where string.Compare(value.Key, "client_id", true) != 0
+                    select value;
+                var trimmedClaims = query.ToList();
+                finalClaims.AddRange(trimmedClaims.Select(value=>new Claim(value.Key, value.Value)));
             }
             if (subject != null)
             {
@@ -101,8 +107,7 @@ namespace P7.IdentityServer4.Common.Services
             }
             // if we find any, than add them to the original and send that back.
             IEnumerable<Claim> claimresults = finalClaims;
-            var taskResult = Task.FromResult(claimresults);
-            return taskResult;
+            return claimresults;
 
         }
     }
