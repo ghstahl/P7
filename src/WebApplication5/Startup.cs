@@ -156,6 +156,9 @@ namespace WebApplication5
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            // https://identityserver4.readthedocs.io/en/release/quickstarts/0_overview.html
+            // NOTE: AddTemporarySigningCredential generates new signing keys on restart, so access_tokens only work for the life of the app.
+            
             var identityServerBuilder = services.AddIdentityServer()
                 .AddTemporarySigningCredential()
                 .AddSecretParser<ClientAssertionSecretParser>()
