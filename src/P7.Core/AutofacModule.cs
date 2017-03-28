@@ -37,8 +37,7 @@ namespace P7.Core
             {
                 builder.RegisterType(type).As<ILocalizedStringResultTreatment>();
             }
-            builder.RegisterType<ResourceFetcher>().As<IResourceFetcher>();
-            builder.RegisterType<ClaimsTransformer>().As<IPostAuthClaimsTransformer>();
+            builder.RegisterType<ResourceFetcher>().As<IResourceFetcher>(); 
         }
     }
 }

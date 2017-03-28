@@ -56,6 +56,7 @@ using Module = Autofac.Module;
 namespace WebApplication5
 {
 
+    // this gates all apis with not only being authenticated, but have one of the following claims.
     class MyAuthApiClaimsProvider : IAuthApiClaimsProvider
     {
         public static string LocalClientIdValue => "local";
@@ -70,10 +71,12 @@ namespace WebApplication5
         }
     }
 
-
+    // this seeds all local identities with a claim {client_id:local}
+    // this is so that downstream api filters can let identites of this type in.
+    // we let in bearer tokens from external systems that we require to have certain claims, in our case client_id.
     class MyPostAuthClaimsProvider : IPostAuthClaimsProvider
     {
-        public async Task<List<Claim>> FetchClaims(ClaimsTransformationContext context)
+        public async Task<List<Claim>> FetchClaims(ClaimsPrincipal principal)
         {
             var claims = new List<Claim> {new Claim("client_id", MyAuthApiClaimsProvider.LocalClientIdValue) };
             return claims;
@@ -171,7 +174,11 @@ namespace WebApplication5
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-
+            services
+                .AddScoped
+                <Microsoft.AspNetCore.Identity.IUserClaimsPrincipalFactory<ApplicationUser>, 
+                AppClaimsPrincipalFactory<ApplicationUser>>();
+             
             services.AddMvc()
                 .AddJsonOptions(options =>
                 {
@@ -219,14 +226,7 @@ namespace WebApplication5
             ILoggerFactory loggerFactory,
             IApplicationLifetime appLifetime)
         {
-            var postAuthClaimsTransformer = P7.Core.Global.ServiceProvider.GetServices<IPostAuthClaimsTransformer>()
-                .FirstOrDefault();
-
-            app.UseClaimsTransformation(new ClaimsTransformationOptions
-            {
-                Transformer = (IClaimsTransformer)postAuthClaimsTransformer
-            });
-
+            
             LoadIdentityServer4Data();
             LoadGraphQLAuthority();
             var dd = P7.Core.Global.ServiceProvider.GetServices<IQueryFieldRecordRegistration>();

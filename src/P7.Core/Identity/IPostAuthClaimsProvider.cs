@@ -7,6 +7,6 @@ namespace P7.Core.Identity
 {
     public interface IPostAuthClaimsProvider
     {
-        Task<List<Claim>> FetchClaims(ClaimsTransformationContext context);
+        Task<List<Claim>> FetchClaims(ClaimsPrincipal principal);
     }
 }
