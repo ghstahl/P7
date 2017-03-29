@@ -2,6 +2,7 @@
 using System.Reflection;
 using Autofac;
 using Microsoft.AspNetCore.Mvc.Filters;
+using P7.Core.Filters;
 using P7.Core.Middleware;
 using P7.Core.Reflection;
 using Serilog;
@@ -14,7 +15,7 @@ namespace P7.Filters
         static ILogger logger = Log.ForContext<AutofacModule>();
         protected override void Load(ContainerBuilder builder)
         {
-            logger.Information("Hi from pingo.filters Autofac.Load!");
+            logger.Information("Hi from P7.Filters Autofac.Load!");
             var assembly = this.GetType().GetTypeInfo().Assembly;
             var derivedTypes = TypeHelper<ActionFilterAttribute>.FindDerivedTypes(assembly).ToArray();
             var derivedTypesName = derivedTypes.Select(x => x.GetTypeInfo().Name);
@@ -28,7 +29,14 @@ namespace P7.Filters
             logger.Information("Found these types: {DerivedTypes}", derivedTypesName);
             builder.RegisterTypes(derivedTypes).SingleInstance();
 
-
+            builder.RegisterNamedActionFilter<AuthActionFilter>();
+            builder.RegisterNamedActionFilter<AuthApiActionFilter>();
+            builder.RegisterNamedActionFilter<LogFilter>();
+            builder.RegisterNamedActionFilter<LogFilter2>();
+            builder.RegisterNamedActionFilter<LogFilter3>();
+            builder.RegisterNamedActionFilter<DenyAllActionFilter>();
+            builder.RegisterNamedActionFilter<AntiForgeryActionFilter>();
+     
             /*
 
             builder.RegisterType<AuthActionFilter>().SingleInstance();

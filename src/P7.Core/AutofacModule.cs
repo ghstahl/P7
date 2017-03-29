@@ -18,7 +18,7 @@ namespace P7.Core
         {
             builder.RegisterType<Global>().SingleInstance();
 
-            logger.Information("Hi from pingo.filters Autofac.Load!");
+            logger.Information("Hi from P7.Core Autofac.Load!");
             var assembly = this.GetType().GetTypeInfo().Assembly;
             var derivedTypes = TypeHelper<MiddlewarePlugin>.FindDerivedTypes(assembly).ToArray();
             var derivedTypesName = derivedTypes.Select(x => x.GetTypeInfo().Name);

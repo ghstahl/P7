@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Autofac.Features.Indexed;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -28,15 +29,17 @@ namespace P7.Core.Providers
         private IServiceProvider _serviceProvider;
         private readonly IOptions<FiltersConfig> _settings;
         private readonly ILogger<LocalSettingsOptOutOptInAuthorizeStore> _logger;
-
+        IIndex<string, IActionFilter> _actionFilters;
         public LocalSettingsOptOutOptInAuthorizeStore(
             IServiceProvider serviceProvider,
             ILogger<LocalSettingsOptOutOptInAuthorizeStore> logger,
-            IOptions<FiltersConfig> settings)
+            IOptions<FiltersConfig> settings,
+            IIndex<string, IActionFilter> actionFilters)
         {
             _settings = settings;
             _logger = logger;
             _serviceProvider = serviceProvider;
+            _actionFilters = actionFilters;
         }
 
         private Dictionary<string, FilterItem> _typeToFilterItem;

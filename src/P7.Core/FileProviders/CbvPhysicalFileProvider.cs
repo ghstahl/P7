@@ -20,7 +20,7 @@ namespace P7.Core.FileProviders
 
 
         in your razor files use this tag helper.
-         <pingo-script-cbv src="lib/jquery/dist/jquery.js"></pingo-script-cbv>
+         <p7-script-cbv src="lib/jquery/dist/jquery.js"></pingo-script-cbv>
 
         this will produce something that looks like this.
          <script src="/cb-v/{version}/lib/jquery/dist/jquery.js"></script>

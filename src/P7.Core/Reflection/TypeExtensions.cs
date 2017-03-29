@@ -59,6 +59,18 @@ namespace P7.Core.Reflection
 
             return fieldInfos.Select(fi => fi.GetRawConstantValue() as T);
         }
+
+        public static string AssemblyNameWithoutVersion(this Assembly assembly)
+        {
+            var fullNameSplit = assembly.FullName.Split(',');
+            return fullNameSplit[0];
+        }
+        public static string AssemblyQualifiedNameWithoutVersion(this Type type)
+        {
+            var shortAssemblyName = type.GetTypeInfo().Assembly.AssemblyNameWithoutVersion();
+            return type.FullName + "," + shortAssemblyName;
+        }
+
         /*
         public static RouteConstraintAttribute GetRouteConstraintAttribute<TAttributeType>(this Type type)
         {
