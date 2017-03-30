@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Reflection;
 using Autofac;
+using Autofac.Builder;
 using P7.Core.Attributes;
 using P7.Core.Reflection;
+using Remotion.Linq.Clauses;
 using Serilog;
 
 namespace P7.Core.IoC
@@ -42,5 +44,54 @@ Usage:
                 builder.RegisterType(type).As(attribute.Types);
             }
         }
+
+        //
+        // Summary:
+        //     Register a component by name to be created through reflection.
+        //
+        // Parameters:
+        //   builder:
+        //     Container builder.
+        //   name:
+        //     if null, then a AssemblyQualifiedNameWithoutVersion is created.
+        //
+        // Type parameters:
+        //   TImplementer:
+        //     The type of the component implementation.
+        //
+        // Returns:
+        //     Registration builder allowing the registration to be configured.
+        public static void RegisterNamedType<T>(this ContainerBuilder builder, string name = null) where T :  class
+        {
+            builder.RegisterNamedType<T,T>(name);
+        }
+        //
+        // Summary:
+        //     Register a component by name to be created through reflection.
+        //
+        // Parameters:
+        //   builder:
+        //     Container builder.
+        //   name:
+        //     if null, then a AssemblyQualifiedNameWithoutVersion is created.
+        //
+        // Type parameters:
+        //   TImplementer:
+        //     The type of the component implementation.
+        //
+        // Returns:
+        //     Registration builder allowing the registration to be configured.
+        public static void RegisterNamedType<T, TService>(this ContainerBuilder builder, string name = null) where T : class
+        {
+            if (name == null)
+            {
+                var type = typeof(T);
+                name = type.AssemblyQualifiedNameWithoutVersion();
+            }
+            builder.RegisterType<T>().Named<TService>(name);
+        }
+
     }
+
+   
 }

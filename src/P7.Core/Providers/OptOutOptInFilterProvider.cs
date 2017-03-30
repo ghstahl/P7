@@ -18,6 +18,7 @@ namespace P7.Core.Providers
     {
         public string Key { get; set; }
         public Type Type { get; set; }
+        public ActionFilterAttribute ActionFilter { get; set; }
     }
     public interface IOptOutOptInAuthorizeStore
     {
@@ -29,12 +30,12 @@ namespace P7.Core.Providers
         private IServiceProvider _serviceProvider;
         private readonly IOptions<FiltersConfig> _settings;
         private readonly ILogger<LocalSettingsOptOutOptInAuthorizeStore> _logger;
-        IIndex<string, IActionFilter> _actionFilters;
+        IIndex<string, ActionFilterAttribute> _actionFilters;
         public LocalSettingsOptOutOptInAuthorizeStore(
             IServiceProvider serviceProvider,
             ILogger<LocalSettingsOptOutOptInAuthorizeStore> logger,
             IOptions<FiltersConfig> settings,
-            IIndex<string, IActionFilter> actionFilters)
+            IIndex<string, ActionFilterAttribute> actionFilters)
         {
             _settings = settings;
             _logger = logger;
@@ -68,8 +69,15 @@ namespace P7.Core.Providers
                             foreach (var record in _settings.Value.SimpleMany.OptOut)
                             {
                                 _logger.LogInformation("Processing OptOut Record: {0}", record);
+                                var actionFilter = _actionFilters[record.Filter];
+                                if (actionFilter == null)
+                                {
+                                    _logger.LogCritical("IActionFilter does not exist: {0}, make sure it is registred in autofac by name", record.Filter);
+                                    throw new Exception(
+                                       $"fiter:{record.Filter}, seems to be bad, are you sure it is registed with autofac.");
+                                }
                                 var type = TypeHelper<Type>.GetTypeByFullName(record.Filter);
-                                filterTypes.Add(new FilterTypeRecord() { Key = record.Filter, Type = type });
+                                filterTypes.Add(new FilterTypeRecord() { Key = record.Filter, Type = type,ActionFilter = actionFilter});
                             }
                         }
 
@@ -78,8 +86,15 @@ namespace P7.Core.Providers
                             foreach (var record in _settings.Value.SimpleMany.OptIn)
                             {
                                 _logger.LogInformation("Processing OptIn Record: {0}", record);
+                                var actionFilter = _actionFilters[record.Filter];
+                                if (actionFilter == null)
+                                {
+                                    _logger.LogCritical("IActionFilter does not exist: {0}, make sure it is registred in autofac by name", record.Filter);
+                                    throw new Exception(
+                                       $"fiter:{record.Filter}, seems to be bad, are you sure it is registed with autofac.");
+                                }
                                 var type = TypeHelper<Type>.GetTypeByFullName(record.Filter);
-                                filterTypes.Add(new FilterTypeRecord() { Key = record.Filter, Type = type });
+                                filterTypes.Add(new FilterTypeRecord() { Key = record.Filter, Type = type,ActionFilter = actionFilter});
                             }
                         }
                         _typeToFilterItem = new Dictionary<string, FilterItem>();
@@ -88,7 +103,13 @@ namespace P7.Core.Providers
                             _logger.LogInformation("Processing OptOut Record: {0}", filterType.Key);
                             try
                             {
-                                filterItem = _serviceProvider.CreateFilterItem(filterType.Type);
+                                var typeFilterAttribute = new TypeFilterAttribute(filterType.ActionFilter.GetType()) { Order = 0 };
+                                var filterDescriptor = new FilterDescriptor(typeFilterAttribute, 0);
+                                var filterMetaData = (IFilterMetadata)filterType.ActionFilter;
+                                filterItem = new FilterItem(filterDescriptor, filterMetaData);
+
+                                
+                               // filterItem = _serviceProvider.CreateFilterItem(filterType.Type);
                             }
                             catch (Exception e)
                             {

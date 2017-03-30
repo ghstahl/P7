@@ -2,7 +2,7 @@
 using System.Reflection;
 using Autofac;
 using Microsoft.AspNetCore.Mvc.Filters;
-using P7.Core.Filters;
+using P7.Core.IoC;
 using P7.Core.Middleware;
 using P7.Core.Reflection;
 using Serilog;
@@ -17,25 +17,33 @@ namespace P7.Filters
         {
             logger.Information("Hi from P7.Filters Autofac.Load!");
             var assembly = this.GetType().GetTypeInfo().Assembly;
+
+            /*
+             * this autofind all types in this assembly, which is probably not what we want.  Lets register them all by hand.
+           
             var derivedTypes = TypeHelper<ActionFilterAttribute>.FindDerivedTypes(assembly).ToArray();
             var derivedTypesName = derivedTypes.Select(x => x.GetTypeInfo().Name);
             logger.Information("Found these types: {DerivedTypes}", derivedTypesName);
 
             builder.RegisterTypes(derivedTypes).SingleInstance();
 
+            */
 
-            derivedTypes = TypeHelper<MiddlewarePlugin>.FindDerivedTypes(assembly).ToArray();
-            derivedTypesName = derivedTypes.Select(x => x.GetTypeInfo().Name);
+
+            builder.RegisterNamedType<AuthActionFilter, ActionFilterAttribute>();
+            builder.RegisterNamedType<AuthApiActionFilter, ActionFilterAttribute>();
+            builder.RegisterNamedType<LogFilter, ActionFilterAttribute>();
+            builder.RegisterNamedType<LogFilter2, ActionFilterAttribute>();
+            builder.RegisterNamedType<LogFilter3, ActionFilterAttribute>();
+            builder.RegisterNamedType<DenyAllActionFilter, ActionFilterAttribute>();
+            builder.RegisterNamedType<AntiForgeryActionFilter, ActionFilterAttribute>();
+
+
+            var derivedTypes = TypeHelper<MiddlewarePlugin>.FindDerivedTypes(assembly).ToArray();
+            var derivedTypesName = derivedTypes.Select(x => x.GetTypeInfo().Name);
             logger.Information("Found these types: {DerivedTypes}", derivedTypesName);
             builder.RegisterTypes(derivedTypes).SingleInstance();
-
-            builder.RegisterNamedActionFilter<AuthActionFilter>();
-            builder.RegisterNamedActionFilter<AuthApiActionFilter>();
-            builder.RegisterNamedActionFilter<LogFilter>();
-            builder.RegisterNamedActionFilter<LogFilter2>();
-            builder.RegisterNamedActionFilter<LogFilter3>();
-            builder.RegisterNamedActionFilter<DenyAllActionFilter>();
-            builder.RegisterNamedActionFilter<AntiForgeryActionFilter>();
+           
      
             /*
 
