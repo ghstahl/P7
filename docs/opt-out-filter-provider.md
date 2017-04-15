@@ -1,4 +1,4 @@
-# A IFilterProvider using Opt-Out thinking
+# An IFilterProvider using Opt-Out thinking
 
 When it comes to securing a website your worst enemies are your own developers.  Any one of them can forget to secure an entry point and as projects get bigger it becomes very difficult to track down these open doors.  I have come to hate annotation as the way to secure actions in controllers.  I have gone so far as to search for all **[Authorize]** annotations in code and remove them, thus forcing the deveopers to implement security another way.
 
