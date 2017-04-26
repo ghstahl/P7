@@ -58,6 +58,25 @@ gulp.task('copy:p7.main:areas', function () {
         .pipe(gulp.dest('Areas/'));
 });
 
+gulp.task('copy:brunch:wwwroot', function () {
+    return gulp.src(['../brunch/wwwroot/brunched/**'])
+        .pipe(gulp.dest('wwwroot/'));
+});
+
+gulp.task('copy:p7.main:static', function () {
+    return gulp.src(['../p7.main/static/**'])
+        .pipe(gulp.dest('wwwroot/static/'));
+});
+
+gulp.task('copy:p7.main:RiotApp', function () {
+    return gulp.src(['../p7.main/RiotApp/build/**'])
+        .pipe(gulp.dest('wwwroot/static/p7.main/RiotApp'));
+});
+gulp.task('copy:p7.main:MainJavascriptApp', function () {
+    return gulp.src(['../p7.main/MainJavascriptApp/build/**'])
+        .pipe(gulp.dest('wwwroot/static/p7.main/MainJavascriptApp'));
+});
+
 gulp.task('copy:P7.GraphQLViewer', function () {
     return gulp.src(['../P7.GraphQLViewer/static/**'])
         .pipe(gulp.dest('wwwroot/static/'));
@@ -78,16 +97,24 @@ gulp.task('copy:DevAuth:areas', function () {
         .pipe(gulp.dest('Areas/'));
 });
 gulp.task('watch', [
-        'copy:p7.main',
-        'copy:p7.main:areas',
-        'copy:P7.GraphQLViewer',
-        'copy:P7.GraphQLViewer:areas',
-        'copy:p7.Authorization:areas',
-        'copy:DevAuth:areas'
+    'copy:brunch:wwwroot',
+    'copy:p7.main',
+    'copy:p7.main:areas',
+    'copy:p7.main:static',
+    'copy:p7.main:RiotApp',
+    'copy:p7.main:MainJavascriptApp',
+    'copy:P7.GraphQLViewer',
+    'copy:P7.GraphQLViewer:areas',
+    'copy:p7.Authorization:areas',
+    'copy:DevAuth:areas'
     ],
     function () {
+        gulp.watch(['../brunch/wwwroot/brunched/**'], ['copy:brunch:wwwroot']);
         gulp.watch(['../p7.main/Views/**'], ['copy:p7.main']);
         gulp.watch(['../p7.main/Areas/**'], ['copy:p7.main:areas']);
+        gulp.watch(['../p7.main/static/**'], ['copy:p7.main:static']);
+        gulp.watch(['../p7.main/RiotApp/build/**'], ['copy:p7.main:RiotApp']);
+        gulp.watch(['../p7.main/MainJavascriptApp/build/**'], ['copy:p7.main:MainJavascriptApp']);
         gulp.watch(['../P7.GraphQLViewer/Views/**'], ['copy:P7.GraphQLViewer']);
         gulp.watch(['../P7.GraphQLViewer/Areas/**'], ['copy:P7.GraphQLViewer:areas']);
         gulp.watch(['../p7.Authorization/Areas/**'], ['copy:p7.Authorization:areas']);

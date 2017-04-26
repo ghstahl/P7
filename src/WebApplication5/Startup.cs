@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Rewrite;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -329,10 +330,16 @@ namespace WebApplication5
             }
 
             app.UseStaticFiles();
+            var contentTypeProvider = new FileExtensionContentTypeProvider();
+           
+            contentTypeProvider.Mappings.Add(".tag", "text/plain");
+
             app.UseStaticFiles(new StaticFileOptions()
             {
                 FileProvider = new CbvPhysicalFileProvider(env.WebRootPath),
-                RequestPath = new PathString("/cb-v")
+                RequestPath = new PathString("/cb-v"),
+                ServeUnknownFileTypes = true,
+                ContentTypeProvider = contentTypeProvider
             });
 
 
