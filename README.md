@@ -19,6 +19,9 @@ This is a Visual Studio 2017+ project
 
 ### [GraphQL Support](docs/graphQL.md)  
 ### [Decentralized Token Management Support](docs/decentralized-token-management-support.md)
+### [Opt-Out IFilterProvider](docs/opt-out-filter-provider.md)
+
+
 
 
 ## Credits
