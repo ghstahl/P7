@@ -1,5 +1,5 @@
 exports.paths = {
-    public: './public'
+    public: './public/app'
 }
 
 // See http://brunch.io for documentation.

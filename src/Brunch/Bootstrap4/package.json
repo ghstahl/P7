@@ -6,7 +6,7 @@
   "version": "0.0.1",
   "repository": "",
   "scripts": {
-    "dist": "cp -r public/* ../wwwroot/brunched/bootstrap4",
+    "dist": "cp -r public/* ../wwwroot/brunched/app4",
     "start": "LOGGY_STACKS=true brunch watch --server",
     "brunchbuild": "brunch build --production",
     "build": "npm-run-all brunchbuild dist"

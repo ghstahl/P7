@@ -7,7 +7,7 @@
   "repository": "",
   "scripts": {
     "postbuild": "cp -r node_modules/bootstrap/fonts public",
-    "dist": "cp -r public/* ../wwwroot/brunched/bootstrap3",
+    "dist": "cp -r public/* ../wwwroot/brunched/app3",
     "start": "LOGGY_STACKS=true brunch watch --server",
     "brunchbuild": "brunch build --production",
     "build": "npm-run-all brunchbuild postbuild dist"
