@@ -4,7 +4,7 @@
   each={ navItems } 
   onclick={parent.route} 
   type="button" 
-  class = {parent.currentView === this.view ? 'active btn btn-outline-primary' : 'btn btn-outline-primary'}
+  class = {parent.currentView === this.view ? 'active btn btn-space btn-outline-primary' : 'btn btn-space btn-outline-primary'}
   >{ this.title }</button>
 
 <script>
