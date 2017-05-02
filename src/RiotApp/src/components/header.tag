@@ -4,19 +4,20 @@
   each={ navItems } 
   onclick={parent.route} 
   type="button" 
-  class = {parent.currentView === this.view ? 'active btn btn-space btn-outline-primary' : 'btn btn-space btn-outline-primary'}
+  class = {parent.routeState.view === this.view ? 'active btn btn-space btn-outline-primary' : 'btn btn-space btn-outline-primary'}
   >{ this.title }</button>
 
 <script>
 
-  this.currentView = riot.routeState.view;
+  var self = this;
+  self.routeState = riot.routeState
 
-  this.navItems = [
+  self.navItems = [
     { title : 'Home', view : 'home'},
     { title : 'Projects', view : 'projects' }
   ];
 
-  this.route = (evt) => {
+  self.route = (evt) => {
     riot.route(evt.item.view)
   };
 
