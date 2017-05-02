@@ -19,7 +19,7 @@ function FetchStore() {
      * Reset tag attributes to hide the errors and cleaning the results list
      */
     self.resetData = function() {
-        self.fetchException = null;
+        this.fetchException = null;
     }
 
     self.onRiotTrigger = (query,data)=>{
@@ -38,6 +38,35 @@ function FetchStore() {
         console.log('FetchStore app-unmount');
         RiotControl.off('riot-trigger', self.onRiotTrigger);
     })
+
+    self.doRiotControlFetchTextRequest = function(input,init,trigger ) {
+        // we are a json shop
+
+        RiotControl.trigger('inprogress_start');
+
+        fetch(input,init).then(function (response) {
+            if(response.status == 204){
+                return null;
+            }
+            return response.text();
+        }).then(function (data) {
+            RiotControl.trigger('inprogress_done');
+          //  let myTrigger = JSON.parse(JSON.stringify(trigger));
+            let myTrigger = trigger;
+
+            if(myTrigger.query){
+                self.trigger(trigger.name,myTrigger.query,data);
+            }
+            else{
+                self.trigger(trigger.name,data);
+            }
+        }).catch(function(ex) {
+            console.log('fetch failed', ex)
+            self.error = ex;
+            RiotControl.trigger('inprogress_done');
+        });
+    }
+
     self.doRiotControlFetchRequest = function(input,init,trigger,jsonFixup ) {
         // we are a json shop
 
@@ -63,7 +92,6 @@ function FetchStore() {
                 }
             }
         }
-        init.credentials = 'include';
 
         fetch(input,init).then(function (response) {
             if(response.status == 204){
@@ -97,6 +125,11 @@ function FetchStore() {
         console.log('fetch:',input,init,trigger,jsonFixup);
         self.doRiotControlFetchRequest(input,init,trigger,jsonFixup);
     })
+    self.on('fetch-text', function(input,init,trigger) {
+        console.log('fetch-text:',input,init,trigger);
+        self.doRiotControlFetchTextRequest(input,init,trigger);
+    })
+
 
     // The store emits change events to any listening views, so that they may react and redraw themselves.
 

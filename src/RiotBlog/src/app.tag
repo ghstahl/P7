@@ -1,11 +1,29 @@
-import RiotControl from 'riotcontrol';
+
 import './components/header.tag';
-import './components/footer.tag';
+ 
 <app>
-	The App
-	<header></header>
-  	<div class="container">
-  		<div id="riot-app"></div>
-    </div>
-  	<footer></footer>
+<header></header>
+<div class="container">
+	<div id="riot-app"></div>
+</div>
+
+
+<script>
+ 	var self = this;
+
+ 	self.on('mount', () => {
+      console.log('app mount');
+      riot.control.on(riot.EVT.finalMount,self.onFinalMount);
+    });
+    self.on('unmount', () => {
+      console.log('app unmount')
+      riot.control.off(riot.EVT.finalMount,self.onFinalMount);
+    });
+
+    self.onFinalMount = () =>{
+      console.log('app '+riot.EVT.finalMount)
+      self.update()
+    }
+
+</script>
 </app>

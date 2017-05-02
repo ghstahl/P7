@@ -17,7 +17,6 @@ class Router{
     
     riot.route(this._handleRoute.bind(this));
     riot.route.exec(this._handleRoute.bind(this));
-            riot.observable(this)
   }
 
   _handleRoute(view){
@@ -40,5 +39,5 @@ class Router{
   }
 
 }
-
-export default new Router();
+export default Router;
+ 
