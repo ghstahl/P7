@@ -3,8 +3,10 @@
  */
 
 function LocalStorageStore() {
-    riot.observable(this) // Riot provides our event emitter.
     var self = this
+
+    riot.observable(self) // Riot provides our event emitter.
+
 
     /*
      {

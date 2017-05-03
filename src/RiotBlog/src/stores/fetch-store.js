@@ -19,7 +19,7 @@ function FetchStore() {
      * Reset tag attributes to hide the errors and cleaning the results list
      */
     self.resetData = function() {
-        this.fetchException = null;
+        self.fetchException = null;
     }
 
     self.onRiotTrigger = (query,data)=>{

@@ -1,4 +1,5 @@
 
+import RiotControl from 'riotcontrol';
 import './components/header.tag';
  
 <app>
@@ -11,19 +12,20 @@ import './components/header.tag';
 <script>
  	var self = this;
 
+  self.on('before-mount', function() {
+    // before the tag is mounted
+    console.log('app before-mount') // Succeeds, fires once (per mount)
+  })
+
  	self.on('mount', () => {
-      console.log('app mount');
-      riot.control.on(riot.EVT.finalMount,self.onFinalMount);
-    });
-    self.on('unmount', () => {
-      console.log('app unmount')
-      riot.control.off(riot.EVT.finalMount,self.onFinalMount);
-    });
+    console.log('app mount');
+   // RiotControl.on(riot.EVT.finalMount,self.onFinalMount);
+  });
 
-    self.onFinalMount = () =>{
-      console.log('app '+riot.EVT.finalMount)
-      self.update()
-    }
-
+  self.on('unmount', () => {
+    console.log('app unmount')
+    //RiotControl.off(riot.EVT.finalMount,self.onFinalMount);
+  });
+ 
 </script>
 </app>
