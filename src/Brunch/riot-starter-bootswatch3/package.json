@@ -1,0 +1,33 @@
+{
+  "name": "brunch-app",
+  "description": "Brunch.io application",
+  "private": true,
+  "author": "Brunch",
+  "version": "0.0.1",
+  "repository": "",
+  "scripts": {
+    "postbuild": "cpx node_modules/bootstrap/fonts/**/* public/fonts -v",
+    "dist": "cpx public/**/* ../wwwroot/brunched/riot-bootswatch3",
+    "start": "LOGGY_STACKS=true brunch watch --server",
+    "brunchbuild-dev": "brunch build",
+    "brunchbuild-production": "brunch build --production",
+    "build": "npm-run-all brunchbuild-dev postbuild dist"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "auto-reload-brunch": "^2.7.1",
+    "babel-brunch": "~6.0",
+    "babel-preset-latest": "^6",
+    "babel-preset-stage-0": "^6.22.0",
+    "bootstrap": "^3.3.7",
+    "bootswatch": "^3.3.7",
+    "brunch": "^2",
+    "clean-css-brunch": "^2",
+    "cpx": "^1.5.0",
+    "jquery": "^3.2.1",
+    "npm-run-all": "^4.0.2",
+    "riot": "^3.5.1",
+    "tether": "^1.4.0",
+    "uglify-js-brunch": "^2"
+  }
+}
