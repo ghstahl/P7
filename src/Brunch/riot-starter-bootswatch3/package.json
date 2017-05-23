@@ -8,10 +8,11 @@
   "scripts": {
     "postbuild": "cpx node_modules/bootstrap/fonts/**/* public/fonts -v",
     "dist": "cpx public/**/* ../wwwroot/brunched/riot-bootswatch3",
-    "start": "LOGGY_STACKS=true brunch watch --server",
+    "start": "brunch watch --server",
     "brunchbuild-dev": "brunch build",
     "brunchbuild-production": "brunch build --production",
-    "build": "npm-run-all brunchbuild-dev postbuild dist"
+    "build": "npm-run-all brunchbuild-dev postbuild dist",
+    "dev": "npm-run-all dist start "
   },
   "dependencies": {},
   "devDependencies": {
@@ -26,8 +27,12 @@
     "cpx": "^1.5.0",
     "jquery": "^3.2.1",
     "npm-run-all": "^4.0.2",
+    "nprogress": "^0.2.0",
     "riot": "^3.5.1",
+    "riot-route": "^3.1.1",
+    "riotcontrol": "0.0.3",
     "tether": "^1.4.0",
-    "uglify-js-brunch": "^2"
+    "uglify-js-brunch": "^2",
+    "whatwg-fetch": "^2.0.3"
   }
 }

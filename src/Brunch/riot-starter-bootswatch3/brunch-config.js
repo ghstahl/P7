@@ -32,7 +32,8 @@ exports.npm = {
         $: 'jquery',
         Tether:'tether',
         bootstrap: 'bootstrap',
-        riot: 'riot' 
+        riot: 'riot'
+
 
     },
     styles: {
