@@ -1,0 +1,33 @@
+{
+	"components":[
+		{
+        "key":"typicode-component",
+        "path":"/partial/typicode_component/bundle.js",
+        "type":"js",
+        "trigger":{
+          "onLoad":[{
+              "event":"SidebarStore:sidebar-add-item",
+              "data":{
+                "title" : "My Components Page", 
+                "route" : "my-component-page/home" 
+              }
+            }
+          ],
+          "onUnload":[{
+              "event":"SidebarStore:sidebar-remove-item",
+              "data":{"title" : "My Components Page"}
+            },{
+              "event":"plugin-unregistration",
+              "data":{"name":"typicode-component"}
+            }
+          ]
+        },
+        "routeLoad":{
+        	"route":"/my-component-page.."
+        },
+        "state":{
+        	"loaded":false
+        }
+      }
+	]
+}

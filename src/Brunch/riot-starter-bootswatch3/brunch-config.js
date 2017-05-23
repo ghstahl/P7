@@ -14,7 +14,13 @@ exports.files = {
 };
 
 exports.plugins = {
-    babel: {presets: ['latest', 'stage-0']},
+ riot: {
+      extension: 'tag',
+      pattern: /\.tag$/ 
+    },
+    babel: {
+        presets: [ 'latest', 'stage-0']
+    },
     uglify: {
       mangle: false,
       compress: {

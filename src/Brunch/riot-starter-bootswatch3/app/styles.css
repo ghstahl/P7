@@ -1,3 +1,9 @@
-.main-content {
+body {
+  padding-top: 70px;
+}
+ a:hover {
+  cursor:pointer;
+ }
+ .main-content {
     padding: 40px 0;
 }

@@ -6,18 +6,22 @@
   "version": "0.0.1",
   "repository": "",
   "scripts": {
-    "postbuild": "cpx node_modules/bootstrap/fonts/**/* public/fonts -v",
+    "postbuild": "cpx node_modules/bootstrap/fonts/**/* public/app/fonts -v",
     "dist": "cpx public/**/* ../wwwroot/brunched/riot-bootswatch3",
     "start": "brunch watch --server",
     "brunchbuild-dev": "brunch build",
     "brunchbuild-production": "brunch build --production",
-    "build": "npm-run-all brunchbuild-dev postbuild dist",
-    "dev": "npm-run-all dist start "
+    "build": "npm-run-all brunchbuild-dev json postbuild dist",
+    "html": "cpx ./src/index.html ./build/",
+    "json": "cpx ./app/*.json ./public/app/",
+    "dev": "npm-run-all build start "
   },
   "dependencies": {},
   "devDependencies": {
     "auto-reload-brunch": "^2.7.1",
     "babel-brunch": "~6.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-es2015-riot": "^1.1.0",
     "babel-preset-latest": "^6",
     "babel-preset-stage-0": "^6.22.0",
     "bootstrap": "^3.3.7",
@@ -29,6 +33,7 @@
     "npm-run-all": "^4.0.2",
     "nprogress": "^0.2.0",
     "riot": "^3.5.1",
+    "riot-brunch": "^0.1.1",
     "riot-route": "^3.1.1",
     "riotcontrol": "0.0.3",
     "tether": "^1.4.0",

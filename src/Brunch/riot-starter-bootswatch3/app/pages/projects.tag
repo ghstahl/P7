@@ -1,4 +1,4 @@
-import "../components/pretty-json.tag"
+
 
 <projects>
 

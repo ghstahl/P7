@@ -5,7 +5,34 @@ riot.control = RiotControl;
 import RiotRouteExtension            	from '../src/extensions/riot-route-extension.js';
 new RiotRouteExtension();
 
-
+riot.EVT = {
+	app:{
+		out:{
+			appMount: 'app-mount',
+			appUnmount: 'app-unmount'
+		}
+	},
+	router:{
+		out:{
+			contributeRoutes: 'contribute-routes',
+	        contributeCatchAllRoute: 'contribute-catchall-route'
+	    }
+	}
+};
+riot.routeState = {};
+riot.state = {
+	error:{code:'unknown'},
+	route:{
+		defaultRoute:'/main/home/'
+	},
+	sidebar:{
+		touch:0,
+		items:[
+			{ title : 'Home', route : '/main/home'},
+			{ title : 'Projects', route : '/main/projects'}
+		]
+	}
+};
 // Add the mixings
 ////////////////////////////////////////////////////////
 import OptsMixin                            from '../src/mixins/opts-mixin.js'
@@ -48,24 +75,20 @@ riot.control.addStore(new ErrorStore());
 import RouteContributionStore 		from './stores/route-contribution-store.js';
 riot.control.addStore(new RouteContributionStore());
 
+import SidebarStore 				from './stores/sidebar-store.js';
+riot.control.addStore(new SidebarStore());
 
-riot.routeState = {};
-riot.state = {
-	error:{code:'unknown'},
-	route:{
-		defaultRoute:'/main/home/'
-	},
-	sidebar:{
-		touch:0,
-		items:[
-			{ title : 'Home', route : '/main/home'},
-			{ title : 'Projects', route : '/main/projects'}
-		]
-	}
-};
 
+import '../src/components/startup.tag';
+
+import '../src/components/loading-indicator.js';
+import './components/header.tag';
+import './components/sidebar.tag';
+
+import './app.tag';
 document.addEventListener('DOMContentLoaded', () => {
     // do your setup here
     console.log('Initialized app');
+    riot.mount('startup');
 });
 
