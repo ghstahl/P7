@@ -182,14 +182,20 @@ namespace WebApplication5
                 .AddScoped
                 <Microsoft.AspNetCore.Identity.IUserClaimsPrincipalFactory<ApplicationUser>, 
                 AppClaimsPrincipalFactory<ApplicationUser>>();
-             
-            services.AddMvc()
-                .AddJsonOptions(options =>
-                {
-                    options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                });
+
+            services.AddAntiforgery(opts => opts.HeaderName = "X-XSRF-Token");
+            services.AddMvc(opts =>
+            {
+                opts.Filters.AddService(typeof(AngularAntiforgeryCookieResultFilter));
+            }).AddJsonOptions(options =>
+            {
+                options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
+            });
+            services.AddTransient<AngularAntiforgeryCookieResultFilter>();
 
             services.AddAuthorization();
+        
 
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
