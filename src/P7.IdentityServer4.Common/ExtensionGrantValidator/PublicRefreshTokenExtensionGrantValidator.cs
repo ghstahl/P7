@@ -242,8 +242,9 @@ namespace P7.IdentityServer4.Common.ExtensionGrantValidator
 
         private TokenRequestValidationResult Invalid(string error, string errorDescription = null, Dictionary<string, object> customResponse = null)
         {
-            return new TokenRequestValidationResult(error, errorDescription, customResponse);
+            return new TokenRequestValidationResult(_validatedRequest, error, errorDescription, customResponse);
         }
+        
         private void LogError(string message = null, params object[] values)
         {
             if (message.IsPresent())

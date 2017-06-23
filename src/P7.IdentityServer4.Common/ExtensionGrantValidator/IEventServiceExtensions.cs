@@ -450,7 +450,7 @@ namespace P7.IdentityServer4.Common.ExtensionGrantValidator
         //    await events.RaiseAsync(evt);
         //}
 
-        private static async Task RaiseEventAsync<T>(this IEventService events, Event<T> evt)
+        private static async Task RaiseEventAsync(this IEventService events, Event evt)
         {
             if (events == null) throw new ArgumentNullException(nameof(events));
 
