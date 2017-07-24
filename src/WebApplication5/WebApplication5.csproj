@@ -8,9 +8,17 @@
     <PackageId>WebApplication5</PackageId>
     <UserSecretsId>aspnet-WebApplication5-9fcba761-eec6-4296-aea0-3bc6b3c55136</UserSecretsId>
     <RuntimeIdentifiers>win10-x64;osx.10.10-x64;win7-x64</RuntimeIdentifiers>
-    <RuntimeFrameworkVersion>1.1.1</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>1.1.2</RuntimeFrameworkVersion>
     <PackageTargetFallback>$(PackageTargetFallback);dotnet5.6;portable-net45+win8</PackageTargetFallback>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningLevel>3</WarningLevel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Properties\PublishProfiles\FolderProfile.pubxml" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Include="wwwroot\fonts\glyphicons-halflings-regular.eot">
@@ -115,11 +123,14 @@
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.0.0" />
     <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="1.0.0" />
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0" />
+    <DotNetCliToolReference Include="BundlerMinifier.Core" Version="2.2.281" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="App_Data\blogstore\00000000-0000-0000-0000-000000000000\" />
     <Folder Include="App_Data\blogstore\00000000-0000-0000-0000-000000000000\" />
+    <Folder Include="Properties\PublishProfiles\" />
+    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
 
 </Project>
