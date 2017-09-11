@@ -86,7 +86,10 @@ gulp.task('copy:P7.GraphQLViewer:areas', function () {
     return gulp.src(['../P7.GraphQLViewer/Areas/**', '!../P7.GraphQLViewer/Areas/*/{Controllers,Controllers/**}'])
         .pipe(gulp.dest('Areas/'));
 });
-
+gulp.task('copy:p7.external.spa:areas', function () {
+    return gulp.src(['../p7.external.spa/Areas/**', '!../p7.external.spa/Areas/*/{Controllers,Controllers/**}'])
+        .pipe(gulp.dest('Areas/'));
+});
 gulp.task('copy:p7.Authorization:areas', function () {
     return gulp.src(['../p7.Authorization/Areas/**', '!../p7.Authorization/Areas/*/{Controllers,Controllers/**}'])
         .pipe(gulp.dest('Areas/'));
@@ -105,6 +108,7 @@ gulp.task('watch', [
     'copy:p7.main:MainJavascriptApp',
     'copy:P7.GraphQLViewer',
     'copy:P7.GraphQLViewer:areas',
+    'copy:p7.external.spa:areas',
     'copy:p7.Authorization:areas',
     'copy:DevAuth:areas'
     ],
@@ -116,7 +120,8 @@ gulp.task('watch', [
         gulp.watch(['../p7.main/RiotApp/build/**'], ['copy:p7.main:RiotApp']);
         gulp.watch(['../p7.main/MainJavascriptApp/build/**'], ['copy:p7.main:MainJavascriptApp']);
         gulp.watch(['../P7.GraphQLViewer/Views/**'], ['copy:P7.GraphQLViewer']);
-        gulp.watch(['../P7.GraphQLViewer/Areas/**'], ['copy:P7.GraphQLViewer:areas']);
+        gulp.watch(['../P7.GraphQLViewer/Areas/**'], ['copy:P7.GraphQLViewer:areas']); 
+        gulp.watch(['../p7.external.spa/Areas/**'], ['copy:p7.external.spa:areas']);
         gulp.watch(['../p7.Authorization/Areas/**'], ['copy:p7.Authorization:areas']);
         gulp.watch(['../DevAuth/Areas/**'], ['copy:DevAuth:areas']);
     });
