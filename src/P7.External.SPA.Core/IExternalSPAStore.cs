@@ -1,15 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace P7.External.SPA.Core
 {
+
     public class ExternalSPARecord
     {
-        public string Key { get; set; }
-        public bool RequiredAuth { get; set; }
+        [JsonProperty("renderTemplate")]
         public string RenderTemplate { get; set; }
+
+        [JsonProperty("key")]
+        public string Key { get; set; }
+
+        [JsonProperty("requireAuth")]
+        public bool RequireAuth { get; set; }
     }
+    public class SpaRecords
+    {
+        [JsonProperty("spas")]
+        public ExternalSPARecord[] Spas { get; set; }
+    }
+
     public interface IExternalSPAStore
     {
         ExternalSPARecord GetRecord(string key);

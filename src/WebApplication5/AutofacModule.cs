@@ -77,10 +77,29 @@ namespace WebApplication5
                 .SingleInstance();
 
             // build external InMemoryStore
-            IExternalSPAStore inMemoryExternalStore = new InMemoryExternalSpaStore();
-            inMemoryExternalStore.AddRecord(new ExternalSPARecord(){Key = "Support",RequiredAuth = false,RenderTemplate = "<div access_token={%{user.access_token}%}>Well Hello Support</div>" });
-            inMemoryExternalStore.AddRecord(new ExternalSPARecord() { Key = "admin", RequiredAuth = true, RenderTemplate = "<div access_token={%{user.access_token}%}>Well Hello Admin</div>" });
-            builder.Register(c => inMemoryExternalStore)
+            var remoteStaticExternalSpaStore = new RemoteStaticExternalSpaStore(
+                "https://rawgit.com/ghstahl/P7/master/src/WebApplication5/external.spa.config.json");
+            var records = remoteStaticExternalSpaStore.GetRemoteStaticConfigsAsync().GetAwaiter().GetResult();
+            foreach (var spa in records.Spas)
+            {
+                remoteStaticExternalSpaStore.AddRecord(spa);
+            }
+          
+            /*
+            remoteStaticExternalSpaStore.AddRecord(new ExternalSPARecord()
+            {
+                Key = "Support",
+                RequireAuth = false,
+                RenderTemplate = "<div access_token={%{user.access_token}%}>Well Hello Support</div>"
+            });
+            remoteStaticExternalSpaStore.AddRecord(new ExternalSPARecord()
+            {
+                Key = "admin",
+                RequireAuth = true,
+                RenderTemplate = "<div access_token={%{user.access_token}%}>Well Hello Admin</div>"
+            });
+            */
+            builder.Register(c => remoteStaticExternalSpaStore)
                 .As<IExternalSPAStore>()
                 .SingleInstance();
         }
