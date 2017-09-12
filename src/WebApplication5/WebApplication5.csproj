@@ -46,7 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\p7.external.spa\p7.external.spa.csproj" />
+    <ProjectReference Include="..\p7.External.Spa\P7.External.SPA.csproj" />
     <ProjectReference Include="..\p7.main\p7.main.csproj" />
     <ProjectReference Include="..\p7.Authorization\p7.Authorization.csproj" />
     <ProjectReference Include="..\TwitterAuth\TwitterAuth.csproj" />

@@ -2,9 +2,10 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using p7.external.spa.Models;
+using P7.External.SPA.Models;
 
-namespace p7.external.spa.Areas.ExtSpa.Controllers
+
+namespace P7.External.SPA.Areas.ExtSpa.Controllers
 {
     [Area("ExtSPA")]
     public class HomeController : Controller

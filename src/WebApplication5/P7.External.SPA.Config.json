@@ -1,0 +1,16 @@
+﻿{
+  "P7ExternalSPAConfig": {
+    "SPAS": [
+      {
+        "key": "Support",
+        "section": "<div access_token={%{user.access_token}%}>Well Hello Support</div>",
+        "requiresAuth": false
+      },
+      {
+        "key": "Admin",
+        "section": "<div access_token={%{user.access_token}%}>Well Hello Admin</div>",
+        "requiresAuth": false
+      }
+    ]
+  }
+}

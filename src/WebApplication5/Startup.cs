@@ -132,6 +132,7 @@ namespace WebApplication5
 
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
+              //  .AddJsonFile("P7.External.SPA.Config.json", optional: true, reloadOnChange: true)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile("appsettings-filters.json", optional: true, reloadOnChange: true)
                 .AddJsonFile("appsettings-filters-graphql.json", optional: true, reloadOnChange: true)
