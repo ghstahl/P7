@@ -13,6 +13,7 @@ using P7.GraphQLCore.Validators;
 using P7.SimpleRedirect.Core;
 using WebApplication5.GraphQLOpts;
 using WebApplication5.Services;
+using P7.External.SPA.Core;
 
 namespace WebApplication5
 {
@@ -73,6 +74,14 @@ namespace WebApplication5
             // register the global configuration root
             builder.RegisterType<GlobalConfigurationRoot>()
                 .As<IConfigurationRoot>()
+                .SingleInstance();
+
+            // build external InMemoryStore
+            IExternalSPAStore inMemoryExternalStore = new InMemoryExternalSpaStore();
+            inMemoryExternalStore.AddRecord(new ExternalSPARecord(){Key = "Support",RequiredAuth = false,RenderTemplate = "<div access_token={%{user.access_token}%}>Well Hello Support</div>" });
+            inMemoryExternalStore.AddRecord(new ExternalSPARecord() { Key = "admin", RequiredAuth = true, RenderTemplate = "<div access_token={%{user.access_token}%}>Well Hello Admin</div>" });
+            builder.Register(c => inMemoryExternalStore)
+                .As<IExternalSPAStore>()
                 .SingleInstance();
         }
     }

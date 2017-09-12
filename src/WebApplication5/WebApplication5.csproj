@@ -46,6 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\P7.External.SPA.Core\P7.External.SPA.Core.csproj" />
     <ProjectReference Include="..\p7.External.Spa\P7.External.SPA.csproj" />
     <ProjectReference Include="..\p7.main\p7.main.csproj" />
     <ProjectReference Include="..\p7.Authorization\p7.Authorization.csproj" />
