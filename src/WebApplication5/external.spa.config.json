@@ -1,16 +1,19 @@
 ﻿{
-  "spas": {
-    "support": {
+  "spas": [
+    {
+      "key": "support",
       "requireAuth": false,
       "renderTemplate": "<div access_token={%{user.access_token}%}>Well Hello Support</div>"
     },
-    "admin": {
+    {
+      "key": "Admin",
       "requireAuth": true,
       "renderTemplate": "<div access_token={%{user.access_token}%}>Well Hello Admin</div>"
     },
-    "money": {
+    {
+      "key": "Money",
       "requireAuth": true,
       "renderTemplate": "<div access_token={%{user.access_token}%}>Well Hello Money</div>"
     }
-  }
+  ]
 }
