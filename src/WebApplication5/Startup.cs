@@ -52,6 +52,10 @@ using P7.IdentityServer4.Common;
 
 using P7.IdentityServer4.Common.ExtensionGrantValidator;
 using P7.IdentityServer4.Common.Middleware;
+using P7.RazorProvider.Store.Hugo.Extensions;
+using P7.RazorProvider.Store.Hugo.Interfaces;
+using P7.RazorProvider.Store.Hugo.Models;
+using P7.SimpleDocument.Store;
 using Module = Autofac.Module;
 
 namespace WebApplication5
@@ -98,6 +102,11 @@ namespace WebApplication5
             dbPath = Path.Combine(env.ContentRootPath, "App_Data/blogstore");
             Directory.CreateDirectory(dbPath);
             builder.AddBlogStoreBiggyConfiguration(dbPath, TenantId);
+
+
+            dbPath = Path.Combine(env.ContentRootPath, "App_Data/razorlocationstore");
+            Directory.CreateDirectory(dbPath);
+            builder.AddRazorLocationStoreBiggyConfiguration(dbPath, TenantId);
 
             builder.RegisterType<InMemoryGraphQLFieldAuthority>()
                 .As<IGraphQLFieldAuthority>()
@@ -236,7 +245,7 @@ namespace WebApplication5
             ILoggerFactory loggerFactory,
             IApplicationLifetime appLifetime)
         {
-            
+            LoadRazorProviderData();
             LoadIdentityServer4Data();
             LoadGraphQLAuthority();
             var dd = P7.Core.Global.ServiceProvider.GetServices<IQueryFieldRecordRegistration>();
@@ -387,6 +396,25 @@ namespace WebApplication5
                 new Claim("client_id","resource-owner-client"),
             });
         }
+
+        private async Task LoadRazorProviderData()
+        {
+            var store = P7.Core.Global.ServiceProvider.GetServices<IRazorLocationStore>().FirstOrDefault();
+            var now = DateTime.UtcNow;
+            await store.InsertAsync(new SimpleDocument<RazorLocation>()
+            {
+                MetaData = new MetaData() {Category = "RazorLocation", Version = "1.0.0.0"},
+                Document = new RazorLocation()
+                {
+                    Location = "/ExtSPA/Home/Index",
+                    Content =
+                        "@using P7.External.SPA.Models @model SectionValue< div id = \"spaSection\" >@Model.Value</ div >",
+                    LastModified = now,
+                    LastRequested = now
+                }
+            });
+        }
+
         private async Task LoadIdentityServer4Data()
         {
             var fullClientStore = P7.Core.Global.ServiceProvider.GetServices<IFullClientStore>().FirstOrDefault();

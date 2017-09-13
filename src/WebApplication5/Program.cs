@@ -15,6 +15,8 @@ namespace WebApplication5
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
+                .UseSetting("detailedErrors", "true")
+                .CaptureStartupErrors(true)
                 .UseStartup<Startup>()
                 .UseApplicationInsights()
                 .Build();

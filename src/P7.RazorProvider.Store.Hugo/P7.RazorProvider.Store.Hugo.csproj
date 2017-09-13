@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Hugo.Biggy\Hugo.Core\Hugo.Core.csproj" />
+    <ProjectReference Include="..\Hugo.Biggy\Hugo.Data.Json\Hugo.Data.Json.csproj" />
+    <ProjectReference Include="..\P7.HugoStore.Core\P7.HugoStore.Core.csproj" />
+    <ProjectReference Include="..\P7.SimpleDocument.Store.Hugo\P7.SimpleDocument.Store.Hugo.csproj" />
+    <ProjectReference Include="..\P7.SimpleDocument.Store\P7.SimpleDocument.Store.csproj" />
+  </ItemGroup>
+
+</Project>

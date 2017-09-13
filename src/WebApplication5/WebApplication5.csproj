@@ -18,11 +18,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="IISUrlRewrite.config" />
     <None Remove="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Remove="Properties\PublishProfiles\FolderProfile1.pubxml" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="IISUrlRewrite.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="wwwroot\fonts\glyphicons-halflings-regular.eot">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
@@ -51,6 +55,7 @@
     <ProjectReference Include="..\p7.External.Spa\P7.External.SPA.csproj" />
     <ProjectReference Include="..\p7.main\p7.main.csproj" />
     <ProjectReference Include="..\p7.Authorization\p7.Authorization.csproj" />
+    <ProjectReference Include="..\P7.RazorProvider.Store.Hugo\P7.RazorProvider.Store.Hugo.csproj" />
     <ProjectReference Include="..\TwitterAuth\TwitterAuth.csproj" />
     <ProjectReference Include="..\DevAuth\DevAuth.csproj" />
     <ProjectReference Include="..\p7.Services\p7.Services.csproj" />

@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\P7.RazorProvider.Store.Hugo\P7.RazorProvider.Store.Hugo.csproj" />
+  </ItemGroup>
+
+</Project>
