@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
@@ -52,9 +53,10 @@ using P7.IdentityServer4.Common;
 
 using P7.IdentityServer4.Common.ExtensionGrantValidator;
 using P7.IdentityServer4.Common.Middleware;
-using P7.RazorProvider.Store.Hugo.Extensions;
-using P7.RazorProvider.Store.Hugo.Interfaces;
-using P7.RazorProvider.Store.Hugo.Models;
+using P7.Razor.FileProvider;
+using P7.RazorProvider.Store.Core;
+using P7.RazorProvider.Store.Core.Interfaces;
+using P7.RazorProvider.Store.Core.Models;
 using P7.SimpleDocument.Store;
 using Module = Autofac.Module;
 
@@ -103,11 +105,11 @@ namespace WebApplication5
             Directory.CreateDirectory(dbPath);
             builder.AddBlogStoreBiggyConfiguration(dbPath, TenantId);
 
-
+            /*
             dbPath = Path.Combine(env.ContentRootPath, "App_Data/razorlocationstore");
             Directory.CreateDirectory(dbPath);
             builder.AddRazorLocationStoreBiggyConfiguration(dbPath, TenantId);
-
+            */
             builder.RegisterType<InMemoryGraphQLFieldAuthority>()
                 .As<IGraphQLFieldAuthority>()
                 .SingleInstance();
@@ -193,6 +195,8 @@ namespace WebApplication5
                 AppClaimsPrincipalFactory<ApplicationUser>>();
 
             services.AddAntiforgery(opts => opts.HeaderName = "X-XSRF-Token");
+           
+
             services.AddMvc(opts =>
             {
                 opts.Filters.AddService(typeof(AngularAntiforgeryCookieResultFilter));
@@ -202,6 +206,16 @@ namespace WebApplication5
 
             });
             services.AddTransient<AngularAntiforgeryCookieResultFilter>();
+
+            var razorLocationStore = new RemoteRazorLocationStore();
+            services.AddSingleton<IRazorLocationStore>(razorLocationStore);
+            services.AddSingleton<RemoteRazorLocationStore>(razorLocationStore);
+
+            services.Configure<RazorViewEngineOptions>(opts =>
+                opts.FileProviders.Add(
+                    new RazorFileProvider(razorLocationStore)
+                )
+            );
 
             services.AddAuthorization();
         
@@ -399,20 +413,22 @@ namespace WebApplication5
 
         private async Task LoadRazorProviderData()
         {
-            var store = P7.Core.Global.ServiceProvider.GetServices<IRazorLocationStore>().FirstOrDefault();
+            // "https://rawgit.com/ghstahl/P7/master/src/p7.external.spa/Areas/ExtSpa/views.json"
+
+            var store = P7.Core.Global.ServiceProvider.GetServices<RemoteRazorLocationStore>().FirstOrDefault();
+            store.LoadRemoteDataAsync("https://rawgit.com/ghstahl/P7/master/src/p7.external.spa/Areas/ExtSpa/views.json").GetAwaiter().GetResult();
+
+            /*
             var now = DateTime.UtcNow;
-            await store.InsertAsync(new SimpleDocument<RazorLocation>()
+            await store.InsertAsync(new RazorLocation()
             {
-                MetaData = new MetaData() {Category = "RazorLocation", Version = "1.0.0.0"},
-                Document = new RazorLocation()
-                {
-                    Location = "/ExtSPA/Home/Index",
-                    Content =
-                        "@using P7.External.SPA.Models @model SectionValue< div id = \"spaSection\" >@Model.Value</ div >",
-                    LastModified = now,
-                    LastRequested = now
-                }
+                Location = "/Areas/ExtSPA/Views/Home/Index.cshtml",
+                Content =
+                    "@using P7.External.SPA.Models \n@model SectionValue \n<div id=\"spaSection\">\n@Model.Value\n</div>",
+                LastModified = now,
+                LastRequested = now
             });
+            */
         }
 
         private async Task LoadIdentityServer4Data()

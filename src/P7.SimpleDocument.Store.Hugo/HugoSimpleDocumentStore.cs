@@ -45,7 +45,7 @@ namespace P7.SimpleDocument.Store.Hugo
                 return await base.PageAsync(pageSize, pagingState, tenantId);
 
             byte[] currentPagingState = pagingState;
-            PagingState ps = pagingState.Deserialize();
+            PagingState ps = pagingState.DeserializePageState();
             var records = await RetrieveAsync(tenantId);
             records = Filter(records, metaData);
             var slice = records.Skip(ps.CurrentIndex).Take(pageSize).ToList();

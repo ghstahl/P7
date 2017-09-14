@@ -26,7 +26,7 @@ namespace P7.RazorProvider.Store.Hugo
             DateTime? timeStampUpperBoundary = null)
         {
             byte[] currentPagingState = pagingState;
-            PagingState ps = pagingState.Deserialize();
+            PagingState ps = pagingState.DeserializePageState();
             var records = await RetrieveAsync();
             records = records.OrderBy(o => o.Document.LastModified).ToList();
 

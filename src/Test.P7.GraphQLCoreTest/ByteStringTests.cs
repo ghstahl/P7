@@ -19,13 +19,13 @@ namespace Test.P7.GraphQLCoreTest
         {
             PagingState pagingStateExpected = new PagingState() {CurrentIndex = 1234};
             var bytes = pagingStateExpected.Serialize();
-            var pagingState = bytes.Deserialize();
+            var pagingState = bytes.DeserializePageState();
 
             pagingState.ShouldBe(pagingStateExpected);
 
             var psString = Convert.ToBase64String(bytes);
             bytes = Convert.FromBase64String(psString);
-            pagingState = bytes.Deserialize();
+            pagingState = bytes.DeserializePageState();
 
             pagingState.ShouldBe(pagingStateExpected);
 
@@ -34,7 +34,7 @@ namespace Test.P7.GraphQLCoreTest
 
             psStringUrlDecoded.ShouldBe(psString);
             bytes = Convert.FromBase64String(psStringUrlDecoded);
-            pagingState = bytes.Deserialize();
+            pagingState = bytes.DeserializePageState();
             pagingState.ShouldBe(pagingStateExpected);
         }
     }

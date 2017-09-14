@@ -190,7 +190,7 @@ namespace P7.HugoStore.Core
             Guid? tenantId = null)
         {
             byte[] currentPagingState = pagingState;
-            PagingState ps = pagingState.Deserialize();
+            PagingState ps = pagingState.DeserializePageState();
             var records = await RetrieveAsync(tenantId);
 
             var slice = records.Skip(ps.CurrentIndex).Take(pageSize).ToList();

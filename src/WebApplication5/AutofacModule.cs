@@ -14,6 +14,8 @@ using P7.SimpleRedirect.Core;
 using WebApplication5.GraphQLOpts;
 using WebApplication5.Services;
 using P7.External.SPA.Core;
+using P7.RazorProvider.Store.Core;
+using P7.RazorProvider.Store.Core.Interfaces;
 
 namespace WebApplication5
 {
@@ -79,12 +81,13 @@ namespace WebApplication5
             // build external InMemoryStore
             var remoteStaticExternalSpaStore = new RemoteStaticExternalSpaStore(
                 "https://rawgit.com/ghstahl/P7/master/src/WebApplication5/external.spa.config.json");
-            var records = remoteStaticExternalSpaStore.GetRemoteStaticConfigsAsync().GetAwaiter().GetResult();
+            var records = remoteStaticExternalSpaStore.GetRemoteDataAsync().GetAwaiter().GetResult();
             foreach (var spa in records.Spas)
             {
                 remoteStaticExternalSpaStore.AddRecord(spa);
             }
-          
+
+            
             /*
             remoteStaticExternalSpaStore.AddRecord(new ExternalSPARecord()
             {
@@ -99,9 +102,11 @@ namespace WebApplication5
                 RenderTemplate = "<div access_token={%{user.access_token}%}>Well Hello Admin</div>"
             });
             */
+
             builder.Register(c => remoteStaticExternalSpaStore)
                 .As<IExternalSPAStore>()
                 .SingleInstance();
+
         }
     }
 }

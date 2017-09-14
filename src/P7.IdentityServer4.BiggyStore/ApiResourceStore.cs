@@ -36,7 +36,7 @@ namespace P7.IdentityServer4.BiggyStore
         public async Task<IPage<ApiResource>> PageAsync(int pageSize, byte[] pagingState)
         {
             byte[] currentPagingState = pagingState;
-            PagingState ps = pagingState.Deserialize();
+            PagingState ps = pagingState.DeserializePageState();
             var records = await RetrieveAsync();
             records = records.OrderBy(o => o.Name).ToList();
 

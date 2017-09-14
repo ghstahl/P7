@@ -57,7 +57,7 @@ namespace P7.BlogStore.Hugo
             DateTime? timeStampUpperBoundary = null, string[] categories = null, string[] tags = null)
         {
             byte[] currentPagingState = pagingState;
-            PagingState ps = pagingState.Deserialize();
+            PagingState ps = pagingState.DeserializePageState();
             var records = await RetrieveAsync();
             records = records.OrderBy(o => o.Document.TimeStamp).ToList();
 

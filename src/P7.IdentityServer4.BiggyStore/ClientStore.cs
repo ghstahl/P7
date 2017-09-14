@@ -40,7 +40,7 @@ namespace P7.IdentityServer4.BiggyStore
         public async Task<IPage<Client>> PageAsync(int pageSize, byte[] pagingState)
         {
             byte[] currentPagingState = pagingState;
-            PagingState ps = pagingState.Deserialize();
+            PagingState ps = pagingState.DeserializePageState();
             var records = await RetrieveAsync();
             records = records.OrderBy(o => o.Id).ToList();
 

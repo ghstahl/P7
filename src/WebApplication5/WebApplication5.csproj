@@ -55,7 +55,8 @@
     <ProjectReference Include="..\p7.External.Spa\P7.External.SPA.csproj" />
     <ProjectReference Include="..\p7.main\p7.main.csproj" />
     <ProjectReference Include="..\p7.Authorization\p7.Authorization.csproj" />
-    <ProjectReference Include="..\P7.RazorProvider.Store.Hugo\P7.RazorProvider.Store.Hugo.csproj" />
+    <ProjectReference Include="..\P7.Razor.FileProvider\P7.Razor.FileProvider.csproj" />
+    <ProjectReference Include="..\P7.RazorProvider.Store.Core\P7.RazorProvider.Store.Core.csproj" />
     <ProjectReference Include="..\TwitterAuth\TwitterAuth.csproj" />
     <ProjectReference Include="..\DevAuth\DevAuth.csproj" />
     <ProjectReference Include="..\p7.Services\p7.Services.csproj" />

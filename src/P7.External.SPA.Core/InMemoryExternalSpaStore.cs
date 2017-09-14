@@ -4,19 +4,6 @@ using System.Linq;
 
 namespace P7.External.SPA.Core
 {
-    //https://rawgit.com/ghstahl/P7/master/src/WebApplication5/external.spa.config.json
-    public static class ListExtensions
-    {
-        public static void Replace<T>(this List<T> list, Predicate<T> oldItemSelector, T newItem)
-        {
-            //check for different situations here and throw exception
-            //if list contains multiple items that match the predicate
-            //or check for nullability of list and etc ...
-            var oldItemIndex = list.FindIndex(oldItemSelector);
-            list[oldItemIndex] = newItem;
-        }
-    }
-
     public class InMemoryExternalSpaStore: IExternalSPAStore
     {
         private Dictionary<string,ExternalSPARecord> _records;

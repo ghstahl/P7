@@ -25,7 +25,7 @@ namespace P7.External.SPA.Core
             DateParseHandling = DateParseHandling.None,
         };
 
-        public async Task<SpaRecords> GetRemoteStaticConfigsAsync()
+        public async Task<SpaRecords> GetRemoteDataAsync()
         {
             var accept = "application/json";
             var uri = Url;

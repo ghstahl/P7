@@ -38,7 +38,7 @@ namespace P7.Store
             var psString = Convert.ToBase64String(bytes);
             return psString;
         }
-        public static PagingState Deserialize(this byte[] bytes)
+        public static PagingState DeserializePageState(this byte[] bytes)
         {
             if (bytes == null)
                 return new PagingState() {CurrentIndex = 0};
@@ -49,12 +49,12 @@ namespace P7.Store
             }
             return pagingState;
         }
-        public static PagingState DeserializeFromBase64String(this string psString)
+        public static PagingState DeserializePageStateFromBase64String(this string psString)
         {
             if (string.IsNullOrEmpty(psString))
                 return new PagingState() { CurrentIndex = 0 };
             var bytes = Convert.FromBase64String(psString);
-            PagingState pagingState = bytes.Deserialize();
+            PagingState pagingState = bytes.DeserializePageState();
             return pagingState;
         }
     }
