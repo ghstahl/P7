@@ -9,6 +9,14 @@
       "content": "<div>\nWelcome to Support!\n</div>"
     },
     {
+      "location": "/Areas/ExtSPA/Views/Home/Admin.cshtml",
+      "content": "<div>\nWelcome to Admin!\n</div>"
+    },
+    {
+      "location": "/Areas/ExtSPA/Views/Home/Money.cshtml",
+      "content": "<div>\nWelcome to Money!\n</div>"
+    },
+    {
       "location": "/Areas/ExtSPA/Views/_ViewImports.cshtml",
       "content": "@using P7.Core\n @addTagHelper \"*, Microsoft.AspNetCore.Mvc.TagHelpers\"\n @addTagHelper \"*, P7.Core\""
     },
