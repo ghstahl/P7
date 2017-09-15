@@ -10,7 +10,7 @@
     },
     {
       "location": "/Areas/ExtSPA/Views/Home/Admin.cshtml",
-      "content": "<div>\nWelcome to Admin!\n</div>"
+      "content": "@using System.Collections.Generic\n @using P7.External.SPA.Models\n @model System.Collections.Generic.IEnumerable<P7.External.SPA.Models.ClaimType>\n <div>\nWelcome to Admin!\n</div>@foreach (var claimType in Model){<div>@claimType.Type\n@claimType.Value</div>}"
     },
     {
       "location": "/Areas/ExtSPA/Views/Home/Money.cshtml",
