@@ -18,9 +18,6 @@ namespace P7.RazorProvider.Store.Hugo
             : base( biggyConfiguration, "razor-location")
         {
         }
-
-      
-
         public async Task<IPage<SimpleDocument<RazorLocation>>> PageAsync(int pageSize, byte[] pagingState,
             DateTime? timeStampLowerBoundary = null,
             DateTime? timeStampUpperBoundary = null)
