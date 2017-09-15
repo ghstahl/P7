@@ -3,17 +3,20 @@
     {
       "key": "support",
       "requireAuth": false,
-      "renderTemplate": "<div access_token={%{user.access_token}%}>Well Hello Support</div>"
+      "renderTemplate": "<div access_token={%{user.access_token}%}>Well Hello Support</div>",
+      "view": "Support" 
     },
     {
       "key": "Admin",
       "requireAuth": true,
-      "renderTemplate": "<div access_token={%{user.access_token}%}>Well Hello Admin</div>"
+      "renderTemplate": "<div access_token={%{user.access_token}%}>Well Hello Admin</div>",
+      "view": "Admin"
     },
     {
       "key": "Money",
       "requireAuth": true,
-      "renderTemplate": "<div access_token={%{user.access_token}%}>Well Hello Money</div>"
+      "renderTemplate": "<div access_token={%{user.access_token}%}>Well Hello Money</div>",
+      "view": "Money"
     }
   ]
 }
