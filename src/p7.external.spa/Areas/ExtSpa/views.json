@@ -14,7 +14,7 @@
     },
     {
       "location": "/Areas/ExtSPA/Views/Home/Money.cshtml",
-      "content": "<div>\nWelcome to Money!\n</div>"
+      "content": "<div id=\"root\"></div><script src=\"https://rawgit.com/ghstahl/p7-react-mobx-host/master/dist/bundle.js\"></script>"
     },
     {
       "location": "/Areas/ExtSPA/Views/_ViewImports.cshtml",
