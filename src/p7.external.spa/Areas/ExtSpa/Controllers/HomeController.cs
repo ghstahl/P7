@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Html;
+﻿using System.Reflection.Metadata;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -31,8 +32,14 @@ namespace P7.External.SPA.Areas.ExtSpa.Controllers
             Logger.LogInformation("Hello from the External SPA Home Index Controller");
             var spa = _externalSpaStore.GetRecord(id);
             var model = new HtmlString(spa.RenderTemplate);
-
-            return View(new SectionValue(){Value = model});
+            if (!string.IsNullOrEmpty(spa.View))
+            {
+                return View(spa.View);
+            }
+            else
+            {
+                return View(new SectionValue() { Value = model });
+            }
         }
 
     }

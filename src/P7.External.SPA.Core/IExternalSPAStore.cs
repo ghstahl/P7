@@ -16,6 +16,9 @@ namespace P7.External.SPA.Core
 
         [JsonProperty("requireAuth")]
         public bool RequireAuth { get; set; }
+
+        [JsonProperty("view")]
+        public string View { get; set; }
     }
     public class SpaRecords
     {
