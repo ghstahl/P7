@@ -55,6 +55,7 @@
     <ProjectReference Include="..\p7.External.Spa\P7.External.SPA.csproj" />
     <ProjectReference Include="..\p7.main\p7.main.csproj" />
     <ProjectReference Include="..\p7.Authorization\p7.Authorization.csproj" />
+    <ProjectReference Include="..\P7.MiddleWare\P7.MiddleWare.csproj" />
     <ProjectReference Include="..\P7.Razor.FileProvider\P7.Razor.FileProvider.csproj" />
     <ProjectReference Include="..\P7.RazorProvider.Store.Core\P7.RazorProvider.Store.Core.csproj" />
     <ProjectReference Include="..\TwitterAuth\TwitterAuth.csproj" />
@@ -137,8 +138,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="App_Data\blogstore\00000000-0000-0000-0000-000000000000\" />
-    <Folder Include="App_Data\blogstore\00000000-0000-0000-0000-000000000000\" />
     <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>

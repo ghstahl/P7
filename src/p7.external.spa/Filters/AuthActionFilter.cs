@@ -57,7 +57,7 @@ namespace P7.External.SPA.Filters
                         if (spa.RequireAuth)
                         {
                             context.Result = new RedirectToActionResult(Action, Controller,
-                                new { area = Area, returnUrl = context.HttpContext.Request.Path });
+                                new { area = Area, returnUrl = context.HttpContext.Items["original-path"] });
                         }
                     }
                 }

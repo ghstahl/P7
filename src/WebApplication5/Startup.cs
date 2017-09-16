@@ -53,6 +53,7 @@ using P7.IdentityServer4.Common;
 
 using P7.IdentityServer4.Common.ExtensionGrantValidator;
 using P7.IdentityServer4.Common.Middleware;
+using P7.MiddleWare;
 using P7.Razor.FileProvider;
 using P7.RazorProvider.Store.Core;
 using P7.RazorProvider.Store.Core.Interfaces;
@@ -373,9 +374,10 @@ namespace WebApplication5
 
 
             var root = env.ContentRootFileProvider;
-            var rewriteOptions = new RewriteOptions()
+            var rewriteOptions = new MutableRewriteOptions()
                 .AddIISUrlRewrite(root, "IISUrlRewrite.config");
-            app.UseRewriter(rewriteOptions);
+            P7.Core.Global.ArbitraryObjects.Add("rewrite-optons",(object)rewriteOptions);
+            app.UseP7Rewriter((RewriteOptions) P7.Core.Global.ArbitraryObjects["rewrite-optons"]);
 
             // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
             app.UseSession();
