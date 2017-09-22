@@ -73,7 +73,7 @@ produces the following;
 ## How is this accomplished.
 
 There are 2 clients in play;
-
+         
 The resource_owner client requires that you must use a client_id, client_secret, username, and password to get the initial response.
 The fact that it is configured to require a password, is what makes it not usable to use the refresh_token in the response in a public way.
 ```
@@ -123,3 +123,12 @@ This intercepts all Requests and is looking for /connect/token, with a client_id
 This extension understands the naming convention scheme and final result we are going for.  It bascially strips away the public- part of the client name and refreshes the token of the original client, but this time without requireing a client_secret.
 
 3. The actual response back from IdentitySever4 is not exactly as we like it, so we read the resonse body and correct that to look nice.  This is handled in the [PublicRefreshTokenMiddleware](../src/P7.IdentityServer4.Common/Middleware/PublicRefreshTokenMiddleware.cs) middleware as well.
+
+### Important.
+Don't forget to add the PublicRefeshTokenMiddleware, as it changes the incoming client_id to one that has public- prepended to it.
+
+    ```
+    app.UsePublicRefreshToken();
+    app.UseIdentityServer();
+    ```
+    
