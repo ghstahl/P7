@@ -1,3 +1,7 @@
+# Deprecated 
+All future development of P7 will be done on the .Net Core 2.0 platform.  
+Please go to [P7.Core-2.0](https://github.com/ghstahl/P7.Core-2.0)  
+
 # P7
 An opinionated way to build Asp.Net Core applications
 
